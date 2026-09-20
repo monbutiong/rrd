@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RRD Suite: Hospital Management System</title>
+<meta name="description" content="A complete Hospital Management System — patient registration and admission, clinical workspace, laboratory and imaging orders, ward & bed board, billing and cashiering, pharmacy with batch tracking and a POS terminal, inventory & procurement, canteen & diet, employees & scheduling, reports, and a role-gated administration. Runs on your own server — one-time purchase, on the Microsoft Store." />
+<link rel="icon" type="image/png" href="images/app-icon.png" />
+<meta property="og:title" content="RRD Suite: Hospital Management System" />
+<meta property="og:description" content="Front desk to finance — patients, clinical, lab & imaging, ward beds, billing, pharmacy & POS, inventory & procurement, canteen, employees, reports. Runs on your own server, no subscription." />
+<meta property="og:type" content="website" />
+<style>
+  :root {
+    --ink: #16192c;
+    --muted: #5b6472;
+    --line: #e6e8ef;
+    --accent: #3e60d5;
+    --accent-ink: #2b47ad;
+    --ok: #2f9e63;
+    --band: #10131f;
+    --band-2: #171b2b;
+    --band-text: #e9ecf6;
+    --soft: #f5f7fb;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    color: var(--ink);
+    background: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: var(--accent); text-decoration: none; }
+  h1, h2, h3 { line-height: 1.2; letter-spacing: -0.02em; margin: 0 0 .5em; }
+  h1 { font-size: clamp(2rem, 4.4vw, 3.1rem); }
+  h2 { font-size: clamp(1.55rem, 3vw, 2.2rem); }
+  h3 { font-size: 1.15rem; }
+  p { margin: 0 0 1em; }
+  .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+  .eyebrow { text-transform: uppercase; letter-spacing: .12em; font-size: .72rem; font-weight: 700; color: var(--accent); margin-bottom: .8em; }
+  .lead { font-size: 1.12rem; color: var(--muted); }
+  .center { text-align: center; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 22px; border-radius: 10px; font-weight: 650; font-size: .95rem;
+    border: 1px solid transparent; cursor: pointer; transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent-ink); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(62,96,213,.28); }
+  .btn-ghost { background: #fff; border-color: var(--line); color: var(--ink); }
+  .btn-ghost:hover { border-color: #c9cede; transform: translateY(-1px); }
+  .btn-lg { padding: 15px 28px; font-size: 1rem; }
+
+  .store-badge { display: inline-block; }
+  .store-badge img { height: 52px; width: auto; }
+  .store-badge:hover { filter: brightness(.97); }
+
+  /* Nav */
+  nav.top {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255,255,255,.9);
+    backdrop-filter: saturate(180%) blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav.top .container { display: flex; align-items: center; justify-content: space-between; height: 66px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -.02em; font-size: 1.05rem; color: var(--ink); }
+  .brand img { height: 30px; width: auto; }
+  .navlinks { display: flex; gap: 26px; align-items: center; }
+  .navlinks a { color: var(--muted); font-size: .92rem; font-weight: 550; }
+  .navlinks a:hover { color: var(--ink); }
+  .nav-cta { display: flex; align-items: center; gap: 14px; }
+  .nav-toggle { display: none; background: none; border: 0; cursor: pointer; padding: 8px; }
+  .nav-toggle span { display: block; width: 22px; height: 2px; background: var(--ink); margin: 4px 0; border-radius: 2px; }
+
+  /* Hero */
+  .hero { padding: 68px 0 40px; background: radial-gradient(1100px 500px at 70% -10%, #eef2ff 0%, #fff 60%); }
+  .hero .container { display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px; align-items: center; }
+  .hero h1 span { color: var(--accent); }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-top: 6px; }
+  .hero-note { margin-top: 18px; font-size: .85rem; color: var(--muted); }
+  .hero-shot { border-radius: var(--radius); border: 1px solid var(--line); box-shadow: 0 30px 70px -30px rgba(16,25,60,.4); overflow: hidden; }
+  .hero-shot img { display: block; }
+
+  .kpis { display: flex; flex-wrap: wrap; gap: 30px; margin-top: 30px; }
+  .kpi b { display: block; font-size: 1.5rem; letter-spacing: -.02em; }
+  .kpi span { font-size: .82rem; color: var(--muted); }
+
+  /* Trust strip */
+  .strip { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--soft); }
+  .strip .container { display: flex; flex-wrap: wrap; gap: 12px 34px; padding: 18px 24px; align-items: center; justify-content: center; }
+  .strip span { font-size: .86rem; color: var(--muted); display: inline-flex; align-items: center; gap: 8px; }
+  .strip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ok); }
+
+  section { padding: 72px 0; }
+  section.alt { background: var(--soft); }
+  .sec-head { max-width: 720px; margin: 0 auto 44px; }
+  .center .sec-head { margin-inline: auto; }
+
+  /* Feature grid */
+  .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .feature { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; transition: transform .14s ease, box-shadow .14s ease; }
+  .feature:hover { transform: translateY(-3px); box-shadow: 0 16px 40px -22px rgba(16,25,60,.35); }
+  .feature .ic { width: 40px; height: 40px; border-radius: 10px; background: #eef2ff; color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 14px; }
+  .feature h3 { margin-bottom: .3em; }
+  .feature p { font-size: .92rem; color: var(--muted); margin: 0; }
+
+  /* Alternating feature rows with screenshots */
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 52px; align-items: center; }
+  .row + .row { margin-top: 72px; }
+  .row.flip .txt { order: 2; }
+  .row .shot { border-radius: var(--radius); border: 1px solid var(--line); box-shadow: 0 24px 60px -32px rgba(16,25,60,.4); overflow: hidden; cursor: zoom-in; }
+  .row ul { margin: 0; padding-left: 1.1em; color: var(--muted); font-size: .95rem; }
+  .row ul li { margin-bottom: .4em; }
+
+  /* Screenshot gallery */
+  .tabs { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 28px; }
+  .tab { padding: 8px 16px; border-radius: 999px; border: 1px solid var(--line); background: #fff; font-size: .86rem; font-weight: 600; color: var(--muted); cursor: pointer; }
+  .tab.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .gallery figure { margin: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; cursor: zoom-in; background: #fff; transition: transform .14s ease; }
+  .gallery figure:hover { transform: translateY(-3px); }
+  .gallery figcaption { font-size: .82rem; color: var(--muted); padding: 10px 14px; border-top: 1px solid var(--line); }
+
+  /* How it runs */
+  .modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .mode { border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; background: #fff; }
+  .mode h3 { display: flex; align-items: center; gap: 8px; }
+  .mode .tag { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; background: #eef2ff; color: var(--accent); padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+  .mode p { font-size: .92rem; color: var(--muted); margin: 0; }
+
+  /* Data band */
+  .band { background: var(--band); color: var(--band-text); }
+  .band h2 { color: #fff; }
+  .band .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; margin-top: 34px; }
+  .band .card { background: var(--band-2); border: 1px solid rgba(255,255,255,.08); border-radius: var(--radius); padding: 24px; }
+  .band .card h3 { color: #fff; }
+  .band .card p { color: #aeb6cc; font-size: .92rem; margin: 0; }
+
+  /* Pricing */
+  .price-wrap { display: flex; justify-content: center; }
+  .price {
+    max-width: 460px; width: 100%; border: 1px solid var(--line); border-radius: 18px; padding: 34px; text-align: center;
+    box-shadow: 0 30px 70px -40px rgba(16,25,60,.4);
+  }
+  .price .amount { font-size: 2.6rem; font-weight: 800; letter-spacing: -.03em; }
+  .price .amount small { font-size: 1rem; font-weight: 600; color: var(--muted); }
+  .price ul { list-style: none; margin: 22px 0; padding: 0; text-align: left; }
+  .price ul li { padding: 9px 0; border-bottom: 1px dashed var(--line); font-size: .93rem; display: flex; gap: 10px; }
+  .price ul li::before { content: "✓"; color: var(--ok); font-weight: 800; }
+  .price ul li:last-child { border-bottom: 0; }
+
+  /* FAQ */
+  .faq { max-width: 780px; margin: 0 auto; }
+  .qa { border-bottom: 1px solid var(--line); }
+  .qa summary { cursor: pointer; padding: 18px 0; font-weight: 650; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+  .qa summary::-webkit-details-marker { display: none; }
+  .qa summary::after { content: "+"; color: var(--accent); font-weight: 800; }
+  .qa[open] summary::after { content: "–"; }
+  .qa p { color: var(--muted); font-size: .95rem; padding-bottom: 18px; margin: 0; }
+
+  footer { background: var(--band); color: #9aa3bd; padding: 44px 0; font-size: .88rem; }
+  footer .container { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; justify-content: space-between; }
+  footer a { color: #c7cfe6; }
+  footer .brand { color: #fff; }
+
+  /* Lightbox */
+  .lb { position: fixed; inset: 0; background: rgba(8,10,20,.9); display: none; align-items: center; justify-content: center; z-index: 200; padding: 30px; }
+  .lb.open { display: flex; }
+  .lb img { max-width: 94vw; max-height: 90vh; border-radius: 10px; box-shadow: 0 30px 80px rgba(0,0,0,.5); }
+  .lb button { position: absolute; top: 18px; right: 22px; background: none; border: 0; color: #fff; font-size: 34px; cursor: pointer; line-height: 1; }
+
+  .reveal { opacity: 0; transform: translateY(14px); transition: opacity .55s ease, transform .55s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+  @media (max-width: 900px) {
+    .navlinks { display: none; }
+    .nav-toggle { display: block; }
+    .navlinks.open { display: flex; position: absolute; top: 66px; left: 0; right: 0; background: #fff; flex-direction: column; padding: 14px 24px 20px; border-bottom: 1px solid var(--line); gap: 4px; }
+    .navlinks.open a { padding: 10px 0; }
+    .hero .container, .row, .row.flip .txt { grid-template-columns: 1fr; order: 0; }
+    .features, .modes, .band .grid { grid-template-columns: 1fr; }
+    .gallery { grid-template-columns: repeat(2, 1fr); }
+    .row .shot { order: 2; }
+    nav.top .nav-cta .store-badge { display: none; }
+    .strip .container { justify-content: flex-start; }
+  }
+  @media (max-width: 620px) {
+    .gallery { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 460px) {
+    .store-badge img { height: 44px; }
+    .kpis { gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="container">
+    <a class="brand" href="#top"><img src="images/app-icon.png" alt="" /> RRD Suite</a>
+    <div class="navlinks" id="navlinks">
+      <a href="#modules">Modules</a>
+      <a href="#screens">Screenshots</a>
+      <a href="#run">How it runs</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-cta">
+      <a class="store-badge" href="https://apps.microsoft.com/detail/9NXXXXXXXXXX" target="_blank" rel="noopener" aria-label="Get RRD Suite on the Microsoft Store">
+        <img src="images/microsoft-store.png" alt="Available only on Microsoft Store" />
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="container">
+    <div class="reveal in">
+      <div class="eyebrow">Hospital Management</div>
+      <h1>Front desk to finance, <span>one hospital system.</span></h1>
+      <p class="lead">
+        RRD Suite is a complete Hospital Management System — patient registration and admission, a clinical workspace with
+        laboratory and imaging orders, a live ward &amp; bed board, billing and cashiering, pharmacy with batch-tracked
+        stock and a point-of-sale terminal, inventory &amp; procurement, canteen &amp; diet, employees &amp; scheduling,
+        reports, and role-gated administration. It installs on a PC in your hospital. No monthly fee.
+      </p>
+      <div class="hero-actions">
+        <a class="store-badge" href="https://apps.microsoft.com/detail/9NXXXXXXXXXX" target="_blank" rel="noopener">
+          <img src="images/microsoft-store.png" alt="Available only on Microsoft Store" />
+        </a>
+        <a class="btn btn-ghost btn-lg" href="#screens">See it in action</a>
+      </div>
+      <p class="hero-note">One-time purchase · 30-day free trial · your patient data stays on your server</p>
+      <div class="kpis">
+        <div class="kpi"><b>14 modules</b><span>every department covered</span></div>
+        <div class="kpi"><b>1 file</b><span>SQLite — no server to babysit</span></div>
+        <div class="kpi"><b>0</b><span>subscription, ever</span></div>
+      </div>
+    </div>
+    <div class="reveal in">
+      <div class="hero-shot"><img src="images/screenshots/dashboard.png" alt="RRD Suite hospital management dashboard" /></div>
+    </div>
+  </div>
+</header>
+
+<div class="strip">
+  <div class="container">
+    <span><i class="dot"></i> Patient registration &amp; admission</span>
+    <span><i class="dot"></i> Clinical, lab &amp; imaging</span>
+    <span><i class="dot"></i> Ward &amp; bed board</span>
+    <span><i class="dot"></i> Billing &amp; cashiering</span>
+    <span><i class="dot"></i> Pharmacy &amp; POS terminal</span>
+    <span><i class="dot"></i> Works offline · multi-user over your LAN</span>
+  </div>
+</div>
+
+<section id="modules">
+  <div class="container center">
+    <div class="sec-head">
+      <div class="eyebrow">Every module, highlighted</div>
+      <h2>Built for the whole hospital</h2>
+      <p class="lead">Modules are role-gated — each person only sees the screens they're allowed to.</p>
+    </div>
+    <div class="features">
+      <div class="feature reveal"><div class="ic">🩺</div><h3>Patients</h3><p>Register with an auto-issued MRN, search with duplicate warnings, admit, transfer and discharge. A full patient directory with admission and appointment history.</p></div>
+      <div class="feature reveal"><div class="ic">📋</div><h3>Clinical Workspace</h3><p>Encounter workbench for physicians — notes, vitals, orders and prescriptions signed and saved in one place, with a per-patient chart that travels across visits.</p></div>
+      <div class="feature reveal"><div class="ic">🧪</div><h3>Lab &amp; Imaging</h3><p>Order worklists for the laboratory and radiology — collect → result → complete — and critical values that surface on the dashboard Alert Centre.</p></div>
+      <div class="feature reveal"><div class="ic">🛏️</div><h3>Ward &amp; Beds</h3><p>A live bed board: occupied, free, dirty and under maintenance, per ward. Assign beds, plan transfers, and see occupancy at a glance.</p></div>
+      <div class="feature reveal"><div class="ic">💳</div><h3>Billing &amp; Cashiering</h3><p>Itemized invoices accumulating charges across a visit, partial payments, balances, voids with re-billing, and cash · card · insurance · bank payment capture.</p></div>
+      <div class="feature reveal"><div class="ic">💊</div><h3>Pharmacy</h3><p>Batch-tracked medicines with weighted-average costing and FEFO dispensing. Controlled and refrigerated stock, requisitions, and expiry alerts.</p></div>
+      <div class="feature reveal"><div class="ic">🛒</div><h3>POS Terminal</h3><p>Walk-in sales of medicines, supplies and even equipment — cash, card or insurance — with receipts, voiding that returns stock, and a sales history.</p></div>
+      <div class="feature reveal"><div class="ic">📦</div><h3>Inventory &amp; Procurement</h3><p>Supplies stock, serialized equipment, purchase orders, receiving (GRV) that posts straight to stock, and supply requisitions with approval and FEFO issue.</p></div>
+      <div class="feature reveal"><div class="ic">🍲</div><h3>Canteen &amp; Diet</h3><p>Meal ordering against patient diets — diabetic, low-sodium, high-protein, pediatric — from placed to served, tied to each ward and patient.</p></div>
+      <div class="feature reveal"><div class="ic">👩‍⚕️</div><h3>Employees</h3><p>Doctors, nurses and every other hire in one directory. Employment records that feed the departments, rosters and payroll below.</p></div>
+      <div class="feature reveal"><div class="ic">🗓️</div><h3>Staff Scheduling</h3><p>Weekly shift patterns, drag-to-replan rosters, daily-time-record attendance, and payroll hours — AM and PM shifts with rest days.</p></div>
+      <div class="feature reveal"><div class="ic">🏛️</div><h3>Organization</h3><p>Department → section → position tree, an organizational chart, and the lookup tables that hold every master list the hospital runs on.</p></div>
+      <div class="feature reveal"><div class="ic">📊</div><h3>Reports</h3><p>Fourteen registered reports — daily revenue, patient census, bed turnover, stock valuation, batch expiry, dispensing activity, procurement — all exportable to Excel.</p></div>
+      <div class="feature reveal"><div class="ic">🔐</div><h3>Administration</h3><p>Menu-level role-based access with a grant matrix, users linked to employees, backup and restore, and a field-level activity log.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="container">
+
+    <div class="row reveal">
+      <div class="txt">
+        <div class="eyebrow">Front desk &amp; revenue</div>
+        <h2>From check-in to cashiering, one flow</h2>
+        <ul>
+          <li>One registration form at intake — MRN auto-issued, duplicates flagged on name + birthdate</li>
+          <li>The alert centre watches expiry, pending POs, requisitions and critical lab results</li>
+          <li>Invoices accumulate every charge across a stay; partial payments and balances tracked per visit</li>
+          <li>Billing options include cash, card, insurance and bank transfer — void only after audit</li>
+        </ul>
+      </div>
+      <div class="shot" data-full="images/screenshots/dashboard.png"><img src="images/screenshots/dashboard.png" alt="Hospital dashboard and alert centre" loading="lazy" /></div>
+    </div>
+
+    <div class="row flip reveal">
+      <div class="txt">
+        <div class="eyebrow">Clinical</div>
+        <h2>Order, treat, and report in the same workspace</h2>
+        <ul>
+          <li>The workbench lists a physician's patients for the round — notes, vitals, orders and prescriptions</li>
+          <li>Laboratory and imaging worklists run collect → result → complete, stat orders flagged in red</li>
+          <li>Critical values surface automatically on the dashboard alert centre</li>
+          <li>Ward occupancy and the bed board stay in sync with admissions and transfers</li>
+        </ul>
+      </div>
+      <div class="shot" data-full="images/screenshots/clinical.png"><img src="images/screenshots/clinical.png" alt="Clinical workspace" loading="lazy" /></div>
+    </div>
+
+    <div class="row reveal">
+      <div class="txt">
+        <div class="eyebrow">Pharmacy &amp; POS</div>
+        <h2>Batch-tracked stock, sold at the counter</h2>
+        <ul>
+          <li>Medicines carry batches and expiry dates; costing is weighted average, dispatch is FEFO</li>
+          <li>The POS terminal sells medicines, supplies and equipment as walk-in sales</li>
+          <li>Payments by cash, card or insurance; receipts print, and voids restore every unit back to stock</li>
+          <li>Controlled, refrigerated and low-stock items surface with their own filters</li>
+        </ul>
+      </div>
+      <div class="shot" data-full="images/screenshots/pos.png"><img src="images/screenshots/pos.png" alt="Pharmacy POS terminal" loading="lazy" /></div>
+    </div>
+
+    <div class="row flip reveal">
+      <div class="txt">
+        <div class="eyebrow">Procurement &amp; requisitions</div>
+        <h2>Buy once, receive once, post straight to stock</h2>
+        <ul>
+          <li>One purchase order engine handles medicine, supply and equipment lines — currency and tax aware</li>
+          <li>Receiving (GRV) dispatches stock by item type: medicines to pharmacy, supplies to inventory, equipment to the asset register</li>
+          <li>Departments raise supply requisitions; approval, issue and rejection follow one workflow</li>
+          <li>FEFO issue skips expired batches and falls back to the flat balance when a line isn't batch-tracked</li>
+        </ul>
+      </div>
+      <div class="shot" data-full="images/screenshots/procurement.png"><img src="images/screenshots/procurement.png" alt="Purchase orders and receiving" loading="lazy" /></div>
+    </div>
+
+  </div>
+</section>
+
+<section id="screens">
+  <div class="container center">
+    <div class="sec-head">
+      <div class="eyebrow">Real screens, real data</div>
+      <h2>Take the tour</h2>
+      <p class="lead">Every screenshot below mirrors the actual app running. Click to enlarge.</p>
+    </div>
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-cat="all">All</button>
+      <button class="tab" data-cat="front">Front desk</button>
+      <button class="tab" data-cat="clinical">Clinical</button>
+      <button class="tab" data-cat="revenue">Revenue &amp; Pharmacy</button>
+      <button class="tab" data-cat="inventory">Inventory</button>
+      <button class="tab" data-cat="people">People</button>
+      <button class="tab" data-cat="govern">System</button>
+    </div>
+    <div class="gallery" id="gallery">
+      <figure data-cat="front" data-full="images/screenshots/dashboard.png"><img src="images/screenshots/dashboard.png" alt="Dashboard" loading="lazy" /><figcaption>Dashboard &amp; alert centre</figcaption></figure>
+      <figure data-cat="front" data-full="images/screenshots/reception.png"><img src="images/screenshots/reception.png" alt="Reception" loading="lazy" /><figcaption>Front-desk registration</figcaption></figure>
+      <figure data-cat="front" data-full="images/screenshots/patients.png"><img src="images/screenshots/patients.png" alt="Patient directory" loading="lazy" /><figcaption>Patient directory</figcaption></figure>
+      <figure data-cat="front" data-full="images/screenshots/appointments.png"><img src="images/screenshots/appointments.png" alt="Appointments" loading="lazy" /><figcaption>Appointments &amp; schedule</figcaption></figure>
+      <figure data-cat="clinical" data-full="images/screenshots/clinical.png"><img src="images/screenshots/clinical.png" alt="Clinical workspace" loading="lazy" /><figcaption>Encounter workbench</figcaption></figure>
+      <figure data-cat="clinical" data-full="images/screenshots/lab.png"><img src="images/screenshots/lab.png" alt="Laboratory" loading="lazy" /><figcaption>Laboratory worklist</figcaption></figure>
+      <figure data-cat="clinical" data-full="images/screenshots/imaging.png"><img src="images/screenshots/imaging.png" alt="Imaging" loading="lazy" /><figcaption>Imaging worklist</figcaption></figure>
+      <figure data-cat="clinical" data-full="images/screenshots/ward-beds.png"><img src="images/screenshots/ward-beds.png" alt="Ward and beds" loading="lazy" /><figcaption>Ward &amp; bed board</figcaption></figure>
+      <figure data-cat="revenue" data-full="images/screenshots/billing.png"><img src="images/screenshots/billing.png" alt="Billing" loading="lazy" /><figcaption>Invoices &amp; cashiering</figcaption></figure>
+      <figure data-cat="revenue" data-full="images/screenshots/pharmacy.png"><img src="images/screenshots/pharmacy.png" alt="Pharmacy" loading="lazy" /><figcaption>Pharmacy stock</figcaption></figure>
+      <figure data-cat="revenue" data-full="images/screenshots/pos.png"><img src="images/screenshots/pos.png" alt="POS terminal" loading="lazy" /><figcaption>POS terminal</figcaption></figure>
+      <figure data-cat="revenue" data-full="images/screenshots/canteen.png"><img src="images/screenshots/canteen.png" alt="Canteen and diet" loading="lazy" /><figcaption>Canteen &amp; diet orders</figcaption></figure>
+      <figure data-cat="inventory" data-full="images/screenshots/inventory.png"><img src="images/screenshots/inventory.png" alt="Supplies inventory" loading="lazy" /><figcaption>Supplies inventory</figcaption></figure>
+      <figure data-cat="inventory" data-full="images/screenshots/procurement.png"><img src="images/screenshots/procurement.png" alt="Purchase orders" loading="lazy" /><figcaption>Purchase orders</figcaption></figure>
+      <figure data-cat="inventory" data-full="images/screenshots/requisitions.png"><img src="images/screenshots/requisitions.png" alt="Supply requisitions" loading="lazy" /><figcaption>Supply requisitions</figcaption></figure>
+      <figure data-cat="inventory" data-full="images/screenshots/equipment.png"><img src="images/screenshots/equipment.png" alt="Equipment register" loading="lazy" /><figcaption>Equipment register</figcaption></figure>
+      <figure data-cat="people" data-full="images/screenshots/employees.png"><img src="images/screenshots/employees.png" alt="Employees" loading="lazy" /><figcaption>Employee directory</figcaption></figure>
+      <figure data-cat="people" data-full="images/screenshots/scheduling.png"><img src="images/screenshots/scheduling.png" alt="Staff scheduling" loading="lazy" /><figcaption>Roster &amp; attendance</figcaption></figure>
+      <figure data-cat="people" data-full="images/screenshots/organization.png"><img src="images/screenshots/organization.png" alt="Organization" loading="lazy" /><figcaption>Organizational chart</figcaption></figure>
+      <figure data-cat="govern" data-full="images/screenshots/reports.png"><img src="images/screenshots/reports.png" alt="Reports" loading="lazy" /><figcaption>Reports catalogue</figcaption></figure>
+      <figure data-cat="govern" data-full="images/screenshots/maintenance.png"><img src="images/screenshots/maintenance.png" alt="Maintenance" loading="lazy" /><figcaption>Lookup &amp; maintenance tables</figcaption></figure>
+      <figure data-cat="govern" data-full="images/screenshots/admin.png"><img src="images/screenshots/admin.png" alt="Administration" loading="lazy" /><figcaption>Roles &amp; permissions</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="run">
+  <div class="container center">
+    <div class="sec-head">
+      <div class="eyebrow">Deployment</div>
+      <h2>Install once. Everyone connects to it.</h2>
+      <p class="lead">One machine holds the database. Other PCs reach it over your hospital network — the desktop app, or just a browser.</p>
+    </div>
+    <div class="modes">
+      <div class="mode reveal">
+        <h3><span class="tag">Solo</span> Standalone</h3>
+        <p>One computer runs everything — the app and the database together. Perfect for a clinic or to evaluate it.</p>
+      </div>
+      <div class="mode reveal">
+        <h3><span class="tag">Hospital</span> Host + Clients</h3>
+        <p>One PC is the Host. Front desk, pharmacy, lab and office PCs install in Client mode and point at the Host's address. The Host owns the single database.</p>
+      </div>
+      <div class="mode reveal">
+        <h3><span class="tag">No install</span> Browser access</h3>
+        <p>Turn on browser access and staff open a link in Chrome or Edge — nothing to install on their machine. Keep it on your hospital network.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="container">
+    <div class="sec-head">
+      <div class="eyebrow" style="color:#8ea2ff">Ownership</div>
+      <h2>Your patient data never leaves your building</h2>
+      <p class="lead" style="color:#aeb6cc">
+        There is no cloud account, no vendor database, nothing phoning home with your records.
+        The whole system is one SQLite file on your own disk — back it up, move it, keep it.
+      </p>
+    </div>
+    <div class="grid">
+      <div class="card reveal"><h3>No subscription</h3><p>Buy it once on the Microsoft Store. It keeps working — the version you own runs for good.</p></div>
+      <div class="card reveal"><h3>Works offline</h3><p>An internet outage doesn't stop the ER. The server only needs your LAN.</p></div>
+      <div class="card reveal"><h3>Handles the whole hospital</h3><p>One process, one database connection, WAL mode — all departments connecting with no write conflicts. Keep the file on local SSD.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="container center">
+    <div class="sec-head">
+      <div class="eyebrow">Pricing</div>
+      <h2>One price. One server. Yours.</h2>
+    </div>
+    <div class="price-wrap">
+      <div class="price reveal">
+        <div class="amount">One-time <small>/ per server</small></div>
+        <p class="lead" style="font-size:1rem">Try free for 30 days, then buy once from the Microsoft Store.</p>
+        <ul>
+          <li>Every module — patients, clinical, lab &amp; imaging, ward beds, billing, pharmacy &amp; POS, inventory &amp; procurement, canteen, employees &amp; scheduling, reports, admin</li>
+          <li>Unlimited patients and unlimited staff connecting over your network</li>
+          <li>Standalone, Host + Client, and browser access</li>
+          <li>The version you buy runs forever — no forced renewals</li>
+          <li>Delivered and licensed through the Microsoft Store</li>
+        </ul>
+        <a class="store-badge" href="https://apps.microsoft.com/detail/9NXXXXXXXXXX" target="_blank" rel="noopener" style="display:inline-block;margin-top:6px">
+          <img src="images/microsoft-store.png" alt="Available only on Microsoft Store" />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="faq">
+  <div class="container">
+    <div class="sec-head center">
+      <div class="eyebrow">Questions</div>
+      <h2>Good to know</h2>
+    </div>
+    <div class="faq">
+      <details class="qa"><summary>Is it a real hospital system, or a spreadsheet with a UI?</summary><p>It runs a full life cycle per patient — registration, admission, clinical encounters, lab and imaging orders, ward placement, billing, and pharmacy dispensing — plus procurement, inventory, POS sales, canteen, employees, scheduling and reporting. Every field change is stamped with the user, the time and the reason.</p></details>
+      <details class="qa"><summary>How do pharmacy and stock work?</summary><p>Medicines and supplies are batch-tracked where needed — each item carries its expiry date, costing is weighted average, and dispensing and issue follow FEFO (earliest expiry first, expired batches excluded). A GRV on a purchase order posts received stock straight into the right place by item type, and the POS terminal sells it as a walk-in sale.</p></details>
+      <details class="qa"><summary>Can it handle billing and partial payments?</summary><p>Yes. Each visit accumulates itemized charges into an invoice; you can record cash, card or insurance payments in part, track the running balance, and void with a full audit trail. Collections roll up into the daily revenue report.</p></details>
+      <details class="qa"><summary>Can several people use it at the same time?</summary><p>Yes. Staff PCs connect to the Host over your hospital network — the desktop app or a browser. One server process owns the single database and runs every query in order, so there is never a write conflict. A hospital of dozens of users is well within range.</p></details>
+      <details class="qa"><summary>Does it need the internet?</summary><p>No. Everything runs on your own network. The only time the internet matters is confirming the Microsoft Store licence occasionally; after that it runs offline for months at a time.</p></details>
+      <details class="qa"><summary>Where is my data stored?</summary><p>In one SQLite database file on the Host machine's disk, plus an uploads folder for photos and documents. It is never sent anywhere. You can back it up, restore it, or move it to another PC from inside the app.</p></details>
+      <details class="qa"><summary>How is it licensed?</summary><p>It's a paid Microsoft Store app with a 30-day free trial. The licence is tied to your Microsoft account; a copied install won't run on another machine. One purchase covers one server — staff PCs connect to it and need nothing of their own.</p></details>
+      <details class="qa"><summary>Can we brand it with our hospital?</summary><p>Yes. Upload your logo, set your hospital details and pick theme colours — it flows through the app and the printed reports.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="center">
+  <div class="container">
+    <h2>Ready to put your hospital on one system?</h2>
+    <p class="lead">Start the 30-day trial today. Your data starts — and stays — on your server.</p>
+    <div style="display:flex;justify-content:center;margin-top:18px">
+      <a class="store-badge" href="https://apps.microsoft.com/detail/9NXXXXXXXXXX" target="_blank" rel="noopener">
+        <img src="images/microsoft-store.png" alt="Available only on Microsoft Store" />
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <span class="brand">RRD Suite</span>
+    <span>© <span id="yr"></span> RRD Suite — Hospital Management System · by RamRam Dev</span>
+    <span>
+      <a href="https://apps.microsoft.com/detail/9NXXXXXXXXXX" target="_blank" rel="noopener">Microsoft Store</a> ·
+      <a href="https://monbutiong.github.io/privacy-policy/rrd-suite.html" target="_blank" rel="noopener">Privacy Policy</a>
+    </span>
+  </div>
+</footer>
+
+<div class="lb" id="lb"><button id="lbClose" aria-label="Close">×</button><img id="lbImg" src="" alt="" /></div>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // Mobile nav
+  var t = document.getElementById('navToggle'), nl = document.getElementById('navlinks');
+  t && t.addEventListener('click', function () { nl.classList.toggle('open'); });
+  nl && nl.addEventListener('click', function (e) { if (e.target.tagName === 'A') nl.classList.remove('open'); });
+
+  // Screenshot tabs
+  var tabs = document.getElementById('tabs'), figs = [].slice.call(document.querySelectorAll('#gallery figure'));
+  tabs && tabs.addEventListener('click', function (e) {
+    if (e.target.tagName !== 'BUTTON') return;
+    [].forEach.call(tabs.children, function (b) { b.classList.toggle('active', b === e.target); });
+    var cat = e.target.dataset.cat;
+    figs.forEach(function (f) { f.style.display = (cat === 'all' || f.dataset.cat === cat) ? '' : 'none'; });
+  });
+
+  // Lightbox
+  var lb = document.getElementById('lb'), lbImg = document.getElementById('lbImg');
+  function openLb(src) { lbImg.src = src; lb.classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function closeLb() { lb.classList.remove('open'); lbImg.src = ''; document.body.style.overflow = ''; }
+  document.addEventListener('click', function (e) {
+    var z = e.target.closest('[data-full]');
+    if (z) { openLb(z.getAttribute('data-full')); }
+  });
+  document.getElementById('lbClose').addEventListener('click', closeLb);
+  lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeLb(); });
+
+  // Scroll reveal
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in'); });
+  }
+</script>
+
+</body>
+</html>

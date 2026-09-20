@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RRD Suite: Fixed Assets Management System</title>
+<meta name="description" content="One register for everything your organization owns. Acquisition &amp; capitalization, QR/barcode tagging, custody to the named employee, location &amp; movement control, accurate monthly depreciation (book &amp; tax), repairs, physical verification and controlled disposal. Runs on your own office server — one-time purchase, on the Microsoft Store." />
+<link rel="icon" type="image/png" href="images/app-icon.png" />
+<meta property="og:title" content="RRD Suite: Fixed Assets Management System" />
+<meta property="og:description" content="Acquisition to disposal — registry, tagging, custody, movement, monthly depreciation, verification. Runs on your own server, no subscription." />
+<meta property="og:type" content="website" />
+<style>
+  :root {
+    --ink: #16192c;
+    --muted: #5b6472;
+    --line: #e6e8ef;
+    --accent: #3e60d5;
+    --accent-ink: #2b47ad;
+    --ok: #2f9e63;
+    --band: #10131f;
+    --band-2: #171b2b;
+    --band-text: #e9ecf6;
+    --soft: #f5f7fb;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    color: var(--ink);
+    background: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: var(--accent); text-decoration: none; }
+  h1, h2, h3 { line-height: 1.2; letter-spacing: -0.02em; margin: 0 0 .5em; }
+  h1 { font-size: clamp(2rem, 4.4vw, 3.1rem); }
+  h2 { font-size: clamp(1.55rem, 3vw, 2.2rem); }
+  h3 { font-size: 1.15rem; }
+  p { margin: 0 0 1em; }
+  .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+  .eyebrow { text-transform: uppercase; letter-spacing: .12em; font-size: .72rem; font-weight: 700; color: var(--accent); margin-bottom: .8em; }
+  .lead { font-size: 1.12rem; color: var(--muted); }
+  .center { text-align: center; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 22px; border-radius: 10px; font-weight: 650; font-size: .95rem;
+    border: 1px solid transparent; cursor: pointer; transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent-ink); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(62,96,213,.28); }
+  .btn-ghost { background: #fff; border-color: var(--line); color: var(--ink); }
+  .btn-ghost:hover { border-color: #c9cede; transform: translateY(-1px); }
+  .btn-lg { padding: 15px 28px; font-size: 1rem; }
+
+  .store-badge { display: inline-block; }
+  .store-badge img { height: 52px; width: auto; }
+  .store-badge:hover { filter: brightness(.97); }
+
+  /* Nav */
+  nav.top {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255,255,255,.9);
+    backdrop-filter: saturate(180%) blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav.top .container { display: flex; align-items: center; justify-content: space-between; height: 66px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -.02em; font-size: 1.05rem; color: var(--ink); }
+  .brand img { height: 30px; width: auto; }
+  .navlinks { display: flex; gap: 26px; align-items: center; }
+  .navlinks a { color: var(--muted); font-size: .92rem; font-weight: 550; }
+  .navlinks a:hover { color: var(--ink); }
+  .nav-cta { display: flex; align-items: center; gap: 14px; }
+  .nav-toggle { display: none; background: none; border: 0; cursor: pointer; padding: 8px; }
+  .nav-toggle span { display: block; width: 22px; height: 2px; background: var(--ink); margin: 4px 0; border-radius: 2px; }
+
+  /* Hero */
+  .hero { padding: 68px 0 40px; background: radial-gradient(1100px 500px at 70% -10%, #eef2ff 0%, #fff 60%); }
+  .hero .container { display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px; align-items: center; }
+  .hero h1 span { color: var(--accent); }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-top: 6px; }
+  .hero-note { margin-top: 18px; font-size: .85rem; color: var(--muted); }
+  .hero-shot { border-radius: var(--radius); border: 1px solid var(--line); box-shadow: 0 30px 70px -30px rgba(16,25,60,.4); overflow: hidden; }
+  .hero-shot img { display: block; }
+
+  .kpis { display: flex; flex-wrap: wrap; gap: 30px; margin-top: 30px; }
+  .kpi b { display: block; font-size: 1.5rem; letter-spacing: -.02em; }
+  .kpi span { font-size: .82rem; color: var(--muted); }
+
+  /* Trust strip */
+  .strip { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--soft); }
+  .strip .container { display: flex; flex-wrap: wrap; gap: 12px 34px; padding: 18px 24px; align-items: center; justify-content: center; }
+  .strip span { font-size: .86rem; color: var(--muted); display: inline-flex; align-items: center; gap: 8px; }
+  .strip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ok); }
+
+  section { padding: 72px 0; }
+  section.alt { background: var(--soft); }
+  .sec-head { max-width: 720px; margin: 0 auto 44px; }
+  .center .sec-head { margin-inline: auto; }
+
+  /* Feature grid */
+  .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .feature { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; transition: transform .14s ease, box-shadow .14s ease; }
+  .feature:hover { transform: translateY(-3px); box-shadow: 0 16px 40px -22px rgba(16,25,60,.35); }
+  .feature .ic { width: 40px; height: 40px; border-radius: 10px; background: #eef2ff; color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 14px; }
+  .feature h3 { margin-bottom: .3em; }
+  .feature p { font-size: .92rem; color: var(--muted); margin: 0; }
+
+  /* Alternating feature rows with screenshots */
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 52px; align-items: center; }
+  .row + .row { margin-top: 72px; }
+  .row.flip .txt { order: 2; }
+  .row .shot { border-radius: var(--radius); border: 1px solid var(--line); box-shadow: 0 24px 60px -32px rgba(16,25,60,.4); overflow: hidden; cursor: zoom-in; }
+  .row ul { margin: 0; padding-left: 1.1em; color: var(--muted); font-size: .95rem; }
+  .row ul li { margin-bottom: .4em; }
+
+  /* Screenshot gallery */
+  .tabs { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 28px; }
+  .tab { padding: 8px 16px; border-radius: 999px; border: 1px solid var(--line); background: #fff; font-size: .86rem; font-weight: 600; color: var(--muted); cursor: pointer; }
+  .tab.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .gallery figure { margin: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; cursor: zoom-in; background: #fff; transition: transform .14s ease; }
+  .gallery figure:hover { transform: translateY(-3px); }
+  .gallery figcaption { font-size: .82rem; color: var(--muted); padding: 10px 14px; border-top: 1px solid var(--line); }
+
+  /* How it runs */
+  .modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .mode { border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; background: #fff; }
+  .mode h3 { display: flex; align-items: center; gap: 8px; }
+  .mode .tag { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; background: #eef2ff; color: var(--accent); padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+  .mode p { font-size: .92rem; color: var(--muted); margin: 0; }
+
+  /* Data band */
+  .band { background: var(--band); color: var(--band-text); }
+  .band h2 { color: #fff; }
+  .band .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; margin-top: 34px; }
+  .band .card { background: var(--band-2); border: 1px solid rgba(255,255,255,.08); border-radius: var(--radius); padding: 24px; }
+  .band .card h3 { color: #fff; }
+  .band .card p { color: #aeb6cc; font-size: .92rem; margin: 0; }
+
+  /* Pricing */
+  .price-wrap { display: flex; justify-content: center; }
+  .price {
+    max-width: 460px; width: 100%; border: 1px solid var(--line); border-radius: 18px; padding: 34px; text-align: center;
+    box-shadow: 0 30px 70px -40px rgba(16,25,60,.4);
+  }
+  .price .amount { font-size: 2.6rem; font-weight: 800; letter-spacing: -.03em; }
+  .price .amount small { font-size: 1rem; font-weight: 600; color: var(--muted); }
+  .price ul { list-style: none; margin: 22px 0; padding: 0; text-align: left; }
+  .price ul li { padding: 9px 0; border-bottom: 1px dashed var(--line); font-size: .93rem; display: flex; gap: 10px; }
+  .price ul li::before { content: "✓"; color: var(--ok); font-weight: 800; }
+  .price ul li:last-child { border-bottom: 0; }
+
+  /* FAQ */
+  .faq { max-width: 780px; margin: 0 auto; }
+  .qa { border-bottom: 1px solid var(--line); }
+  .qa summary { cursor: pointer; padding: 18px 0; font-weight: 650; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+  .qa summary::-webkit-details-marker { display: none; }
+  .qa summary::after { content: "+"; color: var(--accent); font-weight: 800; }
+  .qa[open] summary::after { content: "–"; }
+  .qa p { color: var(--muted); font-size: .95rem; padding-bottom: 18px; margin: 0; }
+
+  footer { background: var(--band); color: #9aa3bd; padding: 44px 0; font-size: .88rem; }
+  footer .container { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; justify-content: space-between; }
+  footer a { color: #c7cfe6; }
+  footer .brand { color: #fff; }
+
+  /* Lightbox */
+  .lb { position: fixed; inset: 0; background: rgba(8,10,20,.9); display: none; align-items: center; justify-content: center; z-index: 200; padding: 30px; }
+  .lb.open { display: flex; }
+  .lb img { max-width: 94vw; max-height: 90vh; border-radius: 10px; box-shadow: 0 30px 80px rgba(0,0,0,.5); }
+  .lb button { position: absolute; top: 18px; right: 22px; background: none; border: 0; color: #fff; font-size: 34px; cursor: pointer; line-height: 1; }
+
+  .reveal { opacity: 0; transform: translateY(14px); transition: opacity .55s ease, transform .55s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+  @media (max-width: 900px) {
+    .navlinks { display: none; }
+    .nav-toggle { display: block; }
+    .navlinks.open { display: flex; position: absolute; top: 66px; left: 0; right: 0; background: #fff; flex-direction: column; padding: 14px 24px 20px; border-bottom: 1px solid var(--line); gap: 4px; }
+    .navlinks.open a { padding: 10px 0; }
+    .hero .container, .row, .row.flip .txt { grid-template-columns: 1fr; order: 0; }
+    .features, .modes, .band .grid { grid-template-columns: 1fr; }
+    .gallery { grid-template-columns: repeat(2, 1fr); }
+    .row .shot { order: 2; }
+    nav.top .nav-cta .store-badge { display: none; }
+    .strip .container { justify-content: flex-start; }
+  }
+  @media (max-width: 620px) {
+    .gallery { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 460px) {
+    .store-badge img { height: 44px; }
+    .kpis { gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="container">
+    <a class="brand" href="#top"><img src="images/app-icon.png" alt="" /> RRD Suite</a>
+    <div class="navlinks" id="navlinks">
+      <a href="#features">Features</a>
+      <a href="#screens">Screenshots</a>
+      <a href="#run">How it runs</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-cta">
+      <a class="store-badge" href="https://apps.microsoft.com/detail/9NXXXXXXXXXX" target="_blank" rel="noopener" aria-label="Get RRD Suite on the Microsoft Store">
+        <img src="images/microsoft-store.png" alt="Available only on Microsoft Store" />
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="container">
+    <div class="reveal in">
+      <div class="eyebrow">Fixed Asset Management</div>
+      <h1>One register for everything your <span>organization owns.</span></h1>
+      <p class="lead">
+        RRD Suite is a complete Fixed Assets Management System — acquisition and capitalization, QR / barcode / RFID
+        tagging, custody to the named employee, location and movement control, accurate monthly depreciation on a book
+        and a tax basis, repairs, physical verification and controlled disposal. It installs on a PC in your office.
+        No monthly fee.
+      </p>
+      <div class="hero-actions">
+        <a class="store-badge" href="https://apps.microsoft.com/detail/9NXXXXXXXXXX" target="_blank" rel="noopener">
+          <img src="images/microsoft-store.png" alt="Available only on Microsoft Store" />
+        </a>
+        <a class="btn btn-ghost btn-lg" href="#screens">See it in action</a>
+      </div>
+      <p class="hero-note">One-time purchase · 30-day free trial · your data stays on your server</p>
+      <div class="kpis">
+        <div class="kpi"><b>Book + Tax</b><span>parallel depreciation schedules</span></div>
+        <div class="kpi"><b>1 file</b><span>SQLite — no server to babysit</span></div>
+        <div class="kpi"><b>0</b><span>subscription, ever</span></div>
+      </div>
+    </div>
+    <div class="reveal in">
+      <div class="hero-shot"><img src="images/screenshots/dashboard.png" alt="RRD Suite fixed-asset dashboard" /></div>
+    </div>
+  </div>
+</header>
+
+<div class="strip">
+  <div class="container">
+    <span><i class="dot"></i> Acquisition to disposal in one system</span>
+    <span><i class="dot"></i> QR / barcode / RFID tagging</span>
+    <span><i class="dot"></i> Custody to the named employee</span>
+    <span><i class="dot"></i> Straight-line to units-of-production</span>
+    <span><i class="dot"></i> Works offline · multi-user over your LAN</span>
+  </div>
+</div>
+
+<section id="features">
+  <div class="container center">
+    <div class="sec-head">
+      <div class="eyebrow">The whole asset life cycle</div>
+      <h2>From purchase order to write-off</h2>
+      <p class="lead">Modules are role-gated — each person only sees what they're allowed to.</p>
+    </div>
+    <div class="features">
+      <div class="feature reveal"><div class="ic">📇</div><h3>Asset Register</h3><p>One asset, one permanent number, one record. A tabbed profile with financials, the custody chain, movement history, its tag and a field-level audit trail of every change and why.</p></div>
+      <div class="feature reveal"><div class="ic">🧾</div><h3>Acquisition &amp; Capitalization</h3><p>Build the capitalized cost line by line — price, freight, duties, installation, testing — then capitalize into one or many assets. Construction-in-progress projects accrue until they're commissioned.</p></div>
+      <div class="feature reveal"><div class="ic">🏷️</div><h3>Tagging &amp; Identification</h3><p>Issue QR, barcode or RFID tags, print a tag sheet, mark them affixed. A scan console identifies any asset — who holds it, where it should be — and flags a mismatch.</p></div>
+      <div class="feature reveal"><div class="ic">👤</div><h3>Custody &amp; Assignment</h3><p>Every asset is someone's responsibility. Capture the acknowledgement and condition at hand-over, process returns and transfers, and authorise home-use and off-site permits.</p></div>
+      <div class="feature reveal"><div class="ic">🗺️</div><h3>Location &amp; Movement</h3><p>A site → building → floor → room tree. Moving an asset is request → approve → execute → receive, with an immutable history. Idle assets surface on their own.</p></div>
+      <div class="feature reveal"><div class="ic">📉</div><h3>Depreciation Engine</h3><p>Straight-line, declining balance, double-declining, sum-of-years and units-of-production. Book and tax schedules in parallel. Each month is calculated, validated and posted — then locked.</p></div>
+      <div class="feature reveal"><div class="ic">🔧</div><h3>Repairs &amp; Betterments</h3><p>Log every repair with its cost. Routine work is an expense that builds the upkeep history; a betterment is capitalised onto the asset and lifts depreciation over the remaining life.</p></div>
+      <div class="feature reveal"><div class="ic">✅</div><h3>Physical Verification</h3><p>Run a count against the register — found, moved, needs repair or missing, each with a cause and a sign-off. Closing the count stamps "last verified" and routes the exceptions.</p></div>
+      <div class="feature reveal"><div class="ic">📊</div><h3>Reports &amp; Dashboard</h3><p>A month-by-month depreciation schedule with actuals and projections, a forecast to zero, the fixed-asset register, and a dashboard alert centre that watches everything that's slipping.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="container">
+
+    <div class="row reveal">
+      <div class="txt">
+        <div class="eyebrow">Depreciation</div>
+        <h2>Depreciation you can defend, month after month</h2>
+        <ul>
+          <li>Five methods — straight-line to units-of-production — per asset or from the class default</li>
+          <li>Book and tax runs in parallel; the run detail shows the deferred-tax difference</li>
+          <li>Each monthly run is calculated → validated → posted, then permanently locked</li>
+          <li>The Depreciation Schedule lays out every asset's whole year — posted months as actuals, the rest projected</li>
+        </ul>
+      </div>
+      <div class="shot" data-full="images/screenshots/depreciation-schedule.png"><img src="images/screenshots/depreciation-schedule.png" alt="Depreciation schedule" loading="lazy" /></div>
+    </div>
+
+    <div class="row flip reveal">
+      <div class="txt">
+        <div class="eyebrow">Verification</div>
+        <h2>Where the register meets reality</h2>
+        <ul>
+          <li>Count the whole register, or one location, class, custodian or department</li>
+          <li>The expected list is snapshotted; counters mark each asset OK, wrong-location, needs-repair or missing</li>
+          <li>Every variance closes with a cause code and a sign-off</li>
+          <li>"Needs repair" flips the asset to under-repair; "missing" enters the loss protocol</li>
+        </ul>
+      </div>
+      <div class="shot" data-full="images/screenshots/verification-detail.png"><img src="images/screenshots/verification-detail.png" alt="Physical count checklist" loading="lazy" /></div>
+    </div>
+
+    <div class="row reveal">
+      <div class="txt">
+        <div class="eyebrow">Custody &amp; Tagging</div>
+        <h2>Every asset accounted for — to a person</h2>
+        <ul>
+          <li>Assign to an employee or a department, with acknowledgement and condition notes</li>
+          <li>The employee asset ledger is the separation-clearance list</li>
+          <li>QR / barcode / RFID tags, a printable tag sheet and a scan console</li>
+          <li>Home-use and off-site permits with a return date and an overdue list</li>
+        </ul>
+      </div>
+      <div class="shot" data-full="images/screenshots/custody.png"><img src="images/screenshots/custody.png" alt="Custody assignments" loading="lazy" /></div>
+    </div>
+
+  </div>
+</section>
+
+<section id="screens">
+  <div class="container center">
+    <div class="sec-head">
+      <div class="eyebrow">Real screens, real data</div>
+      <h2>Take the tour</h2>
+      <p class="lead">Every screenshot below is the actual app running on the demo company. Click to enlarge.</p>
+    </div>
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-cat="all">All</button>
+      <button class="tab" data-cat="registry">Registry</button>
+      <button class="tab" data-cat="financial">Financial</button>
+      <button class="tab" data-cat="operations">Operations</button>
+      <button class="tab" data-cat="assurance">Assurance</button>
+    </div>
+    <div class="gallery" id="gallery">
+      <figure data-cat="registry" data-full="images/screenshots/dashboard.png"><img src="images/screenshots/dashboard.png" alt="Dashboard" loading="lazy" /><figcaption>Executive dashboard &amp; alert centre</figcaption></figure>
+      <figure data-cat="registry" data-full="images/screenshots/asset-register.png"><img src="images/screenshots/asset-register.png" alt="Asset register" loading="lazy" /><figcaption>The asset register</figcaption></figure>
+      <figure data-cat="registry" data-full="images/screenshots/asset-profile.png"><img src="images/screenshots/asset-profile.png" alt="Asset profile" loading="lazy" /><figcaption>An asset, end to end</figcaption></figure>
+      <figure data-cat="registry" data-full="images/screenshots/import-assets.png"><img src="images/screenshots/import-assets.png" alt="Import assets from Excel" loading="lazy" /><figcaption>Bulk import from Excel</figcaption></figure>
+      <figure data-cat="financial" data-full="images/screenshots/asset-classes.png"><img src="images/screenshots/asset-classes.png" alt="Asset classes" loading="lazy" /><figcaption>Asset classes &amp; accounting rules</figcaption></figure>
+      <figure data-cat="financial" data-full="images/screenshots/acquisitions.png"><img src="images/screenshots/acquisitions.png" alt="Capitalization" loading="lazy" /><figcaption>Cost build-up &amp; capitalization</figcaption></figure>
+      <figure data-cat="financial" data-full="images/screenshots/work-in-progress.png"><img src="images/screenshots/work-in-progress.png" alt="Construction in progress" loading="lazy" /><figcaption>Construction in progress</figcaption></figure>
+      <figure data-cat="financial" data-full="images/screenshots/depreciation-runs.png"><img src="images/screenshots/depreciation-runs.png" alt="Monthly depreciation runs" loading="lazy" /><figcaption>Monthly depreciation runs</figcaption></figure>
+      <figure data-cat="financial" data-full="images/screenshots/depreciation-schedule.png"><img src="images/screenshots/depreciation-schedule.png" alt="Depreciation schedule" loading="lazy" /><figcaption>Year-at-a-glance schedule</figcaption></figure>
+      <figure data-cat="financial" data-full="images/screenshots/forecast-schedule.png"><img src="images/screenshots/forecast-schedule.png" alt="Depreciation forecast" loading="lazy" /><figcaption>Forecast to zero</figcaption></figure>
+      <figure data-cat="financial" data-full="images/screenshots/asset-repairs-tab.png"><img src="images/screenshots/asset-repairs-tab.png" alt="Repairs on an asset" loading="lazy" /><figcaption>Repairs &amp; capitalised betterments</figcaption></figure>
+      <figure data-cat="operations" data-full="images/screenshots/tags.png"><img src="images/screenshots/tags.png" alt="Asset tags" loading="lazy" /><figcaption>Asset tags &amp; reconciliation</figcaption></figure>
+      <figure data-cat="operations" data-full="images/screenshots/custody.png"><img src="images/screenshots/custody.png" alt="Custody assignments" loading="lazy" /><figcaption>Custody assignments</figcaption></figure>
+      <figure data-cat="operations" data-full="images/screenshots/locations.png"><img src="images/screenshots/locations.png" alt="Location tree" loading="lazy" /><figcaption>Location tree</figcaption></figure>
+      <figure data-cat="operations" data-full="images/screenshots/movements.png"><img src="images/screenshots/movements.png" alt="Movements" loading="lazy" /><figcaption>Location &amp; movement control</figcaption></figure>
+      <figure data-cat="operations" data-full="images/screenshots/repairs.png"><img src="images/screenshots/repairs.png" alt="Repairs register" loading="lazy" /><figcaption>Repairs &amp; betterments register</figcaption></figure>
+      <figure data-cat="assurance" data-full="images/screenshots/verification.png"><img src="images/screenshots/verification.png" alt="Physical counts" loading="lazy" /><figcaption>Physical counts</figcaption></figure>
+      <figure data-cat="assurance" data-full="images/screenshots/verification-detail.png"><img src="images/screenshots/verification-detail.png" alt="Count checklist" loading="lazy" /><figcaption>The count checklist</figcaption></figure>
+      <figure data-cat="assurance" data-full="images/screenshots/report-asset-register.png"><img src="images/screenshots/report-asset-register.png" alt="Fixed asset register report" loading="lazy" /><figcaption>Fixed asset register report</figcaption></figure>
+      <figure data-cat="operations" data-full="images/screenshots/org-chart.png"><img src="images/screenshots/org-chart.png" alt="Organization chart" loading="lazy" /><figcaption>Organization &amp; custodians</figcaption></figure>
+      <figure data-cat="registry" data-full="images/screenshots/documentation.png"><img src="images/screenshots/documentation.png" alt="Built-in manuals" loading="lazy" /><figcaption>Built-in operator manual</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="run">
+  <div class="container center">
+    <div class="sec-head">
+      <div class="eyebrow">Deployment</div>
+      <h2>Install once. Everyone connects to it.</h2>
+      <p class="lead">One machine holds the database. Other PCs reach it over your office network — the desktop app, or just a browser.</p>
+    </div>
+    <div class="modes">
+      <div class="mode reveal">
+        <h3><span class="tag">Solo</span> Standalone</h3>
+        <p>One computer runs everything — the app and the database together. Perfect for a small office or to evaluate it.</p>
+      </div>
+      <div class="mode reveal">
+        <h3><span class="tag">Team</span> Host + Clients</h3>
+        <p>One PC is the Host. Staff PCs install the app in Client mode and point it at the Host's address. The Host owns the single database file.</p>
+      </div>
+      <div class="mode reveal">
+        <h3><span class="tag">No install</span> Web access</h3>
+        <p>Turn on browser access and staff open a link in Chrome or Edge — nothing to install on their machine. Keep it on your office network.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="container">
+    <div class="sec-head">
+      <div class="eyebrow" style="color:#8ea2ff">Ownership</div>
+      <h2>Your data never leaves your building</h2>
+      <p class="lead" style="color:#aeb6cc">
+        There is no cloud account, no vendor database, nothing phoning home with your asset register.
+        The whole system is one SQLite file on your own disk — back it up, move it, keep it.
+      </p>
+    </div>
+    <div class="grid">
+      <div class="card reveal"><h3>No subscription</h3><p>Buy it once on the Microsoft Store. It keeps working — the version you own runs for good.</p></div>
+      <div class="card reveal"><h3>Works offline</h3><p>An internet outage doesn't stop the monthly close. The server only needs your LAN.</p></div>
+      <div class="card reveal"><h3>Handles the whole office</h3><p>One process, one database connection, WAL mode — dozens of concurrent users with no write conflicts. Keep the file on local SSD.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="container center">
+    <div class="sec-head">
+      <div class="eyebrow">Pricing</div>
+      <h2>One price. One server. Yours.</h2>
+    </div>
+    <div class="price-wrap">
+      <div class="price reveal">
+        <div class="amount">One-time <small>/ per server</small></div>
+        <p class="lead" style="font-size:1rem">Try free for 30 days, then buy once from the Microsoft Store.</p>
+        <ul>
+          <li>Every module — registry, acquisition, tagging, custody, movement, depreciation, repairs, verification, reports</li>
+          <li>Unlimited assets and unlimited staff connecting over your network</li>
+          <li>Standalone, Host + Client, and browser access</li>
+          <li>The version you buy runs forever — no forced renewals</li>
+          <li>Delivered and licensed through the Microsoft Store</li>
+        </ul>
+        <a class="store-badge" href="https://apps.microsoft.com/detail/9NXXXXXXXXXX" target="_blank" rel="noopener" style="display:inline-block;margin-top:6px">
+          <img src="images/microsoft-store.png" alt="Available only on Microsoft Store" />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="faq">
+  <div class="container">
+    <div class="sec-head center">
+      <div class="eyebrow">Questions</div>
+      <h2>Good to know</h2>
+    </div>
+    <div class="faq">
+      <details class="qa"><summary>Is it a real fixed-asset system, or a spreadsheet with a UI?</summary><p>It runs a proper depreciation engine — five methods, book and tax bases, locked monthly runs — a full acquisition-to-disposal life cycle, tagging, custody, movement control and physical verification. Every field change is stamped with the user, the time and the reason.</p></details>
+      <details class="qa"><summary>Does it handle book and tax depreciation?</summary><p>Yes. Each period you post a book run and a tax run in parallel; the run detail shows the deferred-tax difference, and the schedule and forecast can be viewed on either basis. The fiscal-year start month is a setting.</p></details>
+      <details class="qa"><summary>Can we import our existing register?</summary><p>Yes. Download the Excel template, paste your assets into it — including opening accumulated depreciation for assets already in service — and the import checks every row and shows you the result before anything is saved.</p></details>
+      <details class="qa"><summary>Can several people use it at the same time?</summary><p>Yes. Staff PCs connect to the Host over your office network — the desktop app or a browser. One server process owns the single database and runs every query in order, so there is never a write conflict. A team of dozens is well within range.</p></details>
+      <details class="qa"><summary>Does it need the internet?</summary><p>No. Everything runs on your own network. The only time the internet matters is confirming the Microsoft Store licence occasionally; after that it runs offline for months at a time.</p></details>
+      <details class="qa"><summary>Where is my data stored?</summary><p>In one SQLite database file on the Host machine's disk, plus an uploads folder for photos and documents. It is never sent anywhere. You can back it up, restore it, or move it to another PC from inside the app.</p></details>
+      <details class="qa"><summary>How is it licensed?</summary><p>It's a paid Microsoft Store app with a 30-day free trial. The licence is tied to your Microsoft account; a copied install won't run on another machine. One purchase covers one server — staff PCs connect to it and need nothing of their own.</p></details>
+      <details class="qa"><summary>Can we brand it with our company?</summary><p>Yes. Upload your logo, set your company details and pick theme colours — it flows through the app and the printed reports.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="center">
+  <div class="container">
+    <h2>Ready to put your asset register in order?</h2>
+    <p class="lead">Start the 30-day trial today. Your data starts — and stays — on your server.</p>
+    <div style="display:flex;justify-content:center;margin-top:18px">
+      <a class="store-badge" href="https://apps.microsoft.com/detail/9NXXXXXXXXXX" target="_blank" rel="noopener">
+        <img src="images/microsoft-store.png" alt="Available only on Microsoft Store" />
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <span class="brand">RRD Suite</span>
+    <span>© <span id="yr"></span> RRD Suite — Fixed Assets Management System · by RamRam Dev</span>
+    <span>
+      <a href="https://apps.microsoft.com/detail/9NXXXXXXXXXX" target="_blank" rel="noopener">Microsoft Store</a> ·
+      <a href="https://monbutiong.github.io/privacy-policy/rrd-suite.html" target="_blank" rel="noopener">Privacy Policy</a>
+    </span>
+  </div>
+</footer>
+
+<div class="lb" id="lb"><button id="lbClose" aria-label="Close">×</button><img id="lbImg" src="" alt="" /></div>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // Mobile nav
+  var t = document.getElementById('navToggle'), nl = document.getElementById('navlinks');
+  t && t.addEventListener('click', function () { nl.classList.toggle('open'); });
+  nl && nl.addEventListener('click', function (e) { if (e.target.tagName === 'A') nl.classList.remove('open'); });
+
+  // Screenshot tabs
+  var tabs = document.getElementById('tabs'), figs = [].slice.call(document.querySelectorAll('#gallery figure'));
+  tabs && tabs.addEventListener('click', function (e) {
+    if (e.target.tagName !== 'BUTTON') return;
+    [].forEach.call(tabs.children, function (b) { b.classList.toggle('active', b === e.target); });
+    var cat = e.target.dataset.cat;
+    figs.forEach(function (f) { f.style.display = (cat === 'all' || f.dataset.cat === cat) ? '' : 'none'; });
+  });
+
+  // Lightbox
+  var lb = document.getElementById('lb'), lbImg = document.getElementById('lbImg');
+  function openLb(src) { lbImg.src = src; lb.classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function closeLb() { lb.classList.remove('open'); lbImg.src = ''; document.body.style.overflow = ''; }
+  document.addEventListener('click', function (e) {
+    var z = e.target.closest('[data-full]');
+    if (z) { openLb(z.getAttribute('data-full')); }
+  });
+  document.getElementById('lbClose').addEventListener('click', closeLb);
+  lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeLb(); });
+
+  // Scroll reveal
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in'); });
+  }
+</script>
+
+</body>
+</html>
