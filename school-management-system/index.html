@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RRD Suite: School Management System</title>
+<meta name="description" content="Run a Philippine school — Kinder to College — from admission to alumni. Registrar and SF10, sectioning, conflict-free scheduling, DepEd grading with locks, a full LMS, cashier with controlled OR series, HR and payroll, library, clinic, canteen, transport and procurement, plus portals for parents, students, faculty and alumni. Runs on your own school server — one-time purchase." />
+<link rel="icon" type="image/png" href="images/app-icon.png" />
+<meta property="og:title" content="RRD Suite: School Management System" />
+<meta property="og:description" content="Admission to alumni in one system — registrar, grades, LMS, cashier, HR and campus services, with parent, student, faculty and alumni portals. Runs on your own server, no subscription." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="images/screenshots/dashboard.png" />
+<style>
+  :root {
+    --ink: #16192c;
+    --muted: #5b6472;
+    --line: #e6e8ef;
+    --accent: #5b4fd6;
+    --accent-ink: #463bb8;
+    --accent-soft: #efedff;
+    --ok: #2f9e63;
+    --warn: #c98a0c;
+    --band: #10131f;
+    --band-2: #171b2b;
+    --band-text: #e9ecf6;
+    --soft: #f5f7fb;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    color: var(--ink);
+    background: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: var(--accent); text-decoration: none; }
+  h1, h2, h3 { line-height: 1.2; letter-spacing: -0.02em; margin: 0 0 .5em; }
+  h1 { font-size: clamp(2rem, 4.4vw, 3.1rem); }
+  h2 { font-size: clamp(1.55rem, 3vw, 2.2rem); }
+  h3 { font-size: 1.12rem; }
+  p { margin: 0 0 1em; }
+  code { background: var(--soft); border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; font-size: .85em; }
+  .container { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+  .eyebrow { text-transform: uppercase; letter-spacing: .12em; font-size: .72rem; font-weight: 700; color: var(--accent); margin-bottom: .8em; }
+  .lead { font-size: 1.12rem; color: var(--muted); }
+  .center { text-align: center; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 22px; border-radius: 10px; font-weight: 650; font-size: .95rem;
+    border: 1px solid transparent; cursor: pointer; transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent-ink); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(91,79,214,.28); }
+  .btn-ghost { background: #fff; border-color: var(--line); color: var(--ink); }
+  .btn-ghost:hover { border-color: #c9cede; transform: translateY(-1px); }
+  .btn-lg { padding: 15px 28px; font-size: 1rem; }
+
+  .store-badge { display: inline-block; }
+  .store-badge img { height: 52px; width: auto; }
+  .store-badge:hover { filter: brightness(.97); }
+  nav.top .store-badge img { height: 36px; }
+
+  /* Nav */
+  nav.top {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255,255,255,.9);
+    backdrop-filter: saturate(180%) blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav.top .container { display: flex; align-items: center; justify-content: space-between; height: 66px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -.02em; font-size: 1.05rem; color: var(--ink); }
+  .brand img { height: 30px; width: auto; }
+  .navlinks { display: flex; gap: 18px; margin: 0 16px; align-items: center; white-space: nowrap; }
+  .brand { white-space: nowrap; }
+  section[id], [id="featured"] { scroll-margin-top: 80px; }
+  .navlinks a { color: var(--muted); font-size: .92rem; font-weight: 550; }
+  .navlinks a:hover { color: var(--ink); }
+  .nav-cta { display: flex; align-items: center; gap: 14px; }
+  .nav-toggle { display: none; background: none; border: 0; cursor: pointer; padding: 8px; }
+  .nav-toggle span { display: block; width: 22px; height: 2px; background: var(--ink); margin: 4px 0; border-radius: 2px; }
+
+  /* Hero */
+  .hero { padding: 64px 0 40px; background: radial-gradient(1100px 500px at 70% -10%, var(--accent-soft) 0%, #fff 60%); }
+  .hero .container { display: grid; grid-template-columns: 1fr 1.1fr; gap: 48px; align-items: center; }
+  .hero h1 span { color: var(--accent); }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-top: 6px; }
+  .hero-note { margin-top: 18px; font-size: .85rem; color: var(--muted); }
+  .hero-shot { border-radius: var(--radius); border: 1px solid var(--line); box-shadow: 0 30px 70px -30px rgba(16,25,60,.4); overflow: hidden; cursor: zoom-in; }
+
+  .kpis { display: flex; flex-wrap: wrap; gap: 30px; margin-top: 30px; }
+  .kpi b { display: block; font-size: 1.5rem; letter-spacing: -.02em; }
+  .kpi span { font-size: .82rem; color: var(--muted); }
+
+  /* Trust strip */
+  .strip { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--soft); }
+  .strip .container { display: flex; flex-wrap: wrap; gap: 12px 34px; padding: 18px 24px; align-items: center; justify-content: center; }
+  .strip span { font-size: .86rem; color: var(--muted); display: inline-flex; align-items: center; gap: 8px; }
+  .strip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ok); }
+
+  section { padding: 72px 0; }
+  section.alt { background: var(--soft); }
+  .sec-head { max-width: 760px; margin: 0 auto 44px; }
+
+  /* Accounts */
+  .accounts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; text-align: left; }
+  .acct { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; transition: transform .14s ease, box-shadow .14s ease; }
+  .acct:hover { transform: translateY(-3px); box-shadow: 0 16px 40px -22px rgba(16,25,60,.35); }
+  .acct .thumb { border-bottom: 1px solid var(--line); cursor: zoom-in; aspect-ratio: 16 / 10; overflow: hidden; }
+  .acct .thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top left; }
+  .acct .body { padding: 20px 22px 22px; display: flex; flex-direction: column; flex: 1; }
+  .acct h3 { display: flex; align-items: center; gap: 10px; margin-bottom: .35em; }
+  .acct .who { font-size: .8rem; color: var(--muted); margin-bottom: .7em; }
+  .acct ul { margin: 0 0 14px; padding-left: 1.1em; font-size: .9rem; color: var(--muted); }
+  .acct ul li { margin-bottom: .3em; }
+  .acct .login { margin-top: auto; font-size: .8rem; color: var(--muted); }
+  .pill { display: inline-block; font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; padding: 3px 8px; border-radius: 6px; background: var(--accent-soft); color: var(--accent); }
+  .pill.green { background: #e7f6ee; color: var(--ok); }
+  .pill.amber { background: #fdf3de; color: var(--warn); }
+
+  .staff-roles { margin-top: 34px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; text-align: left; }
+  .role { border: 1px solid var(--line); border-radius: 12px; background: #fff; padding: 14px 16px; font-size: .86rem; }
+  .role b { display: block; font-size: .92rem; margin-bottom: 2px; }
+  .role span { color: var(--muted); }
+  .role code { font-size: .78rem; }
+
+  /* Featured features */
+  .feat-head { max-width: 760px; margin: 80px auto 26px; }
+  .featured .acct .body h3 { font-size: 1.05rem; flex-wrap: wrap; }
+  .featured .acct[hidden] { display: none; }
+  /* crop the app's sidebar so the thumbnail zooms in on the feature itself */
+  .featured .thumb img { width: 122%; max-width: none; height: auto; margin-left: -17%; object-fit: initial; }
+  .featured .thumb.full img { width: 100%; margin-left: 0; height: 100%; object-fit: cover; }
+
+  /* Module grid */
+  .mod-groups { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; text-align: left; }
+  .mod-group { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+  .mod-group h3 { display: flex; align-items: center; gap: 10px; }
+  .mod-group .ic { width: 36px; height: 36px; border-radius: 10px; background: var(--accent-soft); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .mods { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 10px; }
+  .mods li { font-size: .9rem; color: var(--muted); padding-left: 52px; position: relative; }
+  .mods li b { color: var(--ink); font-weight: 650; }
+  .mods li::before { content: attr(data-code); position: absolute; left: 0; top: 2px; font-size: .68rem; font-weight: 700; color: var(--accent); background: var(--accent-soft); border-radius: 5px; padding: 1px 6px; }
+
+  /* Alternating feature rows with screenshots */
+  .row { display: grid; grid-template-columns: 1fr 1.15fr; gap: 52px; align-items: center; }
+  .row + .row { margin-top: 76px; }
+  .row.flip .txt { order: 2; }
+  .row .shot { border-radius: var(--radius); border: 1px solid var(--line); box-shadow: 0 24px 60px -32px rgba(16,25,60,.4); overflow: hidden; cursor: zoom-in; }
+  .row ul { margin: 0; padding-left: 1.1em; color: var(--muted); font-size: .95rem; }
+  .row ul li { margin-bottom: .45em; }
+
+  /* Sample school */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 10px; }
+  .stat { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; text-align: left; }
+  .stat b { display: block; font-size: 1.7rem; letter-spacing: -.02em; }
+  .stat span { font-size: .85rem; color: var(--muted); }
+
+  /* Screenshot gallery */
+  .tabs { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 28px; }
+  .tab { padding: 8px 16px; border-radius: 999px; border: 1px solid var(--line); background: #fff; font-size: .86rem; font-weight: 600; color: var(--muted); cursor: pointer; }
+  .tab.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .gallery figure { margin: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; cursor: zoom-in; background: #fff; transition: transform .14s ease; }
+  .gallery figure:hover { transform: translateY(-3px); }
+  .gallery figure img { aspect-ratio: 16 / 10; object-fit: cover; object-position: top left; width: 100%; }
+  .gallery figcaption { font-size: .82rem; color: var(--muted); padding: 10px 14px; border-top: 1px solid var(--line); text-align: left; }
+
+  /* How it runs */
+  .modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; text-align: left; }
+  .mode { border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; background: #fff; }
+  .mode h3 { display: flex; align-items: center; gap: 8px; }
+  .mode p { font-size: .92rem; color: var(--muted); margin: 0; }
+
+  /* Data band */
+  .band { background: var(--band); color: var(--band-text); }
+  .band h2 { color: #fff; }
+  .band .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; margin-top: 34px; }
+  .band .card { background: var(--band-2); border: 1px solid rgba(255,255,255,.08); border-radius: var(--radius); padding: 24px; }
+  .band .card h3 { color: #fff; }
+  .band .card p { color: #aeb6cc; font-size: .92rem; margin: 0; }
+
+  /* Pricing */
+  .price-wrap { display: flex; justify-content: center; }
+  .price {
+    max-width: 480px; width: 100%; border: 1px solid var(--line); border-radius: 18px; padding: 34px; text-align: center;
+    box-shadow: 0 30px 70px -40px rgba(16,25,60,.4);
+  }
+  .price .amount { font-size: 2.6rem; font-weight: 800; letter-spacing: -.03em; }
+  .price .amount small { font-size: 1rem; font-weight: 600; color: var(--muted); }
+  .price ul { list-style: none; margin: 22px 0; padding: 0; text-align: left; }
+  .price ul li { padding: 9px 0; border-bottom: 1px dashed var(--line); font-size: .93rem; display: flex; gap: 10px; }
+  .price ul li::before { content: "✓"; color: var(--ok); font-weight: 800; }
+  .price ul li:last-child { border-bottom: 0; }
+
+  /* FAQ */
+  .faq { max-width: 800px; margin: 0 auto; }
+  .qa { border-bottom: 1px solid var(--line); }
+  .qa summary { cursor: pointer; padding: 18px 0; font-weight: 650; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+  .qa summary::-webkit-details-marker { display: none; }
+  .qa summary::after { content: "+"; color: var(--accent); font-weight: 800; }
+  .qa[open] summary::after { content: "–"; }
+  .qa p { color: var(--muted); font-size: .95rem; padding-bottom: 18px; margin: 0; }
+
+  footer { background: var(--band); color: #9aa3bd; padding: 44px 0; font-size: .88rem; }
+  footer .container { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; justify-content: space-between; }
+  footer a { color: #c7cfe6; }
+  footer .brand { color: #fff; }
+
+  /* Lightbox */
+  .lb { position: fixed; inset: 0; background: rgba(8,10,20,.9); display: none; align-items: center; justify-content: center; z-index: 200; padding: 30px; }
+  .lb.open { display: flex; }
+  .lb img { max-width: 94vw; max-height: 90vh; border-radius: 10px; box-shadow: 0 30px 80px rgba(0,0,0,.5); }
+  .lb button { position: absolute; top: 18px; right: 22px; background: none; border: 0; color: #fff; font-size: 34px; cursor: pointer; line-height: 1; }
+
+  .reveal { opacity: 0; transform: translateY(14px); transition: opacity .55s ease, transform .55s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+  @media (max-width: 1100px) {
+    nav.top .nav-cta .store-badge { display: none; }
+  }
+  @media (max-width: 1000px) {
+    .accounts { grid-template-columns: repeat(2, 1fr); }
+    .staff-roles { grid-template-columns: repeat(2, 1fr); }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 900px) {
+    .navlinks { display: none; }
+    .nav-toggle { display: block; }
+    .navlinks.open { display: flex; position: absolute; top: 66px; left: 0; right: 0; background: #fff; flex-direction: column; padding: 14px 24px 20px; border-bottom: 1px solid var(--line); gap: 4px; }
+    .navlinks.open a { padding: 10px 0; }
+    .hero .container, .row { grid-template-columns: 1fr; }
+    .row.flip .txt { order: 0; }
+    .mod-groups, .modes, .band .grid { grid-template-columns: 1fr; }
+    .gallery { grid-template-columns: repeat(2, 1fr); }
+    nav.top .nav-cta .store-badge { display: none; }
+    .strip .container { justify-content: flex-start; }
+  }
+  @media (max-width: 620px) {
+    .gallery, .accounts, .staff-roles { grid-template-columns: 1fr; }
+    .container { padding: 0 16px; }
+  }
+  @media (max-width: 460px) {
+    .store-badge img { height: 44px; }
+    .kpis { gap: 16px; }
+    .stats { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="container">
+    <a class="brand" href="#top"><img src="images/app-icon.png" alt="" /> RRD Suite</a>
+    <div class="navlinks" id="navlinks">
+      <a href="#accounts">Accounts</a>
+      <a href="#featured">Featured</a>
+      <a href="#modules">Modules</a>
+      <a href="#highlights">Highlights</a>
+      <a href="#screens">Screenshots</a>
+      <a href="#run">How it runs</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-cta">
+      <a class="store-badge" href="https://apps.microsoft.com/detail/9NXXXXXXXXXX" target="_blank" rel="noopener" aria-label="Get RRD Suite on the Microsoft Store">
+        <img src="images/microsoft-store.png" alt="Available only on Microsoft Store" />
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="container">
+    <div class="reveal in">
+      <div class="eyebrow">School Management System · Kinder to College</div>
+      <h1>Run the whole school — <span>admission to alumni.</span></h1>
+      <p class="lead">
+        RRD Suite runs a Philippine school in one system: registrar and SF10, sectioning, conflict-free scheduling,
+        DepEd grading with locks and audited changes, a full learning management system, the cashier window,
+        HR and payroll, and every campus service — with portals for parents, students, faculty and alumni.
+        It installs on a PC in your school. No monthly fee.
+      </p>
+      <div class="hero-actions">
+        <a class="store-badge" href="https://apps.microsoft.com/detail/9NXXXXXXXXXX" target="_blank" rel="noopener">
+          <img src="images/microsoft-store.png" alt="Available only on Microsoft Store" />
+        </a>
+        <a class="btn btn-ghost btn-lg" href="#accounts">Meet every account</a>
+      </div>
+      <p class="hero-note">One-time purchase · sample school included · your learners' data stays on your server</p>
+      <div class="kpis">
+        <div class="kpi"><b>28</b><span>modules, one database</span></div>
+        <div class="kpi"><b>18</b><span>ready-made roles</span></div>
+        <div class="kpi"><b>4</b><span>portals: parent · student · faculty · alumni</span></div>
+        <div class="kpi"><b>₱0</b><span>subscription, ever</span></div>
+      </div>
+    </div>
+    <div class="reveal in">
+      <div class="hero-shot" data-full="images/screenshots/dashboard.png"><img src="images/screenshots/dashboard.png" alt="School dashboard: 801 enrolled learners, 95.6% attendance today, ₱8.1M collected this school year" /></div>
+    </div>
+  </div>
+</header>
+
+<div class="strip">
+  <div class="container">
+    <span><i class="dot"></i> DepEd K-12 transmutation &amp; CHED college scale</span>
+    <span><i class="dot"></i> Same-day absence SMS to guardians</span>
+    <span><i class="dot"></i> Gap-free OR series</span>
+    <span><i class="dot"></i> Custody-aware parent portal</span>
+    <span><i class="dot"></i> Works offline · multi-user over your LAN</span>
+  </div>
+</div>
+
+<!-- ============================================================== ACCOUNTS -->
+<section id="accounts">
+  <div class="container center">
+    <div class="sec-head">
+      <div class="eyebrow">One login, the right home</div>
+      <h2>Every account gets its own workspace</h2>
+      <p class="lead">Sign in and you land where your job starts: the principal on the dashboard, a teacher on today's classes, a parent on their children. Each person only sees what their role allows — and a parent only ever sees their own children.</p>
+    </div>
+
+    <div class="accounts">
+      <div class="acct reveal">
+        <div class="thumb" data-full="images/screenshots/oversight.png"><img src="images/screenshots/oversight.png" alt="Oversight dashboard" loading="lazy" /></div>
+        <div class="body">
+          <h3>School Director <span class="pill">Staff</span></h3>
+          <div class="who">Directors, principals and deans</div>
+          <ul>
+            <li>School dashboard: enrolment, attendance today, collections vs. receivables</li>
+            <li>Oversight across academics, finance, HR and operations</li>
+            <li>Late encoders, at-risk learners, approvals waiting on you</li>
+          </ul>
+          <div class="login">Demo login: <code>director.demo</code> · <code>principal.demo</code></div>
+        </div>
+      </div>
+
+      <div class="acct reveal">
+        <div class="thumb" data-full="images/screenshots/learner-profile.png"><img src="images/screenshots/learner-profile.png" alt="Learner record" loading="lazy" /></div>
+        <div class="body">
+          <h3>Registrar <span class="pill">Staff</span></h3>
+          <div class="who">Registrar and admissions office</div>
+          <ul>
+            <li>Applicants, slot board, reservations and waitlists</li>
+            <li>Lifetime learner record, guardians with custody flags, SF10</li>
+            <li>Document desk gated by clearance; LIS / EBEIS exports</li>
+          </ul>
+          <div class="login">Demo login: <code>registrar.demo</code></div>
+        </div>
+      </div>
+
+      <div class="acct reveal">
+        <div class="thumb" data-full="images/screenshots/faculty-portal.png"><img src="images/screenshots/faculty-portal.png" alt="Faculty portal" loading="lazy" /></div>
+        <div class="body">
+          <h3>Teacher / Adviser <span class="pill green">Faculty portal</span></h3>
+          <div class="who">Teaching staff — scope is their own classes only</div>
+          <ul>
+            <li>Today's classes, advisory, encoding-window status</li>
+            <li>Attendance by cut-off, grade matrix, learning-path builder</li>
+            <li>Leave, payslips, substitute inbox, incident reports</li>
+          </ul>
+          <div class="login">Demo login: <code>teacher.demo</code></div>
+        </div>
+      </div>
+
+      <div class="acct reveal">
+        <div class="thumb" data-full="images/screenshots/parent-portal.png"><img src="images/screenshots/parent-portal.png" alt="Parent portal" loading="lazy" /></div>
+        <div class="body">
+          <h3>Parent / Guardian <span class="pill green">Parent portal</span></h3>
+          <div class="who">Verified guardians — one switcher for all their children</div>
+          <ul>
+            <li>Released grades, report cards and attendance history</li>
+            <li>Live statement of account and payment channels</li>
+            <li>Permission slips, PTC booking, clinic notes, notices</li>
+          </ul>
+          <div class="login">Demo login: <code>parent.demo</code></div>
+        </div>
+      </div>
+
+      <div class="acct reveal">
+        <div class="thumb" data-full="images/screenshots/student-portal.png"><img src="images/screenshots/student-portal.png" alt="Student portal" loading="lazy" /></div>
+        <div class="body">
+          <h3>Student <span class="pill green">Student portal</span></h3>
+          <div class="who">Every enrolled learner, K-12 and college</div>
+          <ul>
+            <li>Today's schedule, deadlines, learning-path progress</li>
+            <li>Courses, videos with resume, quizzes, assignments</li>
+            <li>Own grades, attendance, balance, library loans, clubs</li>
+          </ul>
+          <div class="login">Demo login: <code>student.demo</code> · college: <code>college.demo</code></div>
+        </div>
+      </div>
+
+      <div class="acct reveal">
+        <div class="thumb" data-full="images/screenshots/alumni-portal.png"><img src="images/screenshots/alumni-portal.png" alt="Alumni portal" loading="lazy" /></div>
+        <div class="body">
+          <h3>Alumni <span class="pill amber">Alumni portal</span></h3>
+          <div class="who">Graduates — converted automatically at the ceremony</div>
+          <ul>
+            <li>Profile and directory opt-in</li>
+            <li>Homecoming and alumni events with registration</li>
+            <li>Donations posted with an official receipt</li>
+          </ul>
+          <div class="login">Demo login: <code>alumni.demo</code></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="staff-roles">
+      <div class="role reveal"><b>Cashier / Finance</b><span>Cashier desk, OR printing, refunds, daily cash</span><br /><code>cashier.demo</code></div>
+      <div class="role reveal"><b>Academic Affairs</b><span>Curricula, scheduling, grading policy</span><br /><code>academic.demo</code></div>
+      <div class="role reveal"><b>Guidance</b><span>Discipline register, confidential referrals</span><br /><code>guidance.demo</code></div>
+      <div class="role reveal"><b>HR</b><span>201 files, leave, payroll, statutory reports</span><br /><code>hr.demo</code></div>
+      <div class="role reveal"><b>Librarian</b><span>Catalog, circulation desk, fines, clearance</span><br /><code>librarian.demo</code></div>
+      <div class="role reveal"><b>Clinic</b><span>Medical records, visits, emergency quick-view</span><br /><code>nurse.demo</code></div>
+      <div class="role reveal"><b>Store / Procurement</b><span>PR → PO → GRV → invoice, stock ledger</span><br /><code>store.demo</code></div>
+      <div class="role reveal"><b>IT Administrator</b><span>Devices, network, tickets, restore drills</span><br /><code>it.demo</code></div>
+    </div>
+    <p class="hero-note" style="margin-top:22px">Also seeded: Canteen, Transport and Lab Custodian roles. Every demo login uses the password <code>demo1234</code>.</p>
+
+    <!-- Featured features, from the seat of the person who uses them -->
+    <div class="feat-head reveal" id="featured">
+      <div class="eyebrow">Featured — see it from each seat</div>
+      <h2>What each account actually does in a day</h2>
+      <p class="lead">Real screens from the sample school. Filter by who's using it, then click a screen to enlarge.</p>
+    </div>
+    <div class="tabs" id="featTabs">
+      <button class="tab active" data-who="all">All</button>
+      <button class="tab" data-who="student">Student</button>
+      <button class="tab" data-who="teacher">Teacher</button>
+      <button class="tab" data-who="parent">Parent</button>
+      <button class="tab" data-who="staff">Office staff</button>
+    </div>
+    <div class="accounts featured" id="featGrid">
+      <div class="acct reveal" data-who="student">
+        <div class="thumb" data-full="images/screenshots/learning-path.png"><img src="images/screenshots/learning-path.png" alt="Student learning path with locked units" loading="lazy" /></div>
+        <div class="body">
+          <h3>Learning paths <span class="pill green">Student</span></h3>
+          <ul>
+            <li>A progress bar and a "Next" marker on the step to do now</li>
+            <li>Locked units say exactly why: "Pass Quiz 1 with 75+" or "Opens on Oct 11"</li>
+            <li>Videos resume where the student stopped</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acct reveal" data-who="student">
+        <div class="thumb" data-full="images/screenshots/quiz.png"><img src="images/screenshots/quiz.png" alt="Timed quiz" loading="lazy" /></div>
+        <div class="body">
+          <h3>Online quizzes <span class="pill green">Student</span></h3>
+          <ul>
+            <li>Timer that keeps counting on the server, not the browser</li>
+            <li>Questions shuffled per attempt if the teacher wants; scored instantly</li>
+            <li>The best score lands in the teacher's grade matrix by itself</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acct reveal" data-who="student">
+        <div class="thumb" data-full="images/screenshots/student-library.png"><img src="images/screenshots/student-library.png" alt="Student library loans and clubs" loading="lazy" /></div>
+        <div class="body">
+          <h3>Library &amp; clubs <span class="pill green">Student</span></h3>
+          <ul>
+            <li>Every book out, its copy number and due date</li>
+            <li>Returned and overdue items marked at a glance</li>
+            <li>Club memberships and officer roles for the year</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acct reveal" data-who="student">
+        <div class="thumb" data-full="images/screenshots/student-grades.png"><img src="images/screenshots/student-grades.png" alt="Student released grades" loading="lazy" /></div>
+        <div class="body">
+          <h3>My grades <span class="pill green">Student</span></h3>
+          <ul>
+            <li>Only grades the registrar has released — never a draft</li>
+            <li>Every subject, quarter by quarter</li>
+            <li>Report cards appear here once they're released</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acct reveal" data-who="teacher">
+        <div class="thumb" data-full="images/screenshots/grade-matrix.png"><img src="images/screenshots/grade-matrix.png" alt="Grade matrix" loading="lazy" /></div>
+        <div class="body">
+          <h3>Grading <span class="pill">Teacher</span></h3>
+          <ul>
+            <li>Written work, performance tasks and quarterly exam in one grid</li>
+            <li>Initial and transmuted grades update as you type</li>
+            <li>Locked when the window closes; changes need two approvals</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acct reveal" data-who="teacher">
+        <div class="thumb" data-full="images/screenshots/path-builder.png"><img src="images/screenshots/path-builder.png" alt="Learning path builder" loading="lazy" /></div>
+        <div class="body">
+          <h3>Building a course <span class="pill">Teacher</span></h3>
+          <ul>
+            <li>Drag units and activities into order</li>
+            <li>Set unlock rules: after the previous step, on a date, or on a passing score</li>
+            <li>"Preview as student" before publishing</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acct reveal" data-who="teacher">
+        <div class="thumb" data-full="images/screenshots/teacher-attendance.png"><img src="images/screenshots/teacher-attendance.png" alt="Attendance taking" loading="lazy" /></div>
+        <div class="body">
+          <h3>Attendance in a minute <span class="pill">Teacher</span></h3>
+          <ul>
+            <li>"All present", then tap the exceptions — P, L, A or E</li>
+            <li>Submit before the cut-off; late submissions are flagged</li>
+            <li>Guardians of absent learners are texted the same morning</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acct reveal" data-who="parent">
+        <div class="thumb full" data-full="images/screenshots/report-card.png"><img src="images/screenshots/report-card.png" alt="Report card" loading="lazy" /></div>
+        <div class="body">
+          <h3>Report cards <span class="pill green">Parent</span></h3>
+          <ul>
+            <li>Generated from locked grades only, with DepEd descriptors</li>
+            <li>Attendance summary and the adviser's remark</li>
+            <li>Released against a guardian's signature; unclaimed cards go back to the registrar at 30 days</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acct reveal" data-who="parent">
+        <div class="thumb" data-full="images/screenshots/parent-soa.png"><img src="images/screenshots/parent-soa.png" alt="Statement of account" loading="lazy" /></div>
+        <div class="body">
+          <h3>Statement of account <span class="pill green">Parent</span></h3>
+          <ul>
+            <li>The live balance, every installment and its due date</li>
+            <li>Payment history with OR numbers</li>
+            <li>Bank and GCash payment channels the school publishes</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acct reveal" data-who="parent">
+        <div class="thumb" data-full="images/screenshots/parent-attendance.png"><img src="images/screenshots/parent-attendance.png" alt="Parent attendance view" loading="lazy" /></div>
+        <div class="body">
+          <h3>Attendance &amp; alerts <span class="pill green">Parent</span></h3>
+          <ul>
+            <li>Day-by-day attendance with minutes late</li>
+            <li>Switch between children in one tap</li>
+            <li>Absence alerts arrive by SMS and in the notification bell</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acct reveal" data-who="staff">
+        <div class="thumb" data-full="images/screenshots/library-desk.png"><img src="images/screenshots/library-desk.png" alt="Library circulation desk" loading="lazy" /></div>
+        <div class="body">
+          <h3>Circulation desk <span class="pill amber">Librarian</span></h3>
+          <ul>
+            <li>Scan the copy, pick the borrower, done</li>
+            <li>Overdue fines computed on return and billed to the account</li>
+            <li>Unreturned books block clearance automatically</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acct reveal" data-who="staff">
+        <div class="thumb" data-full="images/screenshots/library-catalog.png"><img src="images/screenshots/library-catalog.png" alt="Library catalog" loading="lazy" /></div>
+        <div class="body">
+          <h3>Library catalog <span class="pill amber">Librarian</span></h3>
+          <ul>
+            <li>Titles with ISBN, call number and accession-numbered copies</li>
+            <li>Copies available vs. out, live</li>
+            <li>Reading lists published straight into LMS courses</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acct reveal" data-who="staff">
+        <div class="thumb full" data-full="images/screenshots/official-receipt.png"><img src="images/screenshots/official-receipt.png" alt="Official receipt" loading="lazy" /></div>
+        <div class="body">
+          <h3>Official receipts <span class="pill amber">Cashier</span></h3>
+          <ul>
+            <li>Printed from the controlled OR series, amount in words</li>
+            <li>Allocated to the oldest installment first</li>
+            <li>A void keeps its number and shows on every report</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acct reveal" data-who="staff">
+        <div class="thumb" data-full="images/screenshots/honor-roll.png"><img src="images/screenshots/honor-roll.png" alt="Honor roll" loading="lazy" /></div>
+        <div class="body">
+          <h3>Honor roll <span class="pill amber">Principal</span></h3>
+          <ul>
+            <li>Computed from locked grades with the handbook's tie-breaks</li>
+            <li>With honors, high and highest honors per level</li>
+            <li>At-risk alerts and retention flags from the same data</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="acct reveal" data-who="staff">
+        <div class="thumb" data-full="images/screenshots/clinic-emergency.png"><img src="images/screenshots/clinic-emergency.png" alt="Clinic emergency quick-view" loading="lazy" /></div>
+        <div class="body">
+          <h3>Emergency quick-view <span class="pill amber">Clinic</span></h3>
+          <ul>
+            <li>Allergies, conditions and medicines on one screen</li>
+            <li>Emergency contacts with custody restrictions respected</li>
+            <li>Clinic visits notify the parent automatically</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================== MODULES -->
+<section class="alt" id="modules">
+  <div class="container center">
+    <div class="sec-head">
+      <div class="eyebrow">28 modules · one database</div>
+      <h2>Everything a school runs on</h2>
+      <p class="lead">Grouped into three workspaces in the sidebar — School, Operations and Fixed Assets — plus My Portal. Each module follows a rule written down before it was built.</p>
+    </div>
+    <div class="mod-groups">
+      <div class="mod-group reveal">
+        <h3><span class="ic">🎓</span> Admissions &amp; Records</h3>
+        <ul class="mods">
+          <li data-code="M01"><b>Admissions &amp; Enrollment</b> — online or desk intake, document checklist, slot board, reservation lapse and waitlist auto-advance</li>
+          <li data-code="M02"><b>Registrar &amp; Records</b> — lifetime learner number, SF10, dual-approval amendments, document desk, duplicate merge</li>
+          <li data-code="M03"><b>Sectioning</b> — hard caps, auto-balance by gender / average / behaviour, overload approvals</li>
+          <li data-code="M04"><b>Drops, Transfers &amp; Shifts</b> — five-office clearance routing and refunds from the published schedule</li>
+          <li data-code="M12"><b>Promotion &amp; Graduation</b> — candidacy audit, honors, protest window, diploma registry</li>
+        </ul>
+      </div>
+      <div class="mod-group reveal">
+        <h3><span class="ic">📚</span> Academics</h3>
+        <ul class="mods">
+          <li data-code="M06"><b>Curriculum &amp; Programs</b> — versioned curricula, prerequisites, unit-load rules, prospectus</li>
+          <li data-code="M07"><b>Class Scheduling</b> — conflict engine for teacher, room and section; versioned, published timetables</li>
+          <li data-code="M08"><b>Attendance &amp; Discipline</b> — cut-off enforcement, same-day guardian SMS, sanction ladder, merits</li>
+          <li data-code="M10"><b>Grades &amp; Assessment</b> — DepEd weights and transmutation, encoding windows, locks, INC lapse</li>
+          <li data-code="M11"><b>Report Cards &amp; Standing</b> — cards from locked grades only, honor roll, at-risk alerts</li>
+        </ul>
+      </div>
+      <div class="mod-group reveal">
+        <h3><span class="ic">💻</span> Learning Management</h3>
+        <ul class="mods">
+          <li data-code="M09"><b>LMS</b> — a course for every published class, drag-and-drop learning paths, score-gated units, video with resume, timed quizzes, assignments with server timestamps, discussions, remote-day check-in, offline packs</li>
+          <li data-code="M05"><b>Portal Services</b> — release calendar, announcements with SMS fallback, permission slips, PTC booking</li>
+        </ul>
+      </div>
+      <div class="mod-group reveal">
+        <h3><span class="ic">👩‍🏫</span> People</h3>
+        <ul class="mods">
+          <li data-code="M13"><b>Faculty</b> — qualification matrix, PRC licence watch, load caps, observations, CPD</li>
+          <li data-code="M14"><b>Substitutes</b> — 06:30 absence intake, orphaned-class detection, qualified match, handover kit, coverage log</li>
+          <li data-code="M15"><b>HR &amp; Payroll</b> — contracts, 201 files, leave credits, TRAIN-law payroll, SSS / PhilHealth / Pag-IBIG / BIR</li>
+        </ul>
+      </div>
+      <div class="mod-group reveal">
+        <h3><span class="ic">💳</span> Finance &amp; Supply</h3>
+        <ul class="mods">
+          <li data-code="M24"><b>Cashier &amp; Billing</b> — fee structures, assessments, installments, controlled OR series, voids with reasons, two-person refunds, aging</li>
+          <li data-code="M25"><b>Procurement</b> — purchase requests, PO approval matrix, partial receiving, three-way match</li>
+          <li data-code="M26"><b>Inventory &amp; Fixed Assets</b> — stock ledger, issue slips, reorder points, physical counts, plus the full asset register with depreciation</li>
+        </ul>
+      </div>
+      <div class="mod-group reveal">
+        <h3><span class="ic">🏫</span> Campus Services</h3>
+        <ul class="mods">
+          <li data-code="M16"><b>Library</b> — catalog and copies, circulation desk, overdue fines billed to the account</li>
+          <li data-code="M17"><b>Bookstore &amp; Uniforms</b> — size-run planning from enrolment, sales posted to the ledger</li>
+          <li data-code="M18"><b>Laboratories</b> — equipment, reservations, breakage and repair queue</li>
+          <li data-code="M19"><b>Facilities</b> — buildings and rooms, bookings with conflict check, utilization</li>
+          <li data-code="M20"><b>Transport</b> — vehicles, routes and riders, daily logs, incidents</li>
+          <li data-code="M21"><b>Canteen</b> — daily menus, sales, prepaid meal accounts</li>
+          <li data-code="M22"><b>Clinic</b> — medical records, visits with parent notice, campaigns, emergency quick-view</li>
+          <li data-code="M23"><b>Clubs &amp; Activities</b> — memberships, proposals with budget approval</li>
+          <li data-code="M27"><b>IT Services</b> — devices, network map, tickets, backup and restore drills</li>
+          <li data-code="M28"><b>Alumni</b> — directory, events, donations with OR</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================== HIGHLIGHTS -->
+<section id="highlights">
+  <div class="container">
+
+    <div class="row reveal">
+      <div class="txt">
+        <div class="eyebrow">Grades &amp; Assessment</div>
+        <h2>Grades that can't be quietly changed</h2>
+        <ul>
+          <li>Teachers encode written work, performance tasks and quarterly assessments in one matrix; the term grade is computed and transmuted as they type</li>
+          <li>DepEd K-12 weights per learning area, or the college 1.0–5.0 scale</li>
+          <li>Encoding happens only inside the window. After it closes, grades lock</li>
+          <li>A change after the lock needs the chair and then the registrar — two different people — and the audit log keeps the old and new values</li>
+          <li>LMS quiz and assignment scores land in the matrix with no re-encoding</li>
+        </ul>
+      </div>
+      <div class="shot" data-full="images/screenshots/grade-matrix.png"><img src="images/screenshots/grade-matrix.png" alt="Grade matrix" loading="lazy" /></div>
+    </div>
+
+    <div class="row flip reveal">
+      <div class="txt">
+        <div class="eyebrow">Cashier &amp; Billing</div>
+        <h2>A cashier window the auditor will like</h2>
+        <ul>
+          <li>Find a learner by student no., LRN, name or applicant no. and see the live statement</li>
+          <li>Payments go to the oldest installment first; the OR prints with the amount in words</li>
+          <li>OR numbers come from a controlled series — a void keeps its number and needs a reason</li>
+          <li>End of day: counted cash against posted ORs, with any gap in the series listed</li>
+          <li>Transcripts, diplomas and transfer credentials are released only when the learner is CLEAR</li>
+        </ul>
+      </div>
+      <div class="shot" data-full="images/screenshots/cashier-desk.png"><img src="images/screenshots/cashier-desk.png" alt="Cashier desk" loading="lazy" /></div>
+    </div>
+
+    <div class="row reveal">
+      <div class="txt">
+        <div class="eyebrow">Learning Management</div>
+        <h2>A real LMS, wired into the gradebook</h2>
+        <ul>
+          <li>Every published class gets a course page automatically — and it expires with the term</li>
+          <li>Build learning paths by drag and drop: lessons, videos, documents, quizzes, assignments, discussions</li>
+          <li>Gate a unit until the previous one is done or the quiz is passed</li>
+          <li>Videos resume where the student stopped; documents record a read receipt</li>
+          <li>Class announcements reach students and text the primary guardian</li>
+        </ul>
+      </div>
+      <div class="shot" data-full="images/screenshots/path-builder.png"><img src="images/screenshots/path-builder.png" alt="Learning path builder" loading="lazy" /></div>
+    </div>
+
+    <div class="row flip reveal">
+      <div class="txt">
+        <div class="eyebrow">Attendance</div>
+        <h2>Absent at 7:40, parents know before lunch</h2>
+        <ul>
+          <li>Homeroom attendance for K-12, per-period for college</li>
+          <li>Submitting sends the absence alert by SMS and to the portal the same day</li>
+          <li>Late submissions are flagged; teachers can't open another teacher's class — attempts are audited</li>
+          <li>Tardiness, perfect attendance and the promotion threshold are tracked every term</li>
+        </ul>
+      </div>
+      <div class="shot" data-full="images/screenshots/take-attendance.png"><img src="images/screenshots/take-attendance.png" alt="Take attendance" loading="lazy" /></div>
+    </div>
+
+    <div class="row reveal">
+      <div class="txt">
+        <div class="eyebrow">Scheduling</div>
+        <h2>A timetable with no clashes, by construction</h2>
+        <ul>
+          <li>The conflict engine refuses a teacher, room or section double-booking before it is saved</li>
+          <li>Teachers are loaded only with subjects they're qualified for, under their cap, with a valid licence</li>
+          <li>Rooms are checked against section size; staggered recess and lunch per level</li>
+          <li>Publish a version: teachers, students and parents see the same schedule</li>
+        </ul>
+      </div>
+      <div class="shot" data-full="images/screenshots/timetable.png"><img src="images/screenshots/timetable.png" alt="Timetable board" loading="lazy" /></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================== SAMPLE SCHOOL -->
+<section class="alt">
+  <div class="container center">
+    <div class="sec-head">
+      <div class="eyebrow">Try it with real-looking data</div>
+      <h2>Meet Sampaguita Valley Academy</h2>
+      <p class="lead">One click loads a complete sample school so every screen has something to show — then one click on Go Live removes it, keeps the DepEd reference tables and restarts every number series. Every screenshot on this page is that sample school.</p>
+    </div>
+    <div class="stats">
+      <div class="stat reveal"><b>801</b><span>learners, Kinder to 1st-year college, each with guardians and a medical record</span></div>
+      <div class="stat reveal"><b>28</b><span>sections with advisers, and a conflict-free published timetable</span></div>
+      <div class="stat reveal"><b>64</b><span>faculty and staff — 43 teachers with qualifications and loads</span></div>
+      <div class="stat reveal"><b>95.6%</b><span>attendance today, from a month of homeroom records</span></div>
+      <div class="stat reveal"><b>₱8.1M</b><span>collected this school year across installments and OR series</span></div>
+      <div class="stat reveal"><b>Q1 locked</b><span>first-quarter grades locked, report cards released; Q2 in progress</span></div>
+      <div class="stat reveal"><b>5</b><span>programs: STEM, ABM, HUMSS strands plus BSIT and BSEd</span></div>
+      <div class="stat reveal"><b>16</b><span>demo logins, one per role — see the Accounts section</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================== SCREENSHOTS -->
+<section id="screens">
+  <div class="container center">
+    <div class="sec-head">
+      <div class="eyebrow">Real screens, real data</div>
+      <h2>Take the tour</h2>
+      <p class="lead">The actual app running on the sample school. Click any screen to enlarge.</p>
+    </div>
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-cat="all">All</button>
+      <button class="tab" data-cat="portals">Portals</button>
+      <button class="tab" data-cat="registrar">Registrar</button>
+      <button class="tab" data-cat="academics">Academics</button>
+      <button class="tab" data-cat="lms">LMS</button>
+      <button class="tab" data-cat="finance">Finance &amp; HR</button>
+      <button class="tab" data-cat="campus">Campus</button>
+      <button class="tab" data-cat="system">System</button>
+    </div>
+    <div class="gallery" id="gallery">
+      <figure data-cat="portals" data-full="images/screenshots/parent-portal.png"><img src="images/screenshots/parent-portal.png" alt="Parent portal" loading="lazy" /><figcaption>Parent portal — child switcher and released grades</figcaption></figure>
+      <figure data-cat="portals" data-full="images/screenshots/parent-soa.png"><img src="images/screenshots/parent-soa.png" alt="Parent statement of account" loading="lazy" /><figcaption>Statement of account for parents</figcaption></figure>
+      <figure data-cat="portals" data-full="images/screenshots/notifications.png"><img src="images/screenshots/notifications.png" alt="Notification center" loading="lazy" /><figcaption>Notification bell — reminders, report-card release, new paths</figcaption></figure>
+      <figure data-cat="portals" data-full="images/screenshots/student-portal.png"><img src="images/screenshots/student-portal.png" alt="Student portal" loading="lazy" /><figcaption>Student portal — today's classes and learning paths</figcaption></figure>
+      <figure data-cat="portals" data-full="images/screenshots/faculty-portal.png"><img src="images/screenshots/faculty-portal.png" alt="Faculty portal" loading="lazy" /><figcaption>Faculty portal — a teacher's day</figcaption></figure>
+      <figure data-cat="portals" data-full="images/screenshots/alumni-portal.png"><img src="images/screenshots/alumni-portal.png" alt="Alumni portal" loading="lazy" /><figcaption>Alumni portal — profile, events, donations</figcaption></figure>
+      <figure data-cat="portals" data-full="images/screenshots/public-apply.png"><img src="images/screenshots/public-apply.png" alt="Online application" loading="lazy" /><figcaption>Public online application and status tracking</figcaption></figure>
+
+      <figure data-cat="registrar" data-full="images/screenshots/applicants.png"><img src="images/screenshots/applicants.png" alt="Applicants" loading="lazy" /><figcaption>Applicants with document checklists</figcaption></figure>
+      <figure data-cat="registrar" data-full="images/screenshots/slot-board.png"><img src="images/screenshots/slot-board.png" alt="Slot board" loading="lazy" /><figcaption>Slot board — seats, reservations, waitlist</figcaption></figure>
+      <figure data-cat="registrar" data-full="images/screenshots/learners.png"><img src="images/screenshots/learners.png" alt="Learner master list" loading="lazy" /><figcaption>Learner master list</figcaption></figure>
+      <figure data-cat="registrar" data-full="images/screenshots/learner-profile.png"><img src="images/screenshots/learner-profile.png" alt="Learner record" loading="lazy" /><figcaption>The learner record, end to end</figcaption></figure>
+      <figure data-cat="registrar" data-full="images/screenshots/document-requests.png"><img src="images/screenshots/document-requests.png" alt="Document requests" loading="lazy" /><figcaption>Document desk gated by clearance</figcaption></figure>
+      <figure data-cat="registrar" data-full="images/screenshots/assignment-board.png"><img src="images/screenshots/assignment-board.png" alt="Sectioning board" loading="lazy" /><figcaption>Sectioning board with live caps</figcaption></figure>
+      <figure data-cat="registrar" data-full="images/screenshots/graduation.png"><img src="images/screenshots/graduation.png" alt="Graduation candidates" loading="lazy" /><figcaption>Graduation candidates and freeze</figcaption></figure>
+      <figure data-cat="registrar" data-full="images/screenshots/exit-analytics.png"><img src="images/screenshots/exit-analytics.png" alt="Retention analytics" loading="lazy" /><figcaption>Drops &amp; transfers — retention analytics</figcaption></figure>
+
+      <figure data-cat="academics" data-full="images/screenshots/timetable.png"><img src="images/screenshots/timetable.png" alt="Timetable" loading="lazy" /><figcaption>Published timetable</figcaption></figure>
+      <figure data-cat="academics" data-full="images/screenshots/grade-matrix.png"><img src="images/screenshots/grade-matrix.png" alt="Grade matrix" loading="lazy" /><figcaption>Grade matrix with DepEd transmutation</figcaption></figure>
+      <figure data-cat="academics" data-full="images/screenshots/teacher-grade-matrix.png"><img src="images/screenshots/teacher-grade-matrix.png" alt="Teacher grade matrix" loading="lazy" /><figcaption>A teacher's own classes only</figcaption></figure>
+      <figure data-cat="academics" data-full="images/screenshots/take-attendance.png"><img src="images/screenshots/take-attendance.png" alt="Attendance" loading="lazy" /><figcaption>Attendance with same-day guardian alerts</figcaption></figure>
+      <figure data-cat="academics" data-full="images/screenshots/discipline.png"><img src="images/screenshots/discipline.png" alt="Discipline cases" loading="lazy" /><figcaption>Discipline register and sanction ladder</figcaption></figure>
+      <figure data-cat="academics" data-full="images/screenshots/standing.png"><img src="images/screenshots/standing.png" alt="Standing statistics" loading="lazy" /><figcaption>Standing statistics and honor roll</figcaption></figure>
+      <figure data-cat="academics" data-full="images/screenshots/report-card.png"><img src="images/screenshots/report-card.png" alt="Report card" loading="lazy" /><figcaption>Printable report card from locked grades</figcaption></figure>
+      <figure data-cat="academics" data-full="images/screenshots/oversight.png"><img src="images/screenshots/oversight.png" alt="Oversight dashboard" loading="lazy" /><figcaption>Principal / director oversight</figcaption></figure>
+
+      <figure data-cat="lms" data-full="images/screenshots/path-builder.png"><img src="images/screenshots/path-builder.png" alt="Path builder" loading="lazy" /><figcaption>Drag-and-drop learning path builder</figcaption></figure>
+      <figure data-cat="lms" data-full="images/screenshots/student-course.png"><img src="images/screenshots/student-course.png" alt="Course page" loading="lazy" /><figcaption>A student's course page</figcaption></figure>
+      <figure data-cat="lms" data-full="images/screenshots/learning-path.png"><img src="images/screenshots/learning-path.png" alt="Learning path player" loading="lazy" /><figcaption>Learning path with locked units</figcaption></figure>
+      <figure data-cat="lms" data-full="images/screenshots/quiz.png"><img src="images/screenshots/quiz.png" alt="Quiz" loading="lazy" /><figcaption>Timed, auto-scored quiz</figcaption></figure>
+      <figure data-cat="lms" data-full="images/screenshots/lms-dashboard.png"><img src="images/screenshots/lms-dashboard.png" alt="LMS progress dashboard" loading="lazy" /><figcaption>Progress dashboard for teachers</figcaption></figure>
+
+      <figure data-cat="finance" data-full="images/screenshots/cashier-desk.png"><img src="images/screenshots/cashier-desk.png" alt="Cashier desk" loading="lazy" /><figcaption>Cashier desk</figcaption></figure>
+      <figure data-cat="finance" data-full="images/screenshots/official-receipt.png"><img src="images/screenshots/official-receipt.png" alt="Official receipt" loading="lazy" /><figcaption>Official receipt with amount in words</figcaption></figure>
+      <figure data-cat="finance" data-full="images/screenshots/aging.png"><img src="images/screenshots/aging.png" alt="Collections and aging" loading="lazy" /><figcaption>Collections &amp; aging</figcaption></figure>
+      <figure data-cat="finance" data-full="images/screenshots/payroll.png"><img src="images/screenshots/payroll.png" alt="Payroll runs" loading="lazy" /><figcaption>Payroll runs with coverage pay</figcaption></figure>
+      <figure data-cat="finance" data-full="images/screenshots/teaching-staff.png"><img src="images/screenshots/teaching-staff.png" alt="Teaching staff" loading="lazy" /><figcaption>Faculty with PRC licence watch</figcaption></figure>
+      <figure data-cat="finance" data-full="images/screenshots/substitutes.png"><img src="images/screenshots/substitutes.png" alt="Substitutes" loading="lazy" /><figcaption>Substitute assignments</figcaption></figure>
+      <figure data-cat="finance" data-full="images/screenshots/procurement.png"><img src="images/screenshots/procurement.png" alt="Procurement" loading="lazy" /><figcaption>Open POs, spend and three-way match</figcaption></figure>
+
+      <figure data-cat="campus" data-full="images/screenshots/operations-workspace.png"><img src="images/screenshots/operations-workspace.png" alt="Operations workspace" loading="lazy" /><figcaption>The Operations workspace</figcaption></figure>
+      <figure data-cat="campus" data-full="images/screenshots/library-desk.png"><img src="images/screenshots/library-desk.png" alt="Circulation desk" loading="lazy" /><figcaption>Library circulation desk</figcaption></figure>
+      <figure data-cat="campus" data-full="images/screenshots/clinic-emergency.png"><img src="images/screenshots/clinic-emergency.png" alt="Emergency quick-view" loading="lazy" /><figcaption>Clinic emergency quick-view</figcaption></figure>
+      <figure data-cat="campus" data-full="images/screenshots/canteen.png"><img src="images/screenshots/canteen.png" alt="Canteen report" loading="lazy" /><figcaption>Canteen sales &amp; feeding</figcaption></figure>
+      <figure data-cat="campus" data-full="images/screenshots/facilities.png"><img src="images/screenshots/facilities.png" alt="Room utilization" loading="lazy" /><figcaption>Room utilization</figcaption></figure>
+      <figure data-cat="campus" data-full="images/screenshots/transport.png"><img src="images/screenshots/transport.png" alt="Transport routes" loading="lazy" /><figcaption>Transport routes and riders</figcaption></figure>
+      <figure data-cat="campus" data-full="images/screenshots/it-tickets.png"><img src="images/screenshots/it-tickets.png" alt="IT tickets" loading="lazy" /><figcaption>IT service tickets</figcaption></figure>
+      <figure data-cat="campus" data-full="images/screenshots/asset-register.png"><img src="images/screenshots/asset-register.png" alt="Asset register" loading="lazy" /><figcaption>Fixed Assets — the asset register</figcaption></figure>
+      <figure data-cat="campus" data-full="images/screenshots/depreciation-schedule.png"><img src="images/screenshots/depreciation-schedule.png" alt="Depreciation schedule" loading="lazy" /><figcaption>Fixed Assets — depreciation schedule</figcaption></figure>
+
+      <figure data-cat="system" data-full="images/screenshots/settings.png"><img src="images/screenshots/settings.png" alt="School settings" loading="lazy" /><figcaption>School settings — cut-offs, SMS, idle sign-out</figcaption></figure>
+      <figure data-cat="system" data-full="images/screenshots/module-help.png"><img src="images/screenshots/module-help.png" alt="Module help" loading="lazy" /><figcaption>Help on every screen</figcaption></figure>
+      <figure data-cat="system" data-full="images/screenshots/documentation.png"><img src="images/screenshots/documentation.png" alt="Built-in manual" loading="lazy" /><figcaption>Built-in operator manual</figcaption></figure>
+      <figure data-cat="system" data-full="images/screenshots/backup-sample-data.png"><img src="images/screenshots/backup-sample-data.png" alt="Backup and sample data" loading="lazy" /><figcaption>Backup, restore and the sample school</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================== DEPLOYMENT -->
+<section class="alt" id="run">
+  <div class="container center">
+    <div class="sec-head">
+      <div class="eyebrow">Deployment</div>
+      <h2>Install once. The whole campus connects to it.</h2>
+      <p class="lead">One machine holds the database. Offices reach it over the school network with the desktop app; parents and students can use a browser.</p>
+    </div>
+    <div class="modes">
+      <div class="mode reveal">
+        <h3><span class="pill">Solo</span> Standalone</h3>
+        <p>One computer runs the app and the database together. Right for a small school, or to evaluate it with the sample school.</p>
+      </div>
+      <div class="mode reveal">
+        <h3><span class="pill">Campus</span> Host + Clients</h3>
+        <p>One PC is the Host. The registrar, cashier, library and faculty room install the app in Client mode and point it at the Host. The Host owns the single database file.</p>
+      </div>
+      <div class="mode reveal">
+        <h3><span class="pill">No install</span> Web access</h3>
+        <p>Turn on browser access and teachers, students and parents open a link in Chrome, Edge or a phone browser — portals are mobile-friendly and sign idle sessions out automatically.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="container">
+    <div class="sec-head">
+      <div class="eyebrow" style="color:#a99fff">Data privacy</div>
+      <h2>Learner records never leave your campus</h2>
+      <p class="lead" style="color:#aeb6cc">
+        No cloud account, no vendor database, nothing phoning home with your learners' grades or health records.
+        The whole system is one SQLite file on your own disk — back it up, move it, keep it.
+      </p>
+    </div>
+    <div class="grid">
+      <div class="card reveal"><h3>Custody-aware by design</h3><p>A parent sees only linked, verified children. A custody-restricted child stays hidden even by direct link, and every denied attempt is written to the audit log.</p></div>
+      <div class="card reveal"><h3>Everything audited</h3><p>Every create, change and delete records who, when, from which device, and the old and new values. Sign-ins and failed attempts are logged too.</p></div>
+      <div class="card reveal"><h3>Built for enrolment peak</h3><p>Tested with 500 concurrent users: 2,000 requests, zero errors, p99 under half a second on an ordinary PC. Nightly backups with a weekly full copy.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================== PRICING -->
+<section id="pricing">
+  <div class="container center">
+    <div class="sec-head">
+      <div class="eyebrow">Pricing</div>
+      <h2>One price. One server. Yours.</h2>
+    </div>
+    <div class="price-wrap">
+      <div class="price reveal">
+        <div class="amount">One-time <small>/ per school server</small></div>
+        <p class="lead" style="font-size:1rem">Buy once from the Microsoft Store — no per-learner fees.</p>
+        <ul>
+          <li>All 28 modules — registrar to alumni, including the LMS and the Fixed Assets register</li>
+          <li>Unlimited learners, staff, parents and students</li>
+          <li>Parent, student, faculty and alumni portals included</li>
+          <li>Standalone, Host + Client, and browser access</li>
+          <li>The version you buy runs forever — no forced renewals</li>
+        </ul>
+        <a class="store-badge" href="https://apps.microsoft.com/detail/9NXXXXXXXXXX" target="_blank" rel="noopener" style="display:inline-block;margin-top:6px">
+          <img src="images/microsoft-store.png" alt="Available only on Microsoft Store" />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="faq">
+  <div class="container">
+    <div class="sec-head center">
+      <div class="eyebrow">Questions</div>
+      <h2>Good to know</h2>
+    </div>
+    <div class="faq">
+      <details class="qa"><summary>Does it follow DepEd grading?</summary><p>Yes. Written work, performance tasks and quarterly assessment are weighted per learning area following DepEd Order No. 8, s. 2015, and the initial grade is transmuted with the official table. College programs use the 1.0–5.0 scale. The weights and tables are data you can adjust, not code.</p></details>
+      <details class="qa"><summary>Can it handle both K-12 and college in one school?</summary><p>Yes. Kinder, elementary, junior and senior high use homeroom sections and quarters; college uses programs, sections per program, semesters, per-period attendance, schedule choice with seat caps and unit-load rules — all in the same database.</p></details>
+      <details class="qa"><summary>How do parents get access?</summary><p>The registrar creates a portal account from the guardian record and verifies the link to each child. Parents then sign in from any browser. Grades appear only when released — on the release calendar date or when the report card is claimed.</p></details>
+      <details class="qa"><summary>Does it send text messages?</summary><p>Absence alerts, announcements, installment reminders and substitute notices go into an SMS outbox. Connect your SMS gateway in School Setup → Settings and they are delivered; without one, the outbox records what would have been sent.</p></details>
+      <details class="qa"><summary>Can we try it before entering our own data?</summary><p>Yes. Load the sample school — Sampaguita Valley Academy — and sign in as any of the 16 demo accounts. When you're ready, Go Live removes the sample data, keeps the reference tables and restarts every number series.</p></details>
+      <details class="qa"><summary>Can we get our data out?</summary><p>Yes. Every list — learners, guardians, grades, payments, anything — exports to Excel with its current filters, and a full backup of the database can be downloaded from inside the app at any time.</p></details>
+      <details class="qa"><summary>Does it need the internet?</summary><p>No. Everything runs on your school network. The internet only matters if you want parents to reach the portal from home, or to deliver SMS through a gateway.</p></details>
+      <details class="qa"><summary>Where is our data stored?</summary><p>In one SQLite database file on the Host machine — <code>rrd_school_management.db</code> — plus a folder for uploaded files. It is never sent anywhere. Back it up, restore it or move it to another PC from inside the app; a nightly backup runs automatically.</p></details>
+      <details class="qa"><summary>We used RRD Suite Fixed Assets. What happens to our data?</summary><p>It is carried over. On first start the old data folder and database file are renamed to the school system's names automatically, and the asset register lives on as the Fixed Assets workspace.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="center">
+  <div class="container">
+    <h2>Ready to run your school from one place?</h2>
+    <p class="lead">Install it, load the sample school, and sign in as a parent, a teacher and the cashier. Your data starts — and stays — on your campus.</p>
+    <div style="display:flex;justify-content:center;margin-top:18px">
+      <a class="store-badge" href="https://apps.microsoft.com/detail/9NXXXXXXXXXX" target="_blank" rel="noopener">
+        <img src="images/microsoft-store.png" alt="Available only on Microsoft Store" />
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <span class="brand">RRD Suite</span>
+    <span>© <span id="yr"></span> RRD Suite — School Management System · by RamRam Dev</span>
+    <span>
+      <a href="https://apps.microsoft.com/detail/9NXXXXXXXXXX" target="_blank" rel="noopener">Microsoft Store</a> ·
+      <a href="privacy-policy.html">Privacy Policy</a>
+    </span>
+  </div>
+</footer>
+
+<div class="lb" id="lb"><button id="lbClose" aria-label="Close">×</button><img id="lbImg" src="" alt="" /></div>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // Mobile nav
+  var t = document.getElementById('navToggle'), nl = document.getElementById('navlinks');
+  t && t.addEventListener('click', function () { nl.classList.toggle('open'); });
+  nl && nl.addEventListener('click', function (e) { if (e.target.tagName === 'A') nl.classList.remove('open'); });
+
+  // Screenshot tabs
+  var tabs = document.getElementById('tabs'), figs = [].slice.call(document.querySelectorAll('#gallery figure'));
+  tabs && tabs.addEventListener('click', function (e) {
+    if (e.target.tagName !== 'BUTTON') return;
+    [].forEach.call(tabs.children, function (b) { b.classList.toggle('active', b === e.target); });
+    var cat = e.target.dataset.cat;
+    figs.forEach(function (f) { f.style.display = (cat === 'all' || f.dataset.cat === cat) ? '' : 'none'; });
+  });
+
+  // Featured cards: filter by who uses the feature
+  var ft = document.getElementById('featTabs'), fcards = [].slice.call(document.querySelectorAll('#featGrid .acct'));
+  ft && ft.addEventListener('click', function (e) {
+    if (e.target.tagName !== 'BUTTON') return;
+    [].forEach.call(ft.children, function (b) { b.classList.toggle('active', b === e.target); });
+    var who = e.target.dataset.who;
+    fcards.forEach(function (c) { c.hidden = !(who === 'all' || c.dataset.who === who); });
+  });
+
+  // Lightbox
+  var lb = document.getElementById('lb'), lbImg = document.getElementById('lbImg');
+  function openLb(src) { lbImg.src = src; lb.classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function closeLb() { lb.classList.remove('open'); lbImg.src = ''; document.body.style.overflow = ''; }
+  document.addEventListener('click', function (e) {
+    var z = e.target.closest('[data-full]');
+    if (z) { openLb(z.getAttribute('data-full')); }
+  });
+  document.getElementById('lbClose').addEventListener('click', closeLb);
+  lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeLb(); });
+
+  // Scroll reveal
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in'); });
+  }
+</script>
+
+</body>
+</html>

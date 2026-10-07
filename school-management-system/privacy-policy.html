@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Privacy Policy — RRD Suite: School Management System</title>
+<meta name="description" content="How RRD Suite: School Management System handles personal data. The app runs on your school's own computer; learner, guardian and staff records are never sent to the developer." />
+<link rel="icon" type="image/png" href="images/app-icon.png" />
+<style>
+  :root {
+    --ink: #16192c;
+    --muted: #5b6472;
+    --line: #e6e8ef;
+    --accent: #5b4fd6;
+    --accent-soft: #efedff;
+    --ok: #2f9e63;
+    --band: #10131f;
+    --soft: #f5f7fb;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    color: var(--ink);
+    background: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  h1, h2, h3 { line-height: 1.25; letter-spacing: -0.02em; }
+  h1 { font-size: clamp(1.9rem, 4vw, 2.6rem); margin: 0 0 .3em; }
+  h2 { font-size: 1.3rem; margin: 2.4em 0 .6em; padding-top: .2em; scroll-margin-top: 84px; }
+  h3 { font-size: 1.02rem; margin: 1.4em 0 .4em; }
+  p, li { color: #2c3142; }
+  ul { padding-left: 1.2em; }
+  li { margin-bottom: .45em; }
+  code { background: var(--soft); border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; font-size: .86em; }
+
+  nav.top { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.92); backdrop-filter: saturate(180%) blur(10px); border-bottom: 1px solid var(--line); }
+  nav.top .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; color: var(--ink); white-space: nowrap; }
+  .brand img { height: 28px; width: auto; }
+  .back { font-size: .92rem; font-weight: 600; }
+
+  header.hero { background: radial-gradient(900px 400px at 70% -20%, var(--accent-soft) 0%, #fff 65%); border-bottom: 1px solid var(--line); }
+  header.hero .wrap { max-width: 1100px; margin: 0 auto; padding: 52px 24px 36px; }
+  .eyebrow { text-transform: uppercase; letter-spacing: .12em; font-size: .72rem; font-weight: 700; color: var(--accent); margin-bottom: .8em; }
+  .meta { color: var(--muted); font-size: .92rem; }
+
+  .layout { max-width: 1100px; margin: 0 auto; padding: 36px 24px 72px; display: grid; grid-template-columns: 240px 1fr; gap: 48px; }
+  aside.toc { position: sticky; top: 88px; align-self: start; font-size: .88rem; }
+  aside.toc b { display: block; font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 10px; }
+  aside.toc ol { list-style: none; margin: 0; padding: 0; border-left: 2px solid var(--line); }
+  aside.toc li { margin: 0; }
+  aside.toc a { display: block; padding: 5px 0 5px 14px; color: var(--muted); }
+  aside.toc a:hover { color: var(--ink); text-decoration: none; }
+  article { min-width: 0; max-width: 760px; }
+  article > h2:first-of-type { margin-top: 1.8em; }
+
+  .summary { background: var(--soft); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 24px; margin-bottom: 8px; }
+  .summary h2 { margin: 0 0 .6em; font-size: 1.1rem; }
+  .summary ul { margin: 0; }
+  .summary li { padding-left: 4px; }
+  .summary li::marker { content: "✓  "; color: var(--ok); font-weight: 800; }
+
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; margin: 10px 0 6px; }
+  th, td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+  th { background: var(--soft); font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+  .table-wrap table { margin: 0; }
+  .table-wrap tr:last-child td { border-bottom: 0; }
+
+  .note { border-left: 3px solid var(--accent); background: var(--accent-soft); padding: 12px 16px; border-radius: 0 10px 10px 0; font-size: .93rem; }
+  .placeholder { background: #fff3cd; border: 1px dashed #c98a0c; border-radius: 6px; padding: 1px 6px; }
+
+  footer { background: var(--band); color: #9aa3bd; padding: 36px 0; font-size: .88rem; }
+  footer .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; }
+  footer a { color: #c7cfe6; }
+
+  @media (max-width: 860px) {
+    .layout { grid-template-columns: 1fr; gap: 20px; }
+    aside.toc { position: static; }
+    aside.toc ol { columns: 2; }
+  }
+  @media (max-width: 520px) {
+    nav.top .wrap, header.hero .wrap, .layout, footer .wrap { padding-left: 16px; padding-right: 16px; }
+    aside.toc ol { columns: 1; }
+  }
+  @media print {
+    nav.top, aside.toc, footer { display: none; }
+    .layout { display: block; padding: 0; }
+    header.hero { background: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html"><img src="images/app-icon.png" alt="" /> RRD Suite</a>
+    <a class="back" href="index.html">← Back to the website</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Legal</div>
+    <h1>Privacy Policy</h1>
+    <p class="meta">RRD Suite: School Management System · by RamRam Dev<br />Effective <b>October 1, 2026</b> · Last updated October 1, 2026</p>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="toc" aria-label="Contents">
+    <b>On this page</b>
+    <ol>
+      <li><a href="#summary">In short</a></li>
+      <li><a href="#who">Who this covers</a></li>
+      <li><a href="#roles">Who is responsible</a></li>
+      <li><a href="#data">Data the app stores</a></li>
+      <li><a href="#where">Where data is kept</a></li>
+      <li><a href="#leaves">When data leaves the school</a></li>
+      <li><a href="#developer">What the developer receives</a></li>
+      <li><a href="#portals">Portals and children</a></li>
+      <li><a href="#security">Security</a></li>
+      <li><a href="#retention">Retention and deletion</a></li>
+      <li><a href="#rights">Your rights</a></li>
+      <li><a href="#website">This website</a></li>
+      <li><a href="#changes">Changes</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ol>
+  </aside>
+
+  <article>
+    <div class="summary" id="summary">
+      <h2>In short</h2>
+      <ul>
+        <li>The app runs on your school's own computer. Every learner, guardian and staff record lives in a database file on that computer.</li>
+        <li>RamRam Dev, the developer, never receives, sees or stores your school's records. There is no cloud account and no analytics.</li>
+        <li>Data leaves your school only if <em>you</em> switch on something that sends it: an SMS gateway, an email server, or an external system link.</li>
+        <li>The Microsoft Store checks your licence. That check involves your Microsoft account, not your school's records.</li>
+      </ul>
+    </div>
+
+    <h2 id="who">1. Who this policy covers</h2>
+    <p>This policy explains how <b>RRD Suite: School Management System</b> (the "app") handles personal information. The app is published on the Microsoft Store by <b>RamRam Dev</b> ("we", "us"). It applies to:</p>
+    <ul>
+      <li>schools and institutions that install the app;</li>
+      <li>the people who use it — administrators, registrar, teachers, cashiers and other staff;</li>
+      <li>the people it holds records about — learners, applicants, parents and guardians, employees and alumni — including those who sign in to the parent, student, faculty or alumni portals.</li>
+    </ul>
+
+    <h2 id="roles">2. Who is responsible for the data</h2>
+    <p>The school that installs the app decides what information to collect and why. Under the Philippine <b>Data Privacy Act of 2012 (Republic Act No. 10173)</b>, the school is the <b>personal information controller</b>.</p>
+    <p>The app is software the school runs on its own equipment. Because school records never reach us, RamRam Dev does not process them and is not the school's personal information processor. Questions about a specific learner's or employee's records should go to the school's Data Protection Officer or registrar.</p>
+    <p class="note">If you are a parent, student or staff member, the school — not RamRam Dev — can view, correct or delete your records.</p>
+
+    <h2 id="data">3. Data the app stores</h2>
+    <p>Depending on which modules a school uses, the app can hold:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>About</th><th>Examples</th></tr></thead>
+        <tbody>
+          <tr><td>Learners &amp; applicants</td><td>Name, birth date, sex, LRN and student number, address, photo, enrollment and section, documents submitted, grades, attendance, report cards, discipline and guidance records, library loans, club memberships, statement of account and payments</td></tr>
+          <tr><td>Health</td><td>Allergies, conditions, medications, clinic visits and emergency contacts — visible only to roles the school allows, such as the clinic and advisers</td></tr>
+          <tr><td>Parents &amp; guardians</td><td>Name, relationship, contact number, email, address, occupation and custody restrictions</td></tr>
+          <tr><td>Employees</td><td>Personal and contact details, government ID numbers (SSS, PhilHealth, Pag-IBIG, TIN), licences, contracts and 201 files, attendance, leave, payroll and payslips</td></tr>
+          <tr><td>Alumni</td><td>Profile, directory preference, event registrations and donations</td></tr>
+          <tr><td>Accounts &amp; activity</td><td>Usernames, password hashes (never the plain password), roles, sign-in times, failed sign-in attempts, and an audit log of changes recording who made each change, when, from which IP address and browser, and the old and new values</td></tr>
+          <tr><td>Uploaded files</td><td>Documents, photos, learning materials and attachments the school uploads</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="where">4. Where the data is kept</h2>
+    <p>All of the above is stored in a single database file, <code>rrd_school_management.db</code>, plus a folder of uploaded files. Both are on the computer where the school installed the app (the "Host"). By default they are in the Windows user's application-data folder, <code>RRDSchoolManagement</code>.</p>
+    <ul>
+      <li><b>Staff computers</b> in Client mode, and <b>browsers</b> when web access is turned on, connect to the Host over the school's own network. They read from the Host and do not keep their own copy of the database.</li>
+      <li><b>Backups</b> are files the app writes to the Host: a nightly backup with a weekly full copy, plus any backup the school downloads. The school decides where those files go after that.</li>
+      <li>The browser keeps small settings such as the selected workspace, plus the sign-in session. It does not keep school records.</li>
+    </ul>
+
+    <h2 id="leaves">5. When data leaves the school</h2>
+    <p>The app sends nothing about your school's people anywhere unless the school turns on one of these features:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Feature</th><th>What is sent, and to whom</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>SMS notices</td><td>The guardian's mobile number and the message text (for example an absence alert or payment reminder) go to the SMS gateway the school configures.</td><td>Off — messages are only recorded in the app's outbox</td></tr>
+          <tr><td>Email</td><td>The recipient's address and the message go through the email (SMTP) server the school configures.</td><td>Off until an email server is entered</td></tr>
+          <tr><td>External system links</td><td>The data the school chooses to share is exchanged with systems it connects through the app's API settings.</td><td>Off</td></tr>
+          <tr><td>Portal access from home</td><td>If the school makes the portal reachable from the internet, parents and students connect directly to the school's own server.</td><td>Off — local network only</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Any of these third parties handles the data under its own terms, chosen by the school. The school is responsible for having a proper agreement with them.</p>
+
+    <h2 id="developer">6. What the developer receives</h2>
+    <p><b>Nothing from your school's records.</b> The app has no analytics, advertising, crash reporting or usage tracking. The "Server Status" page shows who is connected right now, but that information stays in the Host's memory and is cleared when the app restarts.</p>
+    <p>The only outside service the app contacts on its own is the <b>Microsoft Store licensing service</b>, to confirm the app is licensed or in trial. That check is handled by Microsoft under the <a href="https://privacy.microsoft.com/privacystatement" target="_blank" rel="noopener">Microsoft Privacy Statement</a>, using the Microsoft account that bought the app. To stop a copied install from running elsewhere, the app keeps a fingerprint of the licensed computer together with the licence receipt. Both stay on that computer.</p>
+    <p>If you write to us for support, we see only what you choose to send. Please don't include learner records in support messages; describe the problem or use the sample school instead.</p>
+
+    <h2 id="portals">7. Portals and children's data</h2>
+    <p>Many learners are minors, so the app limits who can see their records:</p>
+    <ul>
+      <li>A parent's portal opens only after the registrar verifies the link to each child. Parents see <b>only</b> their linked children.</li>
+      <li>If a court order restricts a guardian's access, that child stays hidden from them — even by a direct link.</li>
+      <li>Students see only their own record. Attempts to open another learner's record are refused and written to the audit log.</li>
+      <li>Grades appear on a portal only after the school releases them. Discipline and guidance details are not shown to students.</li>
+      <li>Portal sessions sign out automatically after a period of inactivity (15 minutes by default) — useful on shared devices.</li>
+    </ul>
+
+    <h2 id="security">8. Security</h2>
+    <ul>
+      <li>Passwords are stored only as one-way hashes. Accounts lock after repeated failed sign-ins.</li>
+      <li>Every role sees only the screens and actions it has been granted.</li>
+      <li>Every change to a record is audited with the old and new values. Grades lock after the encoding window, and changing them afterwards takes two approvers.</li>
+      <li>Downloaded files use short-lived signed links.</li>
+    </ul>
+    <p>Because the data lives on the school's equipment, the school is responsible for protecting that computer and network: Windows account security, disk encryption where appropriate, firewall settings, physical access, and keeping backups safe. We recommend keeping the Host on the local network unless remote access is properly secured.</p>
+
+    <h2 id="retention">9. Retention and deletion</h2>
+    <p>The school decides how long to keep records, in line with DepEd, CHED and other legal requirements. Records the app "deletes" are first marked deleted, so the action can be audited. The school can remove data permanently from the database or its backups.</p>
+    <p>The <b>Go Live</b> feature removes the bundled sample school (a fictional school with made-up people) and its demo logins. Backups copied off the Host — to a USB drive, another PC or a cloud folder — are not touched by the app or by uninstalling it, so the school must delete those itself.</p>
+
+    <h2 id="rights">10. Your rights</h2>
+    <p>Under the Data Privacy Act, people whose data is in the app have the right to be informed, to access, to correct, to object, to erasure or blocking, to data portability, and to file a complaint with the <a href="https://privacy.gov.ph" target="_blank" rel="noopener">National Privacy Commission</a>. Because the school controls the records, <b>send these requests to the school</b>. The app helps the school respond: it can export records to Excel, correct records (with an audit trail) and produce transcripts and permanent records.</p>
+
+    <h2 id="website">11. This website</h2>
+    <p>This website is a static information page. It sets no cookies, has no sign-in or forms, and contains no analytics or tracking scripts. The hosting provider may keep standard server logs, such as IP addresses and the pages requested. Links to the Microsoft Store and other sites are governed by those sites' own policies.</p>
+
+    <h2 id="changes">12. Changes to this policy</h2>
+    <p>If the app's data handling changes — for example, a new feature that sends data outside the school — we will update this page and its "Last updated" date before that version is released. Significant changes will also be noted in the app's release notes.</p>
+
+    <h2 id="contact">13. Contact</h2>
+    <p>For questions about this policy or the app's data handling, contact RamRam Dev:</p>
+    <ul>
+      <li>Email: <span class="placeholder">privacy@your-domain.example</span></li>
+      <li>Publisher page: <a href="https://apps.microsoft.com/search/publisher?name=Ramram+Dev" target="_blank" rel="noopener">RamRam Dev on the Microsoft Store</a></li>
+    </ul>
+    <p>For questions about your own records — grades, attendance, balances, health or employment data — contact your school's registrar or Data Protection Officer.</p>
+  </article>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="yr"></span> RRD Suite — School Management System · by RamRam Dev</span>
+    <span><a href="index.html">Website</a> · <a href="#summary">Back to top</a></span>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
