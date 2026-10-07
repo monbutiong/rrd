@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RRD Suite: Accounting System</title>
+<meta name="description" content="Complete accounting for the Philippines and the Gulf — general ledger to financial statements, payables, receivables, treasury, payroll, inventory and fixed assets. Pick your country at setup and the system adapts: BIR forms and SSS/PhilHealth in the Philippines, VAT/Zakat/corporate tax and end-of-service gratuity across the GCC. One-time purchase, on the Microsoft Store." />
+<link rel="icon" type="image/png" href="images/app-icon.png" />
+<meta property="og:title" content="RRD Suite: Accounting System" />
+<meta property="og:description" content="One accounting system that adapts to your country — Philippine BIR forms or the GCC packs (UAE, Saudi, Qatar, Oman, Bahrain, Kuwait). Runs on your own server, no subscription." />
+<meta property="og:type" content="website" />
+<style>
+  :root {
+    --ink: #16192c;
+    --muted: #5b6472;
+    --line: #e6e8ef;
+    --accent: #3e60d5;
+    --accent-ink: #2b47ad;
+    --ok: #2f9e63;
+    --band: #10131f;
+    --band-2: #171b2b;
+    --band-text: #e9ecf6;
+    --soft: #f5f7fb;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    color: var(--ink);
+    background: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: var(--accent); text-decoration: none; }
+  h1, h2, h3 { line-height: 1.2; letter-spacing: -0.02em; margin: 0 0 .5em; }
+  h1 { font-size: clamp(2rem, 4.4vw, 3.1rem); }
+  h2 { font-size: clamp(1.55rem, 3vw, 2.2rem); }
+  h3 { font-size: 1.15rem; }
+  p { margin: 0 0 1em; }
+  .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+  .eyebrow { text-transform: uppercase; letter-spacing: .12em; font-size: .72rem; font-weight: 700; color: var(--accent); margin-bottom: .8em; }
+  .lead { font-size: 1.12rem; color: var(--muted); }
+  .center { text-align: center; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 22px; border-radius: 10px; font-weight: 650; font-size: .95rem;
+    border: 1px solid transparent; cursor: pointer; transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent-ink); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(62,96,213,.28); }
+  .btn-ghost { background: #fff; border-color: var(--line); color: var(--ink); }
+  .btn-ghost:hover { border-color: #c9cede; transform: translateY(-1px); }
+  .btn-lg { padding: 15px 28px; font-size: 1rem; }
+
+  .store-badge { display: inline-block; }
+  .store-badge img { height: 52px; width: auto; }
+  .store-badge:hover { filter: brightness(.97); }
+
+  /* Nav */
+  nav.top {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255,255,255,.9);
+    backdrop-filter: saturate(180%) blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav.top .container { display: flex; align-items: center; justify-content: space-between; height: 66px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -.02em; font-size: 1.05rem; color: var(--ink); }
+  .brand img { height: 30px; width: auto; }
+  .navlinks { display: flex; gap: 26px; align-items: center; }
+  .navlinks a { color: var(--muted); font-size: .92rem; font-weight: 550; }
+  .navlinks a:hover { color: var(--ink); }
+  .nav-cta { display: flex; align-items: center; gap: 14px; }
+  .nav-toggle { display: none; background: none; border: 0; cursor: pointer; padding: 8px; }
+  .nav-toggle span { display: block; width: 22px; height: 2px; background: var(--ink); margin: 4px 0; border-radius: 2px; }
+
+  /* Hero */
+  .hero { padding: 68px 0 40px; background: radial-gradient(1100px 500px at 70% -10%, #eef2ff 0%, #fff 60%); }
+  .hero .container { display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px; align-items: center; }
+  .hero h1 span { color: var(--accent); }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-top: 6px; }
+  .hero-note { margin-top: 18px; font-size: .85rem; color: var(--muted); }
+  .hero-shot { border-radius: var(--radius); border: 1px solid var(--line); box-shadow: 0 30px 70px -30px rgba(16,25,60,.4); overflow: hidden; }
+  .hero-shot img { display: block; }
+
+  .kpis { display: flex; flex-wrap: wrap; gap: 30px; margin-top: 30px; }
+  .kpi b { display: block; font-size: 1.5rem; letter-spacing: -.02em; }
+  .kpi span { font-size: .82rem; color: var(--muted); }
+
+  /* Trust strip */
+  .strip { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--soft); }
+  .strip .container { display: flex; flex-wrap: wrap; gap: 12px 34px; padding: 18px 24px; align-items: center; justify-content: center; }
+  .strip span { font-size: .86rem; color: var(--muted); display: inline-flex; align-items: center; gap: 8px; }
+  .strip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ok); }
+
+  section { padding: 72px 0; }
+  section.alt { background: var(--soft); }
+  .sec-head { max-width: 720px; margin: 0 auto 44px; }
+  .center .sec-head { margin-inline: auto; }
+
+  /* Feature grid */
+  .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .feature { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; transition: transform .14s ease, box-shadow .14s ease; }
+  .feature:hover { transform: translateY(-3px); box-shadow: 0 16px 40px -22px rgba(16,25,60,.35); }
+  .feature .ic { width: 40px; height: 40px; border-radius: 10px; background: #eef2ff; color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 14px; }
+  .feature h3 { margin-bottom: .3em; }
+  .feature p { font-size: .92rem; color: var(--muted); margin: 0; }
+
+  /* Alternating feature rows with screenshots */
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 52px; align-items: center; }
+  .row + .row { margin-top: 72px; }
+  .row.flip .txt { order: 2; }
+  .row .shot { border-radius: var(--radius); border: 1px solid var(--line); box-shadow: 0 24px 60px -32px rgba(16,25,60,.4); overflow: hidden; cursor: zoom-in; }
+  .row ul { margin: 0; padding-left: 1.1em; color: var(--muted); font-size: .95rem; }
+  .row ul li { margin-bottom: .4em; }
+
+  /* Country cards */
+  .countries { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; text-align: left; }
+  .country { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; transition: transform .14s ease, box-shadow .14s ease; }
+  .country:hover { transform: translateY(-3px); box-shadow: 0 16px 40px -22px rgba(16,25,60,.35); }
+  .country .flag { font-size: 1.5rem; margin-bottom: 6px; }
+  .country h3 { font-size: 1rem; margin-bottom: .35em; }
+  .country p { font-size: .82rem; color: var(--muted); margin: 0 0 .25em; }
+  .country p.pack { color: var(--accent-ink); font-weight: 600; }
+
+  /* Screenshot gallery */
+  .tabs { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 28px; }
+  .tab { padding: 8px 16px; border-radius: 999px; border: 1px solid var(--line); background: #fff; font-size: .86rem; font-weight: 600; color: var(--muted); cursor: pointer; }
+  .tab.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .gallery figure { margin: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; cursor: zoom-in; background: #fff; transition: transform .14s ease; }
+  .gallery figure:hover { transform: translateY(-3px); }
+  .gallery figcaption { font-size: .82rem; color: var(--muted); padding: 10px 14px; border-top: 1px solid var(--line); }
+
+  /* How it runs */
+  .modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .mode { border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; background: #fff; }
+  .mode h3 { display: flex; align-items: center; gap: 8px; }
+  .mode .tag { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; background: #eef2ff; color: var(--accent); padding: 3px 8px; border-radius: 6px; font-weight: 700; }
+  .mode p { font-size: .92rem; color: var(--muted); margin: 0; }
+
+  /* Data band */
+  .band { background: var(--band); color: var(--band-text); }
+  .band h2 { color: #fff; }
+  .band .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; margin-top: 34px; }
+  .band .card { background: var(--band-2); border: 1px solid rgba(255,255,255,.08); border-radius: var(--radius); padding: 24px; }
+  .band .card h3 { color: #fff; }
+  .band .card p { color: #aeb6cc; font-size: .92rem; margin: 0; }
+
+  /* Pricing */
+  .price-wrap { display: flex; justify-content: center; }
+  .price {
+    max-width: 460px; width: 100%; border: 1px solid var(--line); border-radius: 18px; padding: 34px; text-align: center;
+    box-shadow: 0 30px 70px -40px rgba(16,25,60,.4);
+  }
+  .price .amount { font-size: 2.6rem; font-weight: 800; letter-spacing: -.03em; }
+  .price .amount small { font-size: 1rem; font-weight: 600; color: var(--muted); }
+  .price ul { list-style: none; margin: 22px 0; padding: 0; text-align: left; }
+  .price ul li { padding: 9px 0; border-bottom: 1px dashed var(--line); font-size: .93rem; display: flex; gap: 10px; }
+  .price ul li::before { content: "✓"; color: var(--ok); font-weight: 800; }
+  .price ul li:last-child { border-bottom: 0; }
+
+  /* FAQ */
+  .faq { max-width: 780px; margin: 0 auto; }
+  .qa { border-bottom: 1px solid var(--line); }
+  .qa summary { cursor: pointer; padding: 18px 0; font-weight: 650; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+  .qa summary::-webkit-details-marker { display: none; }
+  .qa summary::after { content: "+"; color: var(--accent); font-weight: 800; }
+  .qa[open] summary::after { content: "–"; }
+  .qa p { color: var(--muted); font-size: .95rem; padding-bottom: 18px; margin: 0; }
+
+  footer { background: var(--band); color: #9aa3bd; padding: 44px 0; font-size: .88rem; }
+  footer .container { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; justify-content: space-between; }
+  footer a { color: #c7cfe6; }
+  footer .brand { color: #fff; }
+
+  /* Lightbox */
+  .lb { position: fixed; inset: 0; background: rgba(8,10,20,.9); display: none; align-items: center; justify-content: center; z-index: 200; padding: 30px; }
+  .lb.open { display: flex; }
+  .lb img { max-width: 94vw; max-height: 90vh; border-radius: 10px; box-shadow: 0 30px 80px rgba(0,0,0,.5); }
+  .lb button { position: absolute; top: 18px; right: 22px; background: none; border: 0; color: #fff; font-size: 34px; cursor: pointer; line-height: 1; }
+
+  .reveal { opacity: 0; transform: translateY(14px); transition: opacity .55s ease, transform .55s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+  @media (max-width: 900px) {
+    .navlinks { display: none; }
+    .nav-toggle { display: block; }
+    .navlinks.open { display: flex; position: absolute; top: 66px; left: 0; right: 0; background: #fff; flex-direction: column; padding: 14px 24px 20px; border-bottom: 1px solid var(--line); gap: 4px; }
+    .navlinks.open a { padding: 10px 0; }
+    .hero .container, .row, .row.flip .txt { grid-template-columns: 1fr; order: 0; }
+    .features, .modes, .band .grid { grid-template-columns: 1fr; }
+    .countries { grid-template-columns: repeat(2, 1fr); }
+    .gallery { grid-template-columns: repeat(2, 1fr); }
+    .row .shot { order: 2; }
+    nav.top .nav-cta .store-badge { display: none; }
+    .strip .container { justify-content: flex-start; }
+  }
+  @media (max-width: 620px) {
+    .countries { grid-template-columns: 1fr; }
+    .gallery { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 460px) {
+    .store-badge img { height: 44px; }
+    .kpis { gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="container">
+    <a class="brand" href="#top"><img src="images/app-icon.png" alt="" /> RRD Suite</a>
+    <div class="navlinks" id="navlinks">
+      <a href="#features">Features</a>
+      <a href="#countries">Countries</a>
+      <a href="#screens">Screenshots</a>
+      <a href="#run">How it runs</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-cta">
+      <a class="store-badge" href="https://apps.microsoft.com/detail/9NXXXXXXXXXX" target="_blank" rel="noopener" aria-label="Get RRD Suite on the Microsoft Store">
+        <img src="images/microsoft-store.png" alt="Available only on Microsoft Store" />
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="container">
+    <div class="reveal in">
+      <div class="eyebrow">Philippines &amp; the Gulf — one system that adapts</div>
+      <h1>Your books, your country's tax filings, <span>one system on your own PC.</span></h1>
+      <p class="lead">
+        RRD Suite is a complete Accounting System — general ledger to financial statements, payables and receivables,
+        treasury, payroll, inventory and fixed assets, budgets, a disciplined period close. Choose your country at setup
+        and it adapts: in the Philippines you get the BIR forms — VAT, expanded withholding tax, alphalists, quarterly
+        income tax; in the Gulf you get VAT, corporate tax or Zakat, and end-of-service gratuity instead of SSS and
+        13th month. Every posting carries its audit trail. It installs on a PC in your office. No monthly fee.
+      </p>
+      <div class="hero-actions">
+        <a class="store-badge" href="https://apps.microsoft.com/detail/9NXXXXXXXXXX" target="_blank" rel="noopener">
+          <img src="images/microsoft-store.png" alt="Available only on Microsoft Store" />
+        </a>
+        <a class="btn btn-ghost btn-lg" href="#screens">See it in action</a>
+      </div>
+      <p class="hero-note">One-time · your data stays on your server</p>
+      <div class="kpis">
+        <div class="kpi"><b>7 countries</b><span>Philippines + all six GCC states</span></div>
+        <div class="kpi"><b>BIR · FTA · ZATCA</b><span>forms &amp; calendars per country</span></div>
+        <div class="kpi"><b>1 file</b><span>SQLite — no server to babysit</span></div>
+        <div class="kpi"><b>0</b><span>subscription, ever</span></div>
+      </div>
+    </div>
+    <div class="reveal in">
+      <div class="hero-shot"><img src="images/screenshots/dashboard.png" alt="RRD Suite accounting dashboard" /></div>
+    </div>
+  </div>
+</header>
+
+<div class="strip">
+  <div class="container">
+    <span><i class="dot"></i> Philippines + UAE, Saudi Arabia, Qatar, Oman, Bahrain, Kuwait</span>
+    <span><i class="dot"></i> Journal entry to financial statements in one system</span>
+    <span><i class="dot"></i> PO → goods receipt → invoice, three-way matched</span>
+    <span><i class="dot"></i> BIR forms &amp; alphalists — or GCC VAT, Zakat &amp; CT</span>
+    <span><i class="dot"></i> Payroll: SSS · PhilHealth · Pag-IBIG · WHT, or gratuity</span>
+    <span><i class="dot"></i> Works offline · multi-user over your LAN</span>
+  </div>
+</div>
+
+<section id="features">
+  <div class="container center">
+    <div class="sec-head">
+      <div class="eyebrow">The whole accounting cycle</div>
+      <h2>From supplier bill to signed financial statements</h2>
+      <p class="lead">Modules are role-gated — each person only sees what they're allowed to, and the books stay balanced underneath it all.</p>
+    </div>
+    <div class="features">
+      <div class="feature reveal"><div class="ic">📘</div><h3>General Ledger</h3><p>A proper chart of accounts, manual and recurring journals with reversals, GL inquiry that drills to the voucher, and the Books of Accounts — general journal, ledger, cash receipts and disbursements — printable for BIR registration.</p></div>
+      <div class="feature reveal"><div class="ic">🧾</div><h3>Accounts Payable</h3><p>Purchase orders, goods receipts and supplier bills matched three ways. Withholding tax computed on every bill, payment batches gated by a delegation of authority, post-dated checks tracked to maturity, and 2307 certificates produced per payee.</p></div>
+      <div class="feature reveal"><div class="ic">💰</div><h3>Accounts Receivable</h3><p>Sales invoices issued only from BIR-registered series. Credit limits gate the delivery, collections apply OPEN-ITEM to the oldest invoices, aging snapshots and expected credit losses keep the receivable honest, and dunning letters go out on schedule.</p></div>
+      <div class="feature reveal"><div class="ic">🏦</div><h3>Treasury</h3><p>Bank statements import and auto-match to the books; the rest flows into a reconciliation worksheet a second person reviews. Petty cash runs on a strict imprest float, deposit slips cover same-day collections, loans carry amortization schedules.</p></div>
+      <div class="feature reveal"><div class="ic">👥</div><h3>Payroll</h3><p>Compensation masters flow into semi-monthly runs. Philippine runs compute SSS, PhilHealth, Pag-IBIG and withholding tax per the current tables, with 13th month accrual, loans, statutory remittances and 2316 certificates. Gulf runs withhold nothing and accrue end-of-service gratuity by tenure instead.</p></div>
+      <div class="feature reveal"><div class="ic">🧮</div><h3>Tax, per country</h3><p>In the Philippines: 2550M/Q VAT returns with sales &amp; purchase books behind them, 1601C and 1601EQ expanded withholding with alphalists, quarterly RCIT vs MCIT, NOLCO tracking. In the Gulf: VAT returns at the local rate (or none, in Qatar and Kuwait), corporate tax or Zakat on the country calendar. One filing calendar drives them all.</p></div>
+      <div class="feature reveal"><div class="ic">📦</div><h3>Inventory &amp; Fixed Assets</h3><p>Goods receipts relieve received-not-invoiced, weighted-average costing with a full movement ledger, counts with variance posting and NRV checks. The fixed-asset register feeds certified depreciation batches straight into the general ledger.</p></div>
+      <div class="feature reveal"><div class="ic">🗓️</div><h3>Period Close</h3><p>A close checklist per period — accrual runs, reconciliations, gate checks — signed off item by item, then soft-close and hard-close with reason codes. Financial statements generate from the closed books, with comparative columns.</p></div>
+      <div class="feature reveal"><div class="ic">🛡️</div><h3>Controls &amp; Audit</h3><p>Segregation-of-duties rules and an approval matrix decide who may touch what. Every field change is stamped with the user, the time and the reason. Scheduled checks raise exceptions into a queue that must be resolved, not ignored.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="countries">
+  <div class="container center">
+    <div class="sec-head">
+      <div class="eyebrow">Multi-country</div>
+      <h2>Pick your country. The system adapts.</h2>
+      <p class="lead">At setup — or later, per company — you choose where the books are kept. The system then switches the
+        currency, the VAT rate and returns, the tax authority's filing calendar, the payroll rules, the tax-number format,
+        and even which menus exist. Run a Philippine company and a Gulf company side by side in the same install.</p>
+    </div>
+    <div class="countries">
+      <div class="country reveal"><div class="flag">🇵🇭</div><h3>Philippines</h3><p><b>PHP · BIR</b></p><p>VAT 12% · RCIT/MCIT · 2550M/Q, 1601C/EQ, alphalists</p><p class="pack">SSS · PhilHealth · Pag-IBIG · WHT · 13th month</p></div>
+      <div class="country reveal"><div class="flag">🇦🇪</div><h3>United Arab Emirates</h3><p><b>AED · FTA</b></p><p>VAT 5% · Corporate tax 9%</p><p class="pack">End-of-service gratuity · no payroll withholding</p></div>
+      <div class="country reveal"><div class="flag">🇸🇦</div><h3>Saudi Arabia</h3><p><b>SAR · ZATCA</b></p><p>VAT 15% · Zakat</p><p class="pack">End-of-service gratuity · monthly VAT returns</p></div>
+      <div class="country reveal"><div class="flag">🇶🇦</div><h3>Qatar</h3><p><b>QAR · GTA</b></p><p>No VAT · CIT 10%</p><p class="pack">End-of-service gratuity · no VAT returns</p></div>
+      <div class="country reveal"><div class="flag">🇴🇲</div><h3>Oman</h3><p><b>OMR · OTA</b></p><p>VAT 5% · CIT 15%</p><p class="pack">End-of-service gratuity · quarterly VAT returns</p></div>
+      <div class="country reveal"><div class="flag">🇧🇭</div><h3>Bahrain</h3><p><b>BHD · NBR</b></p><p>VAT 10% · no CIT</p><p class="pack">End-of-service gratuity · quarterly VAT returns</p></div>
+      <div class="country reveal"><div class="flag">🇰🇼</div><h3>Kuwait</h3><p><b>KWD · DTT</b></p><p>No VAT · CIT 15%</p><p class="pack">End-of-service gratuity · no VAT returns</p></div>
+    </div>
+
+    <div class="row reveal" style="margin-top:72px;text-align:left">
+      <div class="txt">
+        <div class="eyebrow">Setup wizard</div>
+        <h3 style="font-size:1.5rem">One question: where will this company keep its books?</h3>
+        <ul>
+          <li>The wizard asks for the country before the company details — currency and tax notes follow the choice</li>
+          <li>Changed your mind, or a group with entities in several countries? The jurisdiction lives on each company and can be changed from the Companies register</li>
+          <li>The pack gates everything: Philippine-only screens (BIR, SSS tables, 2316, alphalists) simply don't exist for a Gulf company — not hidden, absent</li>
+        </ul>
+      </div>
+      <div class="shot" data-full="images/screenshots/wizard-country.png"><img src="images/screenshots/wizard-country.png" alt="Setup wizard country step" loading="lazy" /></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+
+    <div class="row reveal">
+      <div class="txt">
+        <div class="eyebrow">Philippine Tax</div>
+        <h2>Returns that reconcile to your own books</h2>
+        <ul>
+          <li>VAT transactions are captured as sales and purchase books post — 2550M/Q builds from them, not from re-typing</li>
+          <li>Expanded withholding on every bill and payment; 1601C/1601EQ plus the alphalists fall out of the same data</li>
+          <li>Quarterly income tax compares RCIT against MCIT with NOLCO application, before you provision</li>
+          <li>The filing calendar watches due dates and queues what's unfiled — correspondence and protests tracked too</li>
+        </ul>
+      </div>
+      <div class="shot" data-full="images/screenshots/vat-returns.png"><img src="images/screenshots/vat-returns.png" alt="VAT returns" loading="lazy" /></div>
+    </div>
+
+    <div class="row flip reveal">
+      <div class="txt">
+        <div class="eyebrow">Disbursements</div>
+        <h2>Nobody pays a bill alone</h2>
+        <ul>
+          <li>Supplier bills approve against budget and commit funds; the 3-way match closes the loop with the PO</li>
+          <li>Payment batches release only past the delegation of authority — preparer and releaser must differ</li>
+          <li>Checks print from inventory with numbers that reconcile; post-dated checks mature onto a schedule</li>
+          <li>Every released peso lands on a bank statement line that the reconciliation must explain</li>
+        </ul>
+      </div>
+      <div class="shot" data-full="images/screenshots/payment-batches.png"><img src="images/screenshots/payment-batches.png" alt="Payment batches" loading="lazy" /></div>
+    </div>
+
+    <div class="row reveal">
+      <div class="txt">
+        <div class="eyebrow">Period Close</div>
+        <h2>A close you can hand to the auditor</h2>
+        <ul>
+          <li>The checklist for each period is generated for you — accruals, bank recs, subledger ties, tax returns</li>
+          <li>Gate checks refuse a hard close while subledgers still disagree with the control accounts</li>
+          <li>Financial statements generate from the closed books — statement of financial position, income statement, cash flows</li>
+          <li>Every sign-off carries who, when and what evidence — the audit file builds itself as you close</li>
+        </ul>
+      </div>
+      <div class="shot" data-full="images/screenshots/financial-statements.png"><img src="images/screenshots/financial-statements.png" alt="Financial statements" loading="lazy" /></div>
+    </div>
+
+    <div class="row flip reveal">
+      <div class="txt">
+        <div class="eyebrow">One install, two worlds</div>
+        <h2>Switch the company, switch the pack</h2>
+        <ul>
+          <li>Philippine-only screens — BIR filings, alphalists, SSS tables, 2316 — simply don't exist for a Gulf company: the menus, pages and API routes are all gone, not hidden</li>
+          <li>In the Gulf: VAT at 5–15% (none in Qatar and Kuwait), 9–15% corporate tax or Zakat, and end-of-service gratuity instead of contributions</li>
+          <li>Tax numbers validate as TRNs; VAT returns build as VAT-M/VAT-Q instead of 2550M/Q</li>
+          <li>The filing calendar, payroll rules, nightly alerts and report list all follow the jurisdiction</li>
+        </ul>
+      </div>
+      <div class="shot" data-full="images/screenshots/gcc-companies.png"><img src="images/screenshots/gcc-companies.png" alt="The same app running the UAE pack" loading="lazy" /></div>
+    </div>
+
+  </div>
+</section>
+
+<section id="screens">
+  <div class="container center">
+    <div class="sec-head">
+      <div class="eyebrow">Real screens, real data</div>
+      <h2>Take the tour</h2>
+      <p class="lead">Every screenshot below is the actual app running on the demo company. Click to enlarge.</p>
+    </div>
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-cat="all">All</button>
+      <button class="tab" data-cat="books">Books &amp; Statements</button>
+      <button class="tab" data-cat="cash">Payables, Receivables &amp; Treasury</button>
+      <button class="tab" data-cat="people">Payroll &amp; Tax</button>
+      <button class="tab" data-cat="country">Multi-country</button>
+      <button class="tab" data-cat="control">Close &amp; Controls</button>
+    </div>
+    <div class="gallery" id="gallery">
+      <figure data-cat="books" data-full="images/screenshots/dashboard.png"><img src="images/screenshots/dashboard.png" alt="Dashboard" loading="lazy" /><figcaption>Executive dashboard &amp; alert centre</figcaption></figure>
+      <figure data-cat="books" data-full="images/screenshots/workspace.png"><img src="images/screenshots/workspace.png" alt="My workspace" loading="lazy" /><figcaption>My Workspace — your day at a glance</figcaption></figure>
+      <figure data-cat="books" data-full="images/screenshots/trial-balance.png"><img src="images/screenshots/trial-balance.png" alt="Trial balance" loading="lazy" /><figcaption>Trial balance that drills to the voucher</figcaption></figure>
+      <figure data-cat="books" data-full="images/screenshots/gl-inquiry.png"><img src="images/screenshots/gl-inquiry.png" alt="GL inquiry" loading="lazy" /><figcaption>GL inquiry — account to journal line</figcaption></figure>
+      <figure data-cat="books" data-full="images/screenshots/journals.png"><img src="images/screenshots/journals.png" alt="Journal entries" loading="lazy" /><figcaption>Journal entries &amp; reversals</figcaption></figure>
+      <figure data-cat="books" data-full="images/screenshots/daily-listing.png"><img src="images/screenshots/daily-listing.png" alt="Daily journal listing" loading="lazy" /><figcaption>Daily journal listing per book</figcaption></figure>
+      <figure data-cat="books" data-full="images/screenshots/books-of-accounts.png"><img src="images/screenshots/books-of-accounts.png" alt="Books of accounts" loading="lazy" /><figcaption>Books of Accounts — BIR-format printing</figcaption></figure>
+      <figure data-cat="books" data-full="images/screenshots/financial-statements.png"><img src="images/screenshots/financial-statements.png" alt="Financial statements" loading="lazy" /><figcaption>Financial statements from the closed books</figcaption></figure>
+      <figure data-cat="books" data-full="images/screenshots/chart-of-accounts.png"><img src="images/screenshots/chart-of-accounts.png" alt="Chart of accounts" loading="lazy" /><figcaption>Chart of accounts mapped to the statements</figcaption></figure>
+      <figure data-cat="books" data-full="images/screenshots/fixed-assets.png"><img src="images/screenshots/fixed-assets.png" alt="Fixed assets" loading="lazy" /><figcaption>Fixed-asset register with certified depreciation</figcaption></figure>
+      <figure data-cat="books" data-full="images/screenshots/depreciation-schedule.png"><img src="images/screenshots/depreciation-schedule.png" alt="Depreciation schedule" loading="lazy" /><figcaption>Depreciation schedule — lapsing &amp; forecast</figcaption></figure>
+      <figure data-cat="cash" data-full="images/screenshots/ap-invoices.png"><img src="images/screenshots/ap-invoices.png" alt="AP invoices" loading="lazy" /><figcaption>Supplier bills with EWT computed per ATC</figcaption></figure>
+      <figure data-cat="cash" data-full="images/screenshots/payment-batches.png"><img src="images/screenshots/payment-batches.png" alt="Payment batches" loading="lazy" /><figcaption>Payment batches under the delegation of authority</figcaption></figure>
+      <figure data-cat="cash" data-full="images/screenshots/suppliers.png"><img src="images/screenshots/suppliers.png" alt="Suppliers" loading="lazy" /><figcaption>Supplier master — TIN-validated, default ATC</figcaption></figure>
+      <figure data-cat="cash" data-full="images/screenshots/purchase-orders.png"><img src="images/screenshots/purchase-orders.png" alt="Purchase orders" loading="lazy" /><figcaption>Purchase orders with budget commitments</figcaption></figure>
+      <figure data-cat="cash" data-full="images/screenshots/sales-invoices.png"><img src="images/screenshots/sales-invoices.png" alt="Sales invoices" loading="lazy" /><figcaption>Sales invoices from the registered SI series</figcaption></figure>
+      <figure data-cat="cash" data-full="images/screenshots/collections.png"><img src="images/screenshots/collections.png" alt="Collections" loading="lazy" /><figcaption>Collections applied to the oldest invoices</figcaption></figure>
+      <figure data-cat="cash" data-full="images/screenshots/aging-snapshot.png"><img src="images/screenshots/aging-snapshot.png" alt="Aging" loading="lazy" /><figcaption>Receivable aging &amp; expected credit loss</figcaption></figure>
+      <figure data-cat="cash" data-full="images/screenshots/bank-reconciliation.png"><img src="images/screenshots/bank-reconciliation.png" alt="Bank reconciliation" loading="lazy" /><figcaption>Bank reconciliation worksheet</figcaption></figure>
+      <figure data-cat="cash" data-full="images/screenshots/petty-vouchers.png"><img src="images/screenshots/petty-vouchers.png" alt="Petty cash vouchers" loading="lazy" /><figcaption>Petty cash on a strict imprest float</figcaption></figure>
+      <figure data-cat="cash" data-full="images/screenshots/payables-workspace.png"><img src="images/screenshots/payables-workspace.png" alt="Payables workspace" loading="lazy" /><figcaption>The payables desk — a whole AP day on one screen</figcaption></figure>
+      <figure data-cat="cash" data-full="images/screenshots/receivables-workspace.png"><img src="images/screenshots/receivables-workspace.png" alt="Receivables workspace" loading="lazy" /><figcaption>The receivables desk — aging &amp; dunning due</figcaption></figure>
+      <figure data-cat="cash" data-full="images/screenshots/treasury-workspace.png"><img src="images/screenshots/treasury-workspace.png" alt="Treasury workspace" loading="lazy" /><figcaption>The treasury desk — cash position &amp; forecast</figcaption></figure>
+      <figure data-cat="cash" data-full="images/screenshots/bank-accounts.png"><img src="images/screenshots/bank-accounts.png" alt="Bank accounts" loading="lazy" /><figcaption>Banks, wallets &amp; petty cash — GL-mapped</figcaption></figure>
+      <figure data-cat="cash" data-full="images/screenshots/bank-statements.png"><img src="images/screenshots/bank-statements.png" alt="Bank statements" loading="lazy" /><figcaption>Imported statements waiting to match</figcaption></figure>
+      <figure data-cat="cash" data-full="images/screenshots/customers.png"><img src="images/screenshots/customers.png" alt="Customers" loading="lazy" /><figcaption>Customer master — terms, limits, collectors</figcaption></figure>
+      <figure data-cat="cash" data-full="images/screenshots/goods-receipts.png"><img src="images/screenshots/goods-receipts.png" alt="Goods receipts" loading="lazy" /><figcaption>Goods receipts against purchase orders</figcaption></figure>
+      <figure data-cat="cash" data-full="images/screenshots/inventory-items.png"><img src="images/screenshots/inventory-items.png" alt="Inventory items" loading="lazy" /><figcaption>Inventory items — weighted-average costing</figcaption></figure>
+      <figure data-cat="cash" data-full="images/screenshots/pdc-register.png"><img src="images/screenshots/pdc-register.png" alt="PDC register" loading="lazy" /><figcaption>Post-dated cheques tracked to maturity</figcaption></figure>
+      <figure data-cat="cash" data-full="images/screenshots/loan-register.png"><img src="images/screenshots/loan-register.png" alt="Loan register" loading="lazy" /><figcaption>Loan register with amortization schedules</figcaption></figure>
+      <figure data-cat="cash" data-full="images/screenshots/dunning.png"><img src="images/screenshots/dunning.png" alt="Dunning ladder" loading="lazy" /><figcaption>Dunning ladder — collections escalation</figcaption></figure>
+      <figure data-cat="people" data-full="images/screenshots/payroll-runs.png"><img src="images/screenshots/payroll-runs.png" alt="Payroll runs" loading="lazy" /><figcaption>Payroll runs — computed, approved, posted</figcaption></figure>
+      <figure data-cat="people" data-full="images/screenshots/statutory-remittances.png"><img src="images/screenshots/statutory-remittances.png" alt="Statutory remittances" loading="lazy" /><figcaption>SSS · PhilHealth · Pag-IBIG remittance reports</figcaption></figure>
+      <figure data-cat="people" data-full="images/screenshots/expense-claims.png"><img src="images/screenshots/expense-claims.png" alt="Expense claims" loading="lazy" /><figcaption>Expense claims — no receipt, no reimbursement</figcaption></figure>
+      <figure data-cat="people" data-full="images/screenshots/vat-returns.png"><img src="images/screenshots/vat-returns.png" alt="VAT returns" loading="lazy" /><figcaption>VAT returns built from the books</figcaption></figure>
+      <figure data-cat="people" data-full="images/screenshots/wht-reconciliation.png"><img src="images/screenshots/wht-reconciliation.png" alt="WHT reconciliation" loading="lazy" /><figcaption>Expanded withholding reconciliation</figcaption></figure>
+      <figure data-cat="people" data-full="images/screenshots/bir-filings.png"><img src="images/screenshots/bir-filings.png" alt="BIR filings" loading="lazy" /><figcaption>BIR filing calendar with due dates</figcaption></figure>
+      <figure data-cat="people" data-full="images/screenshots/payroll-compensation.png"><img src="images/screenshots/payroll-compensation.png" alt="Compensation masters" loading="lazy" /><figcaption>Compensation masters feeding the runs</figcaption></figure>
+      <figure data-cat="people" data-full="images/screenshots/tax-workspace.png"><img src="images/screenshots/tax-workspace.png" alt="Tax workspace" loading="lazy" /><figcaption>The tax desk — 60-day filing countdown</figcaption></figure>
+      <figure data-cat="people" data-full="images/screenshots/vat-transactions.png"><img src="images/screenshots/vat-transactions.png" alt="VAT transactions" loading="lazy" /><figcaption>VAT transactions behind the returns</figcaption></figure>
+      <figure data-cat="people" data-full="images/screenshots/bir-atp-series.png"><img src="images/screenshots/bir-atp-series.png" alt="ATP and series registry" loading="lazy" /><figcaption>ATP / permit-to-use &amp; the series registry</figcaption></figure>
+      <figure data-cat="country" data-full="images/screenshots/wizard-country.png"><img src="images/screenshots/wizard-country.png" alt="Setup wizard country step" loading="lazy" /><figcaption>Setup wizard — pick the country, the pack follows</figcaption></figure>
+      <figure data-cat="country" data-full="images/screenshots/wizard-country-ae.png"><img src="images/screenshots/wizard-country-ae.png" alt="Gulf country selected in the wizard" loading="lazy" /><figcaption>Gulf country selected — currency &amp; notes react</figcaption></figure>
+      <figure data-cat="country" data-full="images/screenshots/companies-jurisdiction.png"><img src="images/screenshots/companies-jurisdiction.png" alt="Companies register with jurisdiction" loading="lazy" /><figcaption>Companies register — a jurisdiction per entity</figcaption></figure>
+      <figure data-cat="country" data-full="images/screenshots/gcc-payroll.png"><img src="images/screenshots/gcc-payroll.png" alt="UAE payroll compensation" loading="lazy" /><figcaption>UAE payroll — gratuity accrual, no contributions</figcaption></figure>
+      <figure data-cat="country" data-full="images/screenshots/gcc-companies.png"><img src="images/screenshots/gcc-companies.png" alt="UAE companies register" loading="lazy" /><figcaption>Jurisdiction switched — currency follows</figcaption></figure>
+      <figure data-cat="control" data-full="images/screenshots/approval-inbox.png"><img src="images/screenshots/approval-inbox.png" alt="Approval inbox" loading="lazy" /><figcaption>The approval inbox — one place to decide</figcaption></figure>
+      <figure data-cat="control" data-full="images/screenshots/period-close.png"><img src="images/screenshots/period-close.png" alt="Period close" loading="lazy" /><figcaption>Period close checklist &amp; gates</figcaption></figure>
+      <figure data-cat="control" data-full="images/screenshots/budget-variance.png"><img src="images/screenshots/budget-variance.png" alt="Budget vs actual" loading="lazy" /><figcaption>Budget vs actual, with commentary</figcaption></figure>
+      <figure data-cat="control" data-full="images/screenshots/control-exceptions.png"><img src="images/screenshots/control-exceptions.png" alt="Control exceptions" loading="lazy" /><figcaption>Control checks raising exceptions</figcaption></figure>
+      <figure data-cat="control" data-full="images/screenshots/audit-log.png"><img src="images/screenshots/audit-log.png" alt="Audit log" loading="lazy" /><figcaption>Field-level audit trail</figcaption></figure>
+      <figure data-cat="control" data-full="images/screenshots/report-library.png"><img src="images/screenshots/report-library.png" alt="Report library" loading="lazy" /><figcaption>Report library — saved runs &amp; schedules</figcaption></figure>
+      <figure data-cat="control" data-full="images/screenshots/module-help.png"><img src="images/screenshots/module-help.png" alt="Built-in module help" loading="lazy" /><figcaption>The (i) on every title opens the module manual</figcaption></figure>
+      <figure data-cat="control" data-full="images/screenshots/documentation.png"><img src="images/screenshots/documentation.png" alt="Built-in manuals" loading="lazy" /><figcaption>Built-in operator manual</figcaption></figure>
+      <figure data-cat="control" data-full="images/screenshots/periods.png"><img src="images/screenshots/periods.png" alt="Accounting periods" loading="lazy" /><figcaption>Accounting periods &amp; the close calendar</figcaption></figure>
+      <figure data-cat="control" data-full="images/screenshots/backup-sample-data.png"><img src="images/screenshots/backup-sample-data.png" alt="Backup and restore" loading="lazy" /><figcaption>Backup &amp; restore, with restore drills</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="run">
+  <div class="container center">
+    <div class="sec-head">
+      <div class="eyebrow">Deployment</div>
+      <h2>Install once. Everyone connects to it.</h2>
+      <p class="lead">One machine holds the database. Other PCs reach it over your office network — the desktop app, or just a browser.</p>
+    </div>
+    <div class="modes">
+      <div class="mode reveal">
+        <h3><span class="tag">Solo</span> Standalone</h3>
+        <p>One computer runs everything — the app and the database together. Perfect for a small office or to evaluate it.</p>
+      </div>
+      <div class="mode reveal">
+        <h3><span class="tag">Team</span> Host + Clients</h3>
+        <p>One PC is the Host. Staff PCs install the app in Client mode and point it at the Host's address. The Host owns the single database file.</p>
+      </div>
+      <div class="mode reveal">
+        <h3><span class="tag">No install</span> Web access</h3>
+        <p>Turn on browser access and staff open a link in Chrome or Edge — nothing to install on their machine. Keep it on your office network.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="container">
+    <div class="sec-head">
+      <div class="eyebrow" style="color:#8ea2ff">Ownership</div>
+      <h2>Your data never leaves your building</h2>
+      <p class="lead" style="color:#aeb6cc">
+        There is no cloud account, no vendor database, nothing phoning home with your books.
+        The whole system is one SQLite file on your own disk — back it up, move it, keep it.
+      </p>
+    </div>
+    <div class="grid">
+      <div class="card reveal"><h3>No subscription</h3><p>Buy it once on the Microsoft Store. It keeps working — the version you own runs for good.</p></div>
+      <div class="card reveal"><h3>Works offline</h3><p>An internet outage doesn't stop the monthly close. The server only needs your LAN.</p></div>
+      <div class="card reveal"><h3>Handles the whole office</h3><p>One process, one database connection, WAL mode — dozens of concurrent users with no write conflicts. Keep the file on local SSD.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="container center">
+    <div class="sec-head">
+      <div class="eyebrow">Pricing</div>
+      <h2>One price. One server. Yours.</h2>
+    </div>
+    <div class="price-wrap">
+      <div class="price reveal">
+        <div class="amount">One-time <small>/ per server</small></div>
+        <p class="lead" style="font-size:1rem">Buy once from the Microsoft Store — yours forever.</p>
+        <ul>
+          <li>Every module — general ledger, payables, receivables, treasury, payroll, expenses, inventory, fixed assets, budgets, period close, tax &amp; BIR, reports</li>
+          <li>Unlimited transactions and unlimited staff connecting over your network</li>
+          <li>Standalone, Host + Client, and browser access</li>
+          <li>The version you buy runs forever — no forced renewals</li>
+          <li>Delivered through the Microsoft Store</li>
+        </ul>
+        <a class="store-badge" href="https://apps.microsoft.com/detail/9NXXXXXXXXXX" target="_blank" rel="noopener" style="display:inline-block;margin-top:6px">
+          <img src="images/microsoft-store.png" alt="Available only on Microsoft Store" />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="faq">
+  <div class="container">
+    <div class="sec-head center">
+      <div class="eyebrow">Questions</div>
+      <h2>Good to know</h2>
+    </div>
+    <div class="faq">
+      <details class="qa"><summary>Does it work outside the Philippines?</summary><p>Yes — the system is multi-jurisdiction. At setup you pick the country: Philippines, United Arab Emirates, Saudi Arabia, Qatar, Oman, Bahrain or Kuwait. The pack that follows changes the currency, the VAT rate and return forms (or no VAT at all in Qatar and Kuwait), the filing calendar, the payroll rules — Gulf companies accrue end-of-service gratuity instead of SSS/PhilHealth/Pag-IBIG and withhold nothing — and which screens exist at all. A group can run a Philippine entity and a Gulf entity side by side in the same install, each with its own pack.</p></details>
+      <details class="qa"><summary>Is this real double-entry accounting or a billing front-end?</summary><p>Real. Every transaction — a supplier bill, a collection, a payslip, a depreciation batch — posts balanced journal lines to the general ledger, through the same books a CPA would keep: sales journal, cash receipts, cash disbursements, purchases, general. The trial balance is the same data your financial statements generate from.</p></details>
+      <details class="qa"><summary>Does it produce the BIR forms?</summary><p>The VAT returns (2550M/Q), expanded withholding returns (1601C, 1601EQ, 1604E) and compensation (1604C) are built from your own transactions, with the supporting schedules and alphalists. Sales invoices are issued only from registered series tied to your ATP / permit-to-use, so numbering gaps and voids are tracked the way the regulations require.</p></details>
+      <details class="qa"><summary>Can we import our existing books?</summary><p>Yes. A guided migration loads your chart of accounts, opening balances, partner masters and open items — unpaid invoices on both sides, post-dated checks, employee advances — and validates that the opening entry balances before anything is saved.</p></details>
+      <details class="qa"><summary>Can several people use it at the same time?</summary><p>Yes. Staff PCs connect to the Host over your office network — the desktop app or a browser. One server process owns the single database and runs every query in order, so there is never a write conflict. A team of dozens is well within range.</p></details>
+      <details class="qa"><summary>Does it need the internet?</summary><p>No. Everything runs on your own network, fully offline — accounting, payroll, reports, backups. Once installed, the app never phones home.</p></details>
+      <details class="qa"><summary>Where is my data stored?</summary><p>In one SQLite database file on the Host machine's disk, plus an uploads folder for receipts and documents. It is never sent anywhere. Backups run on a schedule you set, and a restore drill inside the app verifies the backup is actually readable.</p></details>
+      <details class="qa"><summary>How does it stop one person from doing everything?</summary><p>Segregation-of-duties rules and an approval matrix are enforced by the server, not the screen: the person who prepares a payment batch can't be the one who releases it, claims without receipts can't leave draft, and every decision lands in an approval inbox with a reason. Each field change is stamped with who, when and why.</p></details>
+      <details class="qa"><summary>Can we brand it with our company?</summary><p>Yes. Upload your logo, set your company details and pick theme colours — it flows through the app and the printed reports.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="center">
+  <div class="container">
+    <h2>Ready to put your books in order?</h2>
+    <p class="lead">Your books start — and stay — on your server.</p>
+    <div style="display:flex;justify-content:center;margin-top:18px">
+      <a class="store-badge" href="https://apps.microsoft.com/detail/9NXXXXXXXXXX" target="_blank" rel="noopener">
+        <img src="images/microsoft-store.png" alt="Available only on Microsoft Store" />
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <span class="brand">RRD Suite</span>
+    <span>© <span id="yr"></span> RRD Suite — Accounting System · by RamRam Dev</span>
+    <span>
+      <a href="https://apps.microsoft.com/detail/9NXXXXXXXXXX" target="_blank" rel="noopener">Microsoft Store</a> ·
+      <a href="https://monbutiong.github.io/privacy-policy/rrd-suite.html" target="_blank" rel="noopener">Privacy Policy</a>
+    </span>
+  </div>
+</footer>
+
+<div class="lb" id="lb"><button id="lbClose" aria-label="Close">×</button><img id="lbImg" src="" alt="" /></div>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // Mobile nav
+  var t = document.getElementById('navToggle'), nl = document.getElementById('navlinks');
+  t && t.addEventListener('click', function () { nl.classList.toggle('open'); });
+  nl && nl.addEventListener('click', function (e) { if (e.target.tagName === 'A') nl.classList.remove('open'); });
+
+  // Screenshot tabs
+  var tabs = document.getElementById('tabs'), figs = [].slice.call(document.querySelectorAll('#gallery figure'));
+  tabs && tabs.addEventListener('click', function (e) {
+    if (e.target.tagName !== 'BUTTON') return;
+    [].forEach.call(tabs.children, function (b) { b.classList.toggle('active', b === e.target); });
+    var cat = e.target.dataset.cat;
+    figs.forEach(function (f) { f.style.display = (cat === 'all' || f.dataset.cat === cat) ? '' : 'none'; });
+  });
+
+  // Lightbox
+  var lb = document.getElementById('lb'), lbImg = document.getElementById('lbImg');
+  function openLb(src) { lbImg.src = src; lb.classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function closeLb() { lb.classList.remove('open'); lbImg.src = ''; document.body.style.overflow = ''; }
+  document.addEventListener('click', function (e) {
+    var z = e.target.closest('[data-full]');
+    if (z) { openLb(z.getAttribute('data-full')); }
+  });
+  document.getElementById('lbClose').addEventListener('click', closeLb);
+  lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeLb(); });
+
+  // Scroll reveal
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in'); });
+  }
+</script>
+
+</body>
+</html>
