@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Privacy Policy — RRD Suite: Manufacturing ERP | RamRam Dev</title>
+<meta name="description" content="Privacy Policy for RRD Suite: Manufacturing ERP by RamRam Dev. Learn how our local, offline desktop application protects your data." />
+<link rel="icon" href="images/login-title.png" />
+<script>
+  /* Set language/direction + enable JS-only styles before first paint (avoids a flash). */
+  (function () {
+    document.documentElement.classList.add("js");
+    try {
+      var nav = (navigator.language || "").toLowerCase();
+      var lang = localStorage.getItem("siteLang") || (nav.indexOf("ar") === 0 ? "ar" : "en");
+      document.documentElement.setAttribute("lang", lang);
+      document.documentElement.setAttribute("dir", lang === "ar" ? "rtl" : "ltr");
+    } catch (e) {}
+  })();
+</script>
+<style>
+  :root {
+    --ink: #1f2430;
+    --muted: #5b6472;
+    --line: #e4e7ec;
+    --accent: #2b5fd9;
+    --accent-2: #0acf97;
+    --bg: #ffffff;
+    --band: #0f1b3d;
+    --band-text: #eef1fb;
+    --soft: #f6f8fb;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: var(--accent); text-decoration: none; }
+  .container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+
+  /* Top Minimal Floating Language Bar */
+  .top-bar {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    z-index: 10;
+  }
+  [dir="rtl"] .top-bar {
+    right: auto;
+    left: 24px;
+  }
+  .lang-toggle {
+    background: rgba(255, 255, 255, 0.12);
+    color: #c7cff2;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    line-height: 1;
+    white-space: nowrap;
+    transition: color .2s ease, border-color .2s ease, background .2s ease;
+  }
+  .lang-toggle:hover {
+    color: #fff;
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  /* Page Header with Branding Logo */
+  .policy-header {
+    position: relative;
+    background-color: var(--band);
+    background-image: linear-gradient(160deg, rgb(15 27 61) 0%, rgb(26 42 94) 100%);
+    color: var(--band-text);
+    padding: 72px 0 60px;
+    text-align: center;
+  }
+  .header-logo-container {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 10px 20px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .header-logo {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+  }
+  .header-brand-name {
+    color: #fff;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: -0.01em;
+  }
+  .policy-header .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 12px;
+    font-weight: 700;
+    color: #8fd6c1;
+    margin: 0 0 10px;
+  }
+  .policy-header h1 {
+    font-size: 38px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0 0 12px;
+    color: #fff;
+  }
+  .policy-header p {
+    color: #c7cff2;
+    font-size: 15px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* Policy Content Body */
+  .policy-main {
+    padding: 64px 0 96px;
+  }
+  .policy-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  /* Table of Contents Sidebar */
+  .toc-card {
+    position: sticky;
+    top: 32px;
+    background: var(--soft);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .toc-card h3 {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin: 0 0 14px;
+  }
+  .toc-list {
+    list-style: none;
+    margin: 0; padding: 0;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .toc-list a {
+    color: var(--ink);
+    font-size: 13.5px;
+    font-weight: 500;
+    transition: color .2s ease;
+  }
+  .toc-list a:hover {
+    color: var(--accent);
+  }
+
+  /* Article sections */
+  .policy-content {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 48px;
+    box-shadow: 0 4px 20px rgba(15,27,61,0.03);
+  }
+  .policy-section {
+    margin-bottom: 40px;
+    scroll-margin-top: 40px;
+  }
+  .policy-section:last-child {
+    margin-bottom: 0;
+  }
+  .policy-section h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  .policy-section h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 24px 0 10px;
+  }
+  .policy-section p {
+    color: var(--muted);
+    font-size: 15px;
+    margin: 0 0 16px;
+    line-height: 1.7;
+  }
+  .policy-section ul {
+    color: var(--muted);
+    font-size: 15px;
+    margin: 0 0 16px;
+    padding-left: 20px;
+    line-height: 1.7;
+  }
+  .policy-section li {
+    margin-bottom: 8px;
+  }
+
+  /* Highlight boxes */
+  .highlight-box {
+    background: #f0f4fd;
+    border-left: 4px solid var(--accent);
+    padding: 18px 22px;
+    border-radius: 0 10px 10px 0;
+    margin: 20px 0;
+  }
+  .highlight-box p {
+    color: #1a2a5e;
+    margin: 0;
+    font-weight: 500;
+  }
+
+  [dir="rtl"] .highlight-box {
+    border-left: none;
+    border-right: 4px solid var(--accent);
+    border-radius: 10px 0 0 10px;
+  }
+  [dir="rtl"] .policy-section ul {
+    padding-left: 0;
+    padding-right: 20px;
+  }
+
+  /* Footer */
+  footer { background: var(--band); color: #b9c3ea; padding: 46px 0 28px; }
+  .footer-grid { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px; }
+  .footer-brand { display: flex; align-items: center; gap: 12px; }
+  .footer-badge { height: 46px; width: auto; }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1); margin-top: 32px; padding-top: 20px;
+    font-size: 12.5px; color: #8492c4; text-align: center;
+  }
+
+  @media (max-width: 900px) {
+    .policy-layout { grid-template-columns: 1fr; gap: 32px; }
+    .toc-card { position: static; }
+    .policy-content { padding: 28px 20px; }
+    .top-bar { top: 14px; right: 16px; }
+  }
+
+  /* ---- Arabic / RTL ---- */
+  [dir="rtl"] body {
+    font-family: "Cairo", "Segoe UI", Tahoma, "Geeza Pro", "Arabic Typesetting", sans-serif;
+    line-height: 1.75;
+  }
+  [dir="rtl"] .policy-header h1, [dir="rtl"] .policy-section h2, [dir="rtl"] .policy-section h3 {
+    letter-spacing: normal;
+  }
+</style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <button class="lang-toggle" id="langToggle" type="button" aria-label="Switch language">العربية</button>
+  </div>
+
+  <header class="policy-header">
+    <div class="container">
+      <div class="header-logo-container">
+        <img class="header-logo" src="images/login-title.png" alt="RRD Suite Logo" data-i18n-alt="header_logo_alt" />
+        <span class="header-brand-name" data-i18n="brand">RRD Suite: Manufacturing ERP</span>
+      </div>
+      <p class="eyebrow" data-i18n="policy_eyebrow">Microsoft Store App</p>
+      <h1 data-i18n="policy_title">Privacy Policy</h1>
+      <p data-i18n="policy_subtitle">Last updated: October 2026</p>
+    </div>
+  </header>
+
+  <main class="policy-main">
+    <div class="container">
+      <div class="policy-layout">
+        <!-- Table of Contents -->
+        <aside>
+          <div class="toc-card">
+            <h3 data-i18n="toc_title">On this page</h3>
+            <ul class="toc-list">
+              <li><a href="#introduction" data-i18n="toc_1">1. Introduction</a></li>
+              <li><a href="#no-collect" data-i18n="toc_2">2. Information We Do Not Collect</a></li>
+              <li><a href="#local-data" data-i18n="toc_3">3. Information Stored Locally</a></li>
+              <li><a href="#security" data-i18n="toc_4">4. Security of Your Information</a></li>
+              <li><a href="#third-party" data-i18n="toc_5">5. Third-Party Services</a></li>
+              <li><a href="#children" data-i18n="toc_6">6. Children's Privacy</a></li>
+              <li><a href="#changes" data-i18n="toc_7">7. Changes to This Policy</a></li>
+              <li><a href="#contact" data-i18n="toc_8">8. Contact Information</a></li>
+            </ul>
+          </div>
+        </aside>
+
+        <!-- Document Content -->
+        <article class="policy-content">
+          <section id="introduction" class="policy-section">
+            <h2 data-i18n="sec1_h">1. Introduction</h2>
+            <p data-i18n="sec1_p1">
+              RamRam Dev ("we," "our," or "us") respects your privacy and is committed to protecting it. This Privacy Policy governs your use of the <strong>RRD Suite: Manufacturing ERP</strong> desktop application distributed through the Microsoft Store.
+            </p>
+            <p data-i18n="sec1_p2">
+              Our application is specifically engineered as a <strong>100% offline desktop tool</strong>. By design, we do not operate remote servers, cloud databases, or tracking scripts that gather your personal or business operational records.
+            </p>
+          </section>
+
+          <section id="no-collect" class="policy-section">
+            <h2 data-i18n="sec2_h">2. Information We Do Not Collect</h2>
+            <p data-i18n="sec2_p">
+              Because the RRD Suite: Manufacturing ERP runs entirely on your local Windows PC or local company network, we <strong>do not</strong> collect, transmit, store, or have access to any of the following data:
+            </p>
+            <ul>
+              <li data-i18n="sec2_li1">Personal identification information (such as your name, email address, phone number, or Microsoft account details).</li>
+              <li data-i18n="sec2_li2">Your business records, customer lists, supplier directories, inventory counts, or financial sales reports.</li>
+              <li data-i18n="sec2_li3">Telemetry data, usage analytics, clickstream data, or automated crash logs.</li>
+            </ul>
+            <div class="highlight-box">
+              <p data-i18n="sec2_box">Your business data never leaves your computer unless you explicitly choose to export or share it yourself.</p>
+            </div>
+          </section>
+
+          <section id="local-data" class="policy-section">
+            <h2 data-i18n="sec3_h">3. Information Stored Locally on Your Device</h2>
+            <p data-i18n="sec3_p1">
+              To provide its core functionality, the application creates and manages data locally on your storage drive. This includes:
+            </p>
+            <ul>
+              <li data-i18n="sec3_li1"><strong>Database Files:</strong> Local SQLite or relational database files storing inventory items, purchase orders, sales receipts, and staff user roles.</li>
+              <li data-i18n="sec3_li2"><strong>App Preferences:</strong> Local configuration files maintaining user interface settings, language selection (English/Arabic), and window dimensions.</li>
+            </ul>
+            <p data-i18n="sec3_p2">
+              You maintain total ownership and sole custody of this database file. You can back it up, move it across network computers, or delete it at any time without our intervention.
+            </p>
+          </section>
+
+          <section id="security" class="policy-section">
+            <h2 data-i18n="sec4_h">4. Security of Your Information</h2>
+            <p data-i18n="sec4_p">
+              Because all data is stored locally on your device or secure local network, the security of your business records depends on the physical and digital security measures of your computer system (such as operating system passwords, disk encryption, and local user permissions). We strongly recommend maintaining regular local backups of your application database.
+            </p>
+          </section>
+
+          <section id="third-party" class="policy-section">
+            <h2 data-i18n="sec5_h">5. Third-Party Services</h2>
+            <p data-i18n="sec5_p">
+              The application is distributed via the Microsoft Store. Microsoft may collect standard download statistics and licensing validations in accordance with the <a href="https://privacy.microsoft.com/" target="_blank" rel="noopener">Microsoft Privacy Statement</a>. We do not integrate any third-party advertising networks, analytical trackers, or external cloud APIs inside the application.
+            </p>
+          </section>
+
+          <section id="children" class="policy-section">
+            <h2 data-i18n="sec6_h">6. Children's Privacy</h2>
+            <p data-i18n="sec6_p">
+              Our application is a professional business and manufacturing management tool intended for factories, workshops and other commercial manufacturing businesses. It is not directed at children under the age of 13, and we do not knowingly collect any information from children.
+            </p>
+          </section>
+
+          <section id="changes" class="policy-section">
+            <h2 data-i18n="sec7_h">7. Changes to This Privacy Policy</h2>
+            <p data-i18n="sec7_p">
+              We may update this Privacy Policy from time to time to reflect product enhancements or statutory requirements. Any revisions will be posted on this page with an updated revision date. Continued use of the application following any modifications constitutes your acceptance of the revised policy.
+            </p>
+          </section>
+
+          <section id="contact" class="policy-section">
+            <h2 data-i18n="sec8_h">8. Contact Information</h2>
+            <p data-i18n="sec8_p">
+              If you have any questions, comments, or concerns regarding this Privacy Policy or the RRD Suite: Manufacturing ERP, please contact the developer:
+            </p>
+            <ul>
+              <li data-i18n="sec8_li1"><strong>Developer:</strong> RamRam Dev</li>
+              <li data-i18n="sec8_li2"><strong>Developer Profile:</strong> <a href="https://play.google.com/store/apps/dev?id=4673213010085861192" target="_blank" rel="noopener">Visit Microsoft Store / Developer Page</a></li>
+              <li data-i18n="sec8_li3"><strong>Support Website:</strong> RRD Suite: Manufacturing ERP Support</li>
+            </ul>
+          </section>
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img class="footer-badge" src="images/bottom-developed-by.png" alt="Developed by RamRam Dev" data-i18n-alt="footer_badge_alt" />
+        </div>
+      </div>
+      <div class="footer-bottom" data-i18n="foot_copy">© 2026 RamRam Dev — RRD Suite: Manufacturing ERP. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    var I18N = {
+      en: {
+        page_title: "Privacy Policy — RRD Suite: Manufacturing ERP | RamRam Dev",
+        page_desc: "Privacy Policy for RRD Suite: Manufacturing ERP by RamRam Dev. Learn how our local, offline desktop application protects your data.",
+        lang_name: "العربية",
+
+        brand: "RRD Suite: Manufacturing ERP",
+        header_logo_alt: "RRD Suite Logo",
+        policy_eyebrow: "Microsoft Store App",
+        policy_title: "Privacy Policy",
+        policy_subtitle: "Last updated: October 2026",
+
+        toc_title: "On this page",
+        toc_1: "1. Introduction",
+        toc_2: "2. Information We Do Not Collect",
+        toc_3: "3. Information Stored Locally",
+        toc_4: "4. Security of Your Information",
+        toc_5: "5. Third-Party Services",
+        toc_6: "6. Children's Privacy",
+        toc_7: "7. Changes to This Policy",
+        toc_8: "8. Contact Information",
+
+        sec1_h: "1. Introduction",
+        sec1_p1: "RamRam Dev (\"we,\" \"our,\" or \"us\") respects your privacy and is committed to protecting it. This Privacy Policy governs your use of the RRD Suite: Manufacturing ERP desktop application distributed through the Microsoft Store.",
+        sec1_p2: "Our application is specifically engineered as a 100% offline desktop tool. By design, we do not operate remote servers, cloud databases, or tracking scripts that gather your personal or business operational records.",
+
+        sec2_h: "2. Information We Do Not Collect",
+        sec2_p: "Because the RRD Suite: Manufacturing ERP runs entirely on your local Windows PC or local company network, we do not collect, transmit, store, or have access to any of the following data:",
+        sec2_li1: "Personal identification information (such as your name, email address, phone number, or Microsoft account details).",
+        sec2_li2: "Your business records, customer lists, supplier directories, inventory counts, or financial sales reports.",
+        sec2_li3: "Telemetry data, usage analytics, clickstream data, or automated crash logs.",
+        sec2_box: "Your business data never leaves your computer unless you explicitly choose to export or share it yourself.",
+
+        sec3_h: "3. Information Stored Locally on Your Device",
+        sec3_p1: "To provide its core functionality, the application creates and manages data locally on your storage drive. This includes:",
+        sec3_li1: "Database Files: Local SQLite or relational database files storing inventory items, purchase orders, sales receipts, and staff user roles.",
+        sec3_li2: "App Preferences: Local configuration files maintaining user interface settings, language selection (English/Arabic), and window dimensions.",
+        sec3_p2: "You maintain total ownership and sole custody of this database file. You can back it up, move it across network computers, or delete it at any time without our intervention.",
+
+        sec4_h: "4. Security of Your Information",
+        sec4_p: "Because all data is stored locally on your device or secure local network, the security of your business records depends on the physical and digital security measures of your computer system (such as operating system passwords, disk encryption, and local user permissions). We strongly recommend maintaining regular local backups of your application database.",
+
+        sec5_h: "5. Third-Party Services",
+        sec5_p: "The application is distributed via the Microsoft Store. Microsoft may collect standard download statistics and licensing validations in accordance with the Microsoft Privacy Statement. We do not integrate any third-party advertising networks, analytical trackers, or external cloud APIs inside the application.",
+
+        sec6_h: "6. Children's Privacy",
+        sec6_p: "Our application is a professional business and manufacturing management tool intended for factories, workshops and other commercial manufacturing businesses. It is not directed at children under the age of 13, and we do not knowingly collect any information from children.",
+
+        sec7_h: "7. Changes to This Privacy Policy",
+        sec7_p: "We may update this Privacy Policy from time to time to reflect product enhancements or statutory requirements. Any revisions will be posted on this page with an updated revision date. Continued use of the application following any modifications constitutes your acceptance of the revised policy.",
+
+        sec8_h: "8. Contact Information",
+        sec8_p: "If you have any questions, comments, or concerns regarding this Privacy Policy or the RRD Suite: Manufacturing ERP, please contact the developer:",
+        sec8_li1: "Developer: RamRam Dev",
+        sec8_li2: "Developer Profile: Visit Microsoft Store / Developer Page",
+        sec8_li3: "Support Website: RRD Suite: Manufacturing ERP Support",
+
+        footer_badge_alt: "Developed by RamRam Dev",
+        foot_copy: "© 2026 RamRam Dev — RRD Suite: Manufacturing ERP. All rights reserved."
+      },
+      ar: {
+        page_title: "سياسة الخصوصية — نظام RRD Suite لتخطيط موارد التصنيع | RamRam Dev",
+        page_desc: "سياسة الخصوصية لنظام RRD Suite لتخطيط موارد التصنيع من RamRam Dev. تعرّف على كيف يحمي تطبيق سطح المكتب المحلي الذي يعمل دون إنترنت بياناتك.",
+        lang_name: "English",
+
+        brand: "نظام RRD Suite لتخطيط موارد التصنيع",
+        header_logo_alt: "شعار RRD Suite",
+        policy_eyebrow: "تطبيق متجر Microsoft",
+        policy_title: "سياسة الخصوصية",
+        policy_subtitle: "آخر تحديث: أكتوبر 2026",
+
+        toc_title: "في هذه الصفحة",
+        toc_1: "1. المقدمة",
+        toc_2: "2. المعلومات التي لا نجمعها",
+        toc_3: "3. المعلومات المخزنة محلياً",
+        toc_4: "4. أمان معلوماتك",
+        toc_5: "5. خدمات الأطراف الثالثة",
+        toc_6: "6. خصوصية الأطفال",
+        toc_7: "7. التغييرات على سياسة الخصوصية",
+        toc_8: "8. معلومات الاتصال",
+
+        sec1_h: "1. المقدمة",
+        sec1_p1: "تحترم RamRam Dev (\"نحن\" أو \"خاصتنا\") خصوصيتك وتلتزم بحمايتها. تحكم سياسة الخصوصية هذه استخدامك لتطبيق سطح المكتب RRD Suite: Manufacturing ERP المُوزَّع عبر متجر Microsoft.",
+        sec1_p2: "تم تصميم تطبيقنا خصيصًا ليصبح أداة مكتبية تعمل بنسبة 100% دون إنترنت. بحكم التصميم، نحن لا ندير خوادم بعيدة، أو قواعد بيانات سحابية، أو نصوص تتبع تجمع سجلاتك الشخصية أو التشغيلية الخاصة بعملك.",
+
+        sec2_h: "2. المعلومات التي لا نجمعها",
+        sec2_p: "نظرًا لأن نظام RRD Suite لتخطيط موارد التصنيع يعمل بالكامل على جهاز الكمبيوتر المحلّي الخاص بك أو شبكة محلك، فإننا لا نجمع أو ننقل أو نخزن أو نصل مطلقًا إلى أي من البيانات التالية:",
+        sec2_li1: "معلومات التعريف الشخصية (مثل اسمك، أو عنوان بريدك الإلكتروني، أو رقم هاتفك، أو تفاصيل حساب Microsoft الخاص بك).",
+        sec2_li2: "سجلات عملك، وقوائم عملائك، وأدلة الموردين، وأرصدة المخزون، أو تقارير المبيعات المالية.",
+        sec2_li3: "بيانات القياس عن بُعد، أو تحليلات الاستخدام، أو بيانات مسار النقرات، أو سجلات الأعطال التلقائية.",
+        sec2_box: "بيانات عملك لا تغادر جهاز الكمبيوتر الخاص بك أبدًا إلا إذا اخترت تصديرها أو مشاركتها بنفسك.",
+
+        sec3_h: "3. المعلومات المخزنة محلياً على جهازك",
+        sec3_p1: "لتوفير وظائفه الأساسية، يقوم التطبيق بإنشاء وإدارة البيانات محليًا على قرص التخزين الخاص بك. يتضمن ذلك:",
+        sec3_li1: "ملفات قاعدة البيانات: ملفات SQLite المحلية أو قواعد البيانات العلائقية التي تخزن أصناف المخزون، وأوامر الشراء، وإيصالات المبيعات، وأدوار موظفي العمل.",
+        sec3_li2: "تفضيلات التطبيق: ملفات التكوين المحلية التي تحافظ على إعدادات واجهة المستخدم، واختيار اللغة (العربية/الإنجليزية)، وأبعاد النافذة.",
+        sec3_p2: "أنت تحتفظ بالملكية الكاملة والحيازة الفردية لملف قاعدة البيانات هذا. يمكنك نسخه احتياطيًا، أو نقله عبر أجهزة الكمبيوتر بالشبكة، أو حذفه في أي وقت دون تدخل منا.",
+
+        sec4_h: "4. أمان معلوماتك",
+        sec4_p: "نظرًا لتخزين جميع البيانات محليًا على جهازك أو شبكتك المحلية الآمنة، فإن أمان سجلات عملك يعتمد على تدابير الأمان المادية والرقمية لنظام الكمبيوتر الخاص بك (مثل كلمات مرور نظام التشغيل، وتشفير الأقراص، وأذونات المستخدم المحلي). نوصي بشدة بالحفاظ على نسخ احتياطية محلية منتظمة لقاعدة بيانات التطبيق.",
+
+        sec5_h: "5. خدمات الأطراف الثالثة",
+        sec5_p: "يتم توفير التطبيق عبر متجر Microsoft. قد تجمع Microsoft إحصاءات التنزيل القياسية والتحقق من الترخيص وفقًا لبيان خصوصية Microsoft. نحن لا ندمج أي شبكات إعلانية تابعة لجهات خارجية، أو متتبعات تحليلية، أو واجهات برمجة تطبيقات سحابية خارجية داخل التطبيق.",
+
+        sec6_h: "6. خصوصية الأطفال",
+        sec6_p: "تطبيقنا هو أداة احترافية لإدارة الأعمال والتصنيع مخصصة للمصانع والورش التجارية وشركات التصنيع. وهو غير مُوجَّه للأطفال دون سن 13 عامًا، ونحن لا نجمع عن علم أي معلومات من الأطفال.",
+
+        sec7_h: "7. التغييرات على سياسة الخصوصية",
+        sec7_p: "قد نقوم بتحديث سياسة الخصوصية هذه من وقت لآخر لتعكس تحسينات المنتجات أو المتطلبات القانونية. سيتم نشر أي تعديلات على هذه الصفحة مع تاريخ مراجعة مُحدث. يُعد استمرار استخدام التطبيق بعد أي تعديلات قبولًا منك للسياسة المحدثة.",
+
+        sec8_h: "8. معلومات الاتصال",
+        sec8_p: "إذا كانت لديك أي أسئلة أو تعليقات أو مخاوف بخصوص سياسة الخصوصية هذه أو نظام RRD Suite لتخطيط موارد التصنيع، يُرجى الاتصال بالمطوّر:",
+        sec8_li1: "المطوّر: RamRam Dev",
+        sec8_li2: "ملف المطوّر: زيارة متجر Microsoft / صفحة المطوّر",
+        sec8_li3: "موقع الدعم: دعم نظام RRD Suite لتخطيط موارد التصنيع",
+
+        footer_badge_alt: "تطوير RamRam Dev",
+        foot_copy: "© 2026 RamRam Dev — نظام RRD Suite لتخطيط موارد التصنيع. جميع الحقوق محفوظة."
+      }
+    };
+
+    var currentLang = "en";
+
+    function ensureArabicFont() {
+      if (document.getElementById("arFont")) return;
+      var pc1 = document.createElement("link");
+      pc1.rel = "preconnect"; pc1.href = "https://fonts.googleapis.com";
+      var pc2 = document.createElement("link");
+      pc2.rel = "preconnect"; pc2.href = "https://fonts.gstatic.com"; pc2.crossOrigin = "anonymous";
+      var css = document.createElement("link");
+      css.id = "arFont"; css.rel = "stylesheet";
+      css.href = "https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap";
+      document.head.appendChild(pc1);
+      document.head.appendChild(pc2);
+      document.head.appendChild(css);
+    }
+
+    function applyLang(lang) {
+      var d = I18N[lang] || I18N.en;
+      currentLang = I18N[lang] ? lang : "en";
+
+      var html = document.documentElement;
+      html.setAttribute("lang", currentLang);
+      html.setAttribute("dir", currentLang === "ar" ? "rtl" : "ltr");
+
+      if (currentLang === "ar") ensureArabicFont();
+
+      document.title = d.page_title;
+      var md = document.querySelector('meta[name="description"]');
+      if (md) md.setAttribute("content", d.page_desc);
+
+      document.querySelectorAll("[data-i18n]").forEach(function (el) {
+        var k = el.getAttribute("data-i18n");
+        if (d[k] != null) el.textContent = d[k];
+      });
+      document.querySelectorAll("[data-i18n-alt]").forEach(function (el) {
+        var k = el.getAttribute("data-i18n-alt");
+        if (d[k] != null) el.setAttribute("alt", d[k]);
+      });
+
+      var toggle = document.getElementById("langToggle");
+      if (toggle) toggle.textContent = d.lang_name;
+
+      try { localStorage.setItem("siteLang", currentLang); } catch (e) {}
+    }
+
+    (function init() {
+      var stored;
+      try { stored = localStorage.getItem("siteLang"); } catch (e) {}
+      var nav = (navigator.language || "").toLowerCase();
+      applyLang(stored || (nav.indexOf("ar") === 0 ? "ar" : "en"));
+    })();
+
+    document.getElementById("langToggle").addEventListener("click", function () {
+      applyLang(currentLang === "ar" ? "en" : "ar");
+    });
+  </script>
+
+</body>
+</html>

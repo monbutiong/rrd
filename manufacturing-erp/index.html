@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RRD Suite: Manufacturing ERP — RamRam Dev</title>
+<meta name="description" content="RRD Suite: Manufacturing ERP — a complete offline desktop app for bills of material, work orders, MRP, inventory, quality, purchasing, sales, costing and finance. No subscription, no internet required." />
+<link rel="icon" href="images/login-title.png" />
+<script>
+  /* Set language/direction + enable JS-only styles before first paint (avoids a flash). */
+  (function () {
+    document.documentElement.classList.add("js");
+    try {
+      var nav = (navigator.language || "").toLowerCase();
+      var lang = localStorage.getItem("siteLang") || (nav.indexOf("ar") === 0 ? "ar" : "en");
+      document.documentElement.setAttribute("lang", lang);
+      document.documentElement.setAttribute("dir", lang === "ar" ? "rtl" : "ltr");
+    } catch (e) {}
+  })();
+</script>
+<style>
+  :root {
+    --ink: #1f2430;
+    --muted: #5b6472;
+    --line: #e4e7ec;
+    --accent: #2b5fd9;
+    --accent-2: #0acf97;
+    --bg: #ffffff;
+    --band: #0f1b3d;
+    --band-2: #1a2a5e;
+    --band-text: #eef1fb;
+    --soft: #f6f8fb;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: var(--accent); text-decoration: none; }
+  .container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+
+  /* Nav */
+  nav.topnav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(15, 27, 61, 0.96);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  nav.topnav .container { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand img { height: 28px; width: auto; }
+  .brand span { color: #fff; font-weight: 700; font-size: 15px; letter-spacing: -0.01em; }
+  .navlinks { display: flex; gap: 28px; }
+  .navlinks a { color: #c7cff2; font-size: 14px; font-weight: 500; }
+  .navlinks a:hover { color: #fff; }
+  .nav-right { display: flex; align-items: center; gap: 14px; }
+  .lang-toggle {
+    background: transparent; color: #c7cff2;
+    border: 1px solid rgba(255,255,255,0.28);
+    padding: 7px 14px; border-radius: 8px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    font-family: inherit; line-height: 1; white-space: nowrap;
+  }
+  .lang-toggle:hover { color: #fff; border-color: #fff; }
+  .nav-cta {
+    background: var(--accent-2); color: #06331f !important; font-weight: 700;
+    padding: 9px 18px; border-radius: 8px; font-size: 14px;
+  }
+  .nav-cta:hover { background: #0bd9a2; }
+
+  /* Hero */
+  .hero {
+    position: relative;
+    background-color: var(--band);
+    background-image:
+      radial-gradient(circle at 85% 20%, rgba(43,95,217,0.35) 0%, rgba(43,95,217,0) 45%),
+      radial-gradient(circle at 10% 90%, rgba(10,207,151,0.16) 0%, rgba(10,207,151,0) 40%),
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 44px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 44px),
+      linear-gradient(160deg, #0b1330 0%, #14224f 55%, #0b1330 100%);
+    color: var(--band-text);
+    padding: 72px 0 0;
+    overflow: hidden;
+  }
+  .hero-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+    padding-bottom: 64px;
+  }
+  .eyebrow {
+    text-transform: uppercase; letter-spacing: 0.14em; font-size: 12px; font-weight: 700;
+    color: #8fd6c1; margin: 0 0 14px;
+  }
+  .hero h1 { font-size: 40px; font-weight: 800; line-height: 1.15; margin: 0 0 18px; letter-spacing: -0.01em; }
+  .hero p.lead { color: #c7cff2; font-size: 16px; max-width: 480px; margin: 0 0 28px; }
+  .hero-logo { max-width: 380px; margin-bottom: 22px; border-radius: 8px; }
+  .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 13px 24px; border-radius: 9px; font-weight: 700; font-size: 14.5px;
+    border: 1px solid transparent; cursor: pointer;
+  }
+  .btn-primary { background: var(--accent-2); color: #06331f; }
+  .btn-primary:hover { background: #0bd9a2; }
+  .btn-outline { background: transparent; color: #fff; border-color: rgba(255,255,255,0.35); }
+  .btn-outline:hover { border-color: #fff; }
+  .hero-shot {
+    border-radius: 12px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.45), 0 2px 0 rgba(255,255,255,0.06) inset;
+    border: 1px solid rgba(255,255,255,0.12);
+    transform: perspective(1200px) rotateY(-6deg) rotateX(2deg);
+  }
+  .stat-strip {
+    border-top: 1px solid rgba(255,255,255,0.12);
+    padding: 22px 0;
+  }
+  .stat-strip .container { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 18px; }
+  .stat { text-align: center; flex: 1; min-width: 130px; }
+  .stat b { display: block; font-size: 22px; color: #fff; }
+  .stat span { font-size: 12.5px; color: #a9b4de; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  /* Section headers */
+  section { padding: 80px 0; }
+  .section-head { text-align: center; max-width: 620px; margin: 0 auto 48px; }
+  .section-head .eyebrow { color: var(--accent); }
+  .section-head h2 { font-size: 30px; font-weight: 800; margin: 0 0 12px; letter-spacing: -0.01em; }
+  .section-head p { color: var(--muted); font-size: 15.5px; margin: 0; }
+
+  /* Features */
+  .feat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .feat-card {
+    background: var(--soft); border: 1px solid var(--line); border-radius: 12px;
+    padding: 26px 22px;
+  }
+  .feat-icon {
+    width: 42px; height: 42px; border-radius: 10px; background: #e8edfb; color: var(--accent);
+    display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 14px;
+  }
+  .feat-card h3 { font-size: 15.5px; margin: 0 0 6px; }
+  .feat-card p { font-size: 13.5px; color: var(--muted); margin: 0; }
+
+  /* Screenshots */
+  .shots-wrap { background: var(--soft); }
+  .shot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .shot-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+    box-shadow: 0 6px 18px rgba(15,27,61,0.06);
+    cursor: zoom-in;
+  }
+  .shot-card .shot-img-wrap { aspect-ratio: 16/10; overflow: hidden; background: #0f1b3d; }
+  .shot-card img { width: 100%; height: 100%; object-fit: cover; object-position: top; transition: transform .3s ease; }
+  .shot-card:hover img { transform: scale(1.04); }
+  .shot-cap { padding: 12px 16px; }
+  .shot-cap b { font-size: 13.5px; display: block; }
+  .shot-cap span { font-size: 12px; color: var(--muted); }
+
+  /* Why band */
+  .why {
+    background: linear-gradient(135deg, var(--band) 0%, #1a2a5e 100%);
+    color: var(--band-text);
+  }
+  .why .section-head h2 { color: #fff; }
+  .why .section-head p { color: #c7cff2; }
+  .why .section-head .eyebrow { color: #8fd6c1; }
+  .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .why-card {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px; padding: 26px 22px;
+  }
+  .why-card h3 { font-size: 15.5px; margin: 0 0 8px; color: #fff; }
+  .why-card p { font-size: 13.5px; color: #b9c3ea; margin: 0; }
+
+  /* CTA band */
+  .cta-band { text-align: center; padding: 76px 0; }
+  .cta-band h2 { font-size: 28px; font-weight: 800; margin: 0 0 14px; }
+  .cta-band p { color: var(--muted); margin: 0 0 28px; }
+
+  /* Footer */
+  footer { background: var(--band); color: #b9c3ea; padding: 46px 0 28px; }
+  .footer-grid { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 24px; }
+  .footer-brand { display: flex; align-items: center; gap: 12px; }
+  .footer-badge { height: 46px; width: auto; }
+  .footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
+  .footer-links a { color: #b9c3ea; font-size: 13.5px; }
+  .footer-links a:hover { color: #fff; }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1); margin-top: 32px; padding-top: 20px;
+    font-size: 12.5px; color: #8492c4; text-align: center;
+  }
+
+  /* Lightbox */
+  .lightbox {
+    position: fixed; inset: 0; background: rgba(10,14,30,0.92);
+    display: none; align-items: center; justify-content: center; z-index: 100; padding: 32px;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 92vw; max-height: 88vh; border-radius: 8px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+  .lightbox-close {
+    position: absolute; top: 22px; right: 28px; color: #fff; font-size: 30px;
+    background: none; border: none; cursor: pointer; line-height: 1;
+  }
+
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-shot { transform: none; }
+    .feat-grid { grid-template-columns: repeat(2, 1fr); }
+    .shot-grid { grid-template-columns: repeat(2, 1fr); }
+    .why-grid { grid-template-columns: 1fr; }
+    .navlinks { display: none; }
+  }
+  @media (max-width: 560px) {
+    .feat-grid, .shot-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 30px; }
+  }
+
+  /* ---- Motion & micro-interactions ---- */
+  nav.topnav { transition: background .3s ease, box-shadow .3s ease; }
+  nav.topnav.scrolled { background: rgba(15,27,61,0.98); box-shadow: 0 6px 24px rgba(0,0,0,0.28); }
+
+  .navlinks a { position: relative; }
+  .navlinks a::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px;
+    background: var(--accent-2); border-radius: 2px;
+    transform: scaleX(0); transition: transform .25s ease;
+  }
+  .navlinks a:hover::after { transform: scaleX(1); }
+
+  .lang-toggle { transition: color .2s ease, border-color .2s ease, background .2s ease; }
+  .lang-toggle:hover { background: rgba(255,255,255,0.08); }
+
+  .nav-cta { transition: background .2s ease, transform .16s ease, box-shadow .2s ease; }
+  .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(10,207,151,0.30); }
+
+  .btn { transition: background .2s ease, border-color .2s ease, transform .16s ease, box-shadow .2s ease; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn:active { transform: translateY(0); }
+  .btn-primary:hover { box-shadow: 0 12px 26px rgba(10,207,151,0.32); }
+
+  .feat-card { transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+  .feat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 32px rgba(15,27,61,0.10);
+    border-color: #cdd7ee;
+  }
+  .feat-icon { transition: transform .25s ease, background .25s ease; }
+  .feat-card:hover .feat-icon { transform: scale(1.08) rotate(-4deg); background: #dbe4fb; }
+
+  .shot-card { transition: transform .25s ease, box-shadow .25s ease; }
+  .shot-card:hover { transform: translateY(-5px); box-shadow: 0 18px 40px rgba(15,27,61,0.16); }
+
+  .why-card { transition: transform .25s ease, background .25s ease, border-color .25s ease; }
+  .why-card:hover {
+    transform: translateY(-4px);
+    background: rgba(255,255,255,0.10);
+    border-color: rgba(255,255,255,0.24);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html.js .reveal {
+      opacity: 0;
+      transform: translateY(26px);
+      transition: opacity .7s cubic-bezier(.22,.61,.36,1), transform .7s cubic-bezier(.22,.61,.36,1);
+    }
+    html.js .reveal.in { opacity: 1; transform: none; }
+
+    @keyframes heroRise {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: none; }
+    }
+    @keyframes heroShotRise {
+      from { opacity: 0; transform: translateY(30px) scale(0.96); }
+      to   { opacity: 1; transform: none; }
+    }
+    @keyframes heroFloat {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    }
+    .hero .eyebrow,
+    .hero-logo,
+    .hero h1,
+    .hero p.lead,
+    .hero .cta-row { animation: heroRise .7s cubic-bezier(.22,.61,.36,1) both; }
+    .hero .eyebrow { animation-delay: .06s; }
+    .hero-logo     { animation-delay: .14s; }
+    .hero h1       { animation-delay: .24s; }
+    .hero p.lead   { animation-delay: .34s; }
+    .hero .cta-row { animation-delay: .44s; }
+
+    .hero-shot-wrap {
+      animation: heroShotRise .8s cubic-bezier(.22,.61,.36,1) .3s both,
+                 heroFloat 6s ease-in-out 1.6s infinite;
+    }
+
+    .stat-strip .stat { animation: heroRise .6s cubic-bezier(.22,.61,.36,1) both; }
+    .stat-strip .stat:nth-child(1) { animation-delay: .52s; }
+    .stat-strip .stat:nth-child(2) { animation-delay: .60s; }
+    .stat-strip .stat:nth-child(3) { animation-delay: .68s; }
+    .stat-strip .stat:nth-child(4) { animation-delay: .76s; }
+    .stat-strip .stat:nth-child(5) { animation-delay: .84s; }
+  }
+
+  @media (prefers-reduced-motion: no-preference) and (max-width: 900px) {
+    .hero-shot-wrap { animation: heroShotRise .8s cubic-bezier(.22,.61,.36,1) .3s both; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .feat-card:hover, .shot-card:hover, .why-card:hover,
+    .btn:hover, .nav-cta:hover { transform: none; }
+    .shot-card:hover img { transform: none; }
+    .feat-card:hover .feat-icon { transform: none; }
+  }
+
+  /* ---- Arabic / RTL ---- */
+  [dir="rtl"] body {
+    font-family: "Cairo", "Segoe UI", Tahoma, "Geeza Pro", "Arabic Typesetting", sans-serif;
+    line-height: 1.75;
+  }
+  [dir="rtl"] .eyebrow,
+  [dir="rtl"] .stat span,
+  [dir="rtl"] .brand span,
+  [dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3 {
+    letter-spacing: normal;
+  }
+  [dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3 { line-height: 1.4; }
+  [dir="rtl"] .hero h1 { line-height: 1.35; }
+  [dir="rtl"] .hero p.lead,
+  [dir="rtl"] .section-head p,
+  [dir="rtl"] .feat-card p,
+  [dir="rtl"] .why-card p,
+  [dir="rtl"] .shot-cap span { line-height: 1.9; }
+  [dir="rtl"] .hero-shot { transform: perspective(1200px) rotateY(6deg) rotateX(2deg); }
+  [dir="rtl"] .lightbox-close { right: auto; left: 28px; }
+  @media (max-width: 900px) {
+    [dir="rtl"] .hero-shot { transform: none; }
+  }
+
+  /* ---- Order-to-cash flow & module cards ---- */
+  .flow-wrap { background: var(--soft); }
+  .flow-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; counter-reset: flow; }
+  .flow-step {
+    position: relative; background: #fff; border: 1px solid var(--line); border-radius: 12px;
+    padding: 22px 20px 20px; box-shadow: 0 6px 18px rgba(15,27,61,0.05);
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .flow-step:hover { transform: translateY(-4px); box-shadow: 0 16px 34px rgba(15,27,61,0.12); }
+  .flow-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border-radius: 50%; background: var(--accent); color: #fff;
+    font-weight: 800; font-size: 14px; margin-bottom: 10px;
+  }
+  .flow-step h3 { font-size: 15.5px; margin: 0 0 6px; }
+  .flow-step p { font-size: 13.5px; color: var(--muted); margin: 0; }
+  .flow-step:not(:nth-child(4n))::after {
+    content: "→"; position: absolute; right: -16px; top: 50%; transform: translateY(-50%);
+    color: var(--accent-2); font-weight: 800; font-size: 20px; z-index: 2;
+  }
+  [dir="rtl"] .flow-step:not(:nth-child(4n))::after { content: "←"; right: auto; left: -16px; }
+
+  .mod-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .mod-card {
+    background: #fff; border: 1px solid var(--line); border-top: 3px solid var(--accent);
+    border-radius: 12px; padding: 22px 22px 18px;
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .mod-card:hover { transform: translateY(-4px); box-shadow: 0 14px 32px rgba(15,27,61,0.10); }
+  .mod-card:nth-child(even) { border-top-color: var(--accent-2); }
+  .mod-card h3 { font-size: 16px; margin: 0 0 10px; }
+  .mod-card ul { margin: 0; padding-inline-start: 18px; color: var(--muted); font-size: 13.5px; }
+  .mod-card li { margin-bottom: 5px; }
+  .stat-strip .container { flex-wrap: wrap; }
+  @media (max-width: 900px) {
+    .flow-grid, .mod-grid { grid-template-columns: repeat(2, 1fr); }
+    .flow-step::after { display: none; }
+  }
+  @media (max-width: 560px) {
+    .flow-grid, .mod-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+  <nav class="topnav">
+    <div class="container">
+      <div class="brand">
+        <span data-i18n="brand">RRD Suite</span>
+      </div>
+      <div class="navlinks">
+        <a href="#features" data-i18n="nav_features">Features</a>
+        <a href="#flow" data-i18n="nav_flow">Order to Cash</a>
+        <a href="#modules" data-i18n="nav_modules">Modules</a>
+        <a href="#screenshots" data-i18n="nav_screenshots">Screenshots</a>
+        <a href="#why" data-i18n="nav_why">Why Us</a>
+        <a href="#contact" data-i18n="nav_contact">Contact</a>
+      </div>
+      <div class="nav-right">
+        <button class="lang-toggle" id="langToggle" type="button" aria-label="Switch language">العربية</button>
+        <a class="nav-cta" href="#contact" data-i18n="nav_cta">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container hero-grid">
+      <div>
+        <p class="eyebrow" data-i18n="hero_eyebrow">Manufacturing ERP · Windows Desktop</p>
+        <img class="hero-logo" src="images/login-title.png" alt="RRD Suite" data-i18n-alt="hero_logo_alt" />
+        <h1 data-i18n="hero_h1">Run your whole factory from one screen.</h1>
+        <p class="lead" data-i18n="hero_lead">
+          Bills of material, work orders, MRP, inventory, quality, purchasing, sales, and costing — one manufacturing ERP
+          that works fully offline, with no subscription and no internet connection required.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#contact" data-i18n="hero_cta_primary">Get Started</a>
+          <a class="btn btn-outline" href="#screenshots" data-i18n="hero_cta_secondary">See it in action</a>
+        </div>
+      </div>
+      <div class="hero-shot-wrap">
+        <img class="hero-shot" src="images/ss1.png" alt="Manufacturing dashboard screenshot" data-i18n-alt="hero_shot_alt"
+             data-src-en="images/ss1.png" data-src-ar="images/ss1.png" />
+      </div>
+    </div>
+    <div class="stat-strip">
+      <div class="container">
+        <div class="stat"><b data-i18n="stat1_value">BOM → Cash</b><span data-i18n="stat1_label">End-to-End Flow</span></div>
+        <div class="stat"><b>25+</b><span data-i18n="stat2_label">Reports &amp; Excel Export</span></div>
+        <div class="stat"><b>100%</b><span data-i18n="stat3_label">Offline &amp; Local</span></div>
+        <div class="stat"><b data-i18n="stat4_value">EN / AR</b><span data-i18n="stat4_label">Bilingual</span></div>
+        <div class="stat"><b>0</b><span data-i18n="stat5_label">Subscription Fees</span></div>
+      </div>
+    </div>
+  </header>
+
+  <section id="features">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow" data-i18n="feat_eyebrow">Built For Manufacturers</p>
+        <h2 data-i18n="feat_h2">Everything between the drawing and the delivery</h2>
+        <p data-i18n="feat_p">From the bill of material to the customer invoice, every step is connected — stock, cost and quality update as the work happens, not in a spreadsheet at month end.</p>
+      </div>
+      <div class="feat-grid">
+        <div class="feat-card reveal">
+          <div class="feat-icon">▤</div>
+          <h3 data-i18n="feat1_t">BOM &amp; Routings</h3>
+          <p data-i18n="feat1_d">Multi-level bills of material with scrap, phantoms and alternates, routings with setup and run times, revisions and engineering change orders.</p>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-icon">⚙</div>
+          <h3 data-i18n="feat2_t">Work Orders &amp; Shop Floor</h3>
+          <p data-i18n="feat2_d">Release, issue material, book labor and machine time, clock in and out, log scrap and downtime, and receive finished goods — with live progress.</p>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-icon">◫</div>
+          <h3 data-i18n="feat3_t">MPS &amp; MRP Planning</h3>
+          <p data-i18n="feat3_d">Net demand against stock and open supply, explode BOMs, and turn planned orders into work orders and purchase requests — with capacity checks.</p>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-icon">▦</div>
+          <h3 data-i18n="feat4_t">Inventory &amp; Traceability</h3>
+          <p data-i18n="feat4_d">Multi-warehouse stock with bins, lots, expiry and serial numbers, FIFO / FEFO picking, cycle counts, and recall-ready forward and backward trace.</p>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-icon">✔</div>
+          <h3 data-i18n="feat5_t">Quality Control</h3>
+          <p data-i18n="feat5_d">Incoming, in-process and final inspections with QC plans, quarantine, dispositions and non-conformance reports that follow the problem to closure.</p>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-icon">◨</div>
+          <h3 data-i18n="feat6_t">Costing &amp; Variances</h3>
+          <p data-i18n="feat6_d">Standard cost roll-up from BOM and routing, actual cost per work order, six variances, WIP valuation and budget-vs-actual flags on every order.</p>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-icon">▧</div>
+          <h3 data-i18n="feat7_t">Purchasing &amp; 3-Way Match</h3>
+          <p data-i18n="feat7_d">Material and purchase requests with approvals, POs pegged to work orders, receipts into quarantine, and invoices matched to PO and receipt before payment.</p>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-icon">➜</div>
+          <h3 data-i18n="feat8_t">Sales to Cash</h3>
+          <p data-i18n="feat8_d">Quotations with custom-product costing, sales orders with credit and availability checks, pick lists, deliveries, progress billing, returns and receipts.</p>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-icon">⇄</div>
+          <h3 data-i18n="feat9_t">Subcontracting</h3>
+          <p data-i18n="feat9_d">Send material out for outside operations, receive it back good or rejected, and carry the service cost straight into the work order.</p>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-icon">₱</div>
+          <h3 data-i18n="feat10_t">Finance &amp; Banking</h3>
+          <p data-i18n="feat10_d">Receivables and payables aging, supplier payments, overhead absorption, bank accounts and reconciliation — the cash picture beside the shop floor.</p>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-icon">▥</div>
+          <h3 data-i18n="feat11_t">Reports &amp; Excel</h3>
+          <p data-i18n="feat11_d">More than 25 production, inventory, purchasing, sales, cost and finance reports with filters, print and one-click Excel export.</p>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-icon">◩</div>
+          <h3 data-i18n="feat12_t">Roles, Audit &amp; In-App Help</h3>
+          <p data-i18n="feat12_d">Fine-grained permissions per role, a full activity log, and an “i” help panel on every screen explaining the process, fields and links to other modules.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="flow" class="flow-wrap">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow" data-i18n="flow_eyebrow">One Connected Flow</p>
+        <h2 data-i18n="flow_h2">From customer enquiry to cash collected</h2>
+        <p data-i18n="flow_p">Each document creates the next one and every movement of stock and money is recorded once — so what the shop floor does is what the books show.</p>
+      </div>
+      <div class="flow-grid">
+        <div class="flow-step reveal"><span class="flow-num">1</span><h3 data-i18n="flow1_t">Quote</h3><p data-i18n="flow1_d">Price catalog and custom-built products from their BOM and routing cost.</p></div>
+        <div class="flow-step reveal"><span class="flow-num">2</span><h3 data-i18n="flow2_t">Sales Order</h3><p data-i18n="flow2_d">Credit and stock-availability checks, reservations and billing milestones.</p></div>
+        <div class="flow-step reveal"><span class="flow-num">3</span><h3 data-i18n="flow3_t">Plan</h3><p data-i18n="flow3_d">MPS and MRP propose what to make and buy, and when.</p></div>
+        <div class="flow-step reveal"><span class="flow-num">4</span><h3 data-i18n="flow4_t">Buy &amp; Receive</h3><p data-i18n="flow4_d">Requests, purchase orders, goods receipt with lots and quarantine.</p></div>
+        <div class="flow-step reveal"><span class="flow-num">5</span><h3 data-i18n="flow5_t">Produce</h3><p data-i18n="flow5_d">Work orders issue material, book time and track cost against standard.</p></div>
+        <div class="flow-step reveal"><span class="flow-num">6</span><h3 data-i18n="flow6_t">Inspect</h3><p data-i18n="flow6_d">In-process and final QC release stock or raise a non-conformance.</p></div>
+        <div class="flow-step reveal"><span class="flow-num">7</span><h3 data-i18n="flow7_t">Ship</h3><p data-i18n="flow7_d">Pick by FIFO or FEFO, deliver, print the delivery note, record the cost of goods.</p></div>
+        <div class="flow-step reveal"><span class="flow-num">8</span><h3 data-i18n="flow8_t">Invoice &amp; Collect</h3><p data-i18n="flow8_d">Bill deliveries or milestones, apply receipts, age the receivables.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="modules">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow" data-i18n="mod_eyebrow">Modules</p>
+        <h2 data-i18n="mod_h2">Eight areas, one database</h2>
+        <p data-i18n="mod_p">Switch on only what you need — permissions decide who sees which module.</p>
+      </div>
+      <div class="mod-grid">
+        <div class="mod-card reveal">
+          <h3 data-i18n="mod1_t">Engineering</h3>
+          <ul>
+            <li data-i18n="mod1_l1">Bills of material with revisions</li>
+            <li data-i18n="mod1_l2">Routings and operations library</li>
+            <li data-i18n="mod1_l3">Engineering change orders</li>
+            <li data-i18n="mod1_l4">Standard cost roll-up and simulation</li>
+          </ul>
+        </div>
+        <div class="mod-card reveal">
+          <h3 data-i18n="mod2_t">Planning</h3>
+          <ul>
+            <li data-i18n="mod2_l1">Master production schedule with ATP</li>
+            <li data-i18n="mod2_l2">MRP with lot sizing and pegging</li>
+            <li data-i18n="mod2_l3">Rough-cut capacity by work center</li>
+            <li data-i18n="mod2_l4">One-click work order and PR creation</li>
+          </ul>
+        </div>
+        <div class="mod-card reveal">
+          <h3 data-i18n="mod3_t">Production</h3>
+          <ul>
+            <li data-i18n="mod3_l1">Work orders in every status</li>
+            <li data-i18n="mod3_l2">Material issues, returns and backflush</li>
+            <li data-i18n="mod3_l3">Labor, machine, downtime and shift logs</li>
+            <li data-i18n="mod3_l4">Operations board and monitoring</li>
+          </ul>
+        </div>
+        <div class="mod-card reveal">
+          <h3 data-i18n="mod4_t">Quality</h3>
+          <ul>
+            <li data-i18n="mod4_l1">Incoming, in-process and final QC</li>
+            <li data-i18n="mod4_l2">Inspection plans and results</li>
+            <li data-i18n="mod4_l3">NCR with root cause and corrective action</li>
+            <li data-i18n="mod4_l4">Quarantine and release control</li>
+          </ul>
+        </div>
+        <div class="mod-card reveal">
+          <h3 data-i18n="mod5_t">Inventory</h3>
+          <ul>
+            <li data-i18n="mod5_l1">Warehouses, bins, lots and serials</li>
+            <li data-i18n="mod5_l2">Transfers, adjustments and cycle counts</li>
+            <li data-i18n="mod5_l3">Reorder alerts and aging</li>
+            <li data-i18n="mod5_l4">Full movement ledger and traceability</li>
+          </ul>
+        </div>
+        <div class="mod-card reveal">
+          <h3 data-i18n="mod6_t">Purchasing</h3>
+          <ul>
+            <li data-i18n="mod6_l1">Material and purchase requests</li>
+            <li data-i18n="mod6_l2">Approval chains by department</li>
+            <li data-i18n="mod6_l3">Purchase orders and goods receipts</li>
+            <li data-i18n="mod6_l4">Supplier price catalogues and performance</li>
+          </ul>
+        </div>
+        <div class="mod-card reveal">
+          <h3 data-i18n="mod7_t">Sales</h3>
+          <ul>
+            <li data-i18n="mod7_l1">Quotations and sales orders</li>
+            <li data-i18n="mod7_l2">Pick lists and delivery notes</li>
+            <li data-i18n="mod7_l3">Customer returns (RMA) with QC</li>
+            <li data-i18n="mod7_l4">Backlog and on-time delivery</li>
+          </ul>
+        </div>
+        <div class="mod-card reveal">
+          <h3 data-i18n="mod8_t">Finance &amp; Costing</h3>
+          <ul>
+            <li data-i18n="mod8_l1">Invoices, credit notes and receipts</li>
+            <li data-i18n="mod8_l2">Supplier invoices with 3-way match</li>
+            <li data-i18n="mod8_l3">Overhead, WIP and variance analysis</li>
+            <li data-i18n="mod8_l4">Bank accounts and reconciliation</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="screenshots" class="shots-wrap">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow" data-i18n="shots_eyebrow">A Closer Look</p>
+        <h2 data-i18n="shots_h2">See the app in action</h2>
+        <p data-i18n="shots_p">Real screens from the application, running a demo furniture factory — click any screenshot to enlarge.</p>
+      </div>
+      <div class="shot-grid" id="shotGrid">
+        <div class="shot-card reveal" data-full-en="images/ss1.png" data-full-ar="images/ss1.png">
+          <div class="shot-img-wrap"><img src="images/ss1.png" alt="Manufacturing Dashboard" data-i18n-alt="shot1_title" data-src-en="images/ss1.png" data-src-ar="images/ss1.png" /></div>
+          <div class="shot-cap"><b data-i18n="shot1_title">Manufacturing Dashboard</b><span data-i18n="shot1_desc">WIP, inventory, backlog, receivables and quality at a glance</span></div>
+        </div>
+        <div class="shot-card reveal" data-full-en="images/ss2.png" data-full-ar="images/ss2.png">
+          <div class="shot-img-wrap"><img src="images/ss2.png" alt="Work Orders" data-i18n-alt="shot2_title" data-src-en="images/ss2.png" data-src-ar="images/ss2.png" /></div>
+          <div class="shot-cap"><b data-i18n="shot2_title">Work Orders</b><span data-i18n="shot2_desc">Every order with its status, progress and schedule health</span></div>
+        </div>
+        <div class="shot-card reveal" data-full-en="images/ss3.png" data-full-ar="images/ss3.png">
+          <div class="shot-img-wrap"><img src="images/ss3.png" alt="Work Order Workspace" data-i18n-alt="shot3_title" data-src-en="images/ss3.png" data-src-ar="images/ss3.png" /></div>
+          <div class="shot-cap"><b data-i18n="shot3_title">Work Order Workspace</b><span data-i18n="shot3_desc">Materials, operations, labor, costs and timeline in one place</span></div>
+        </div>
+        <div class="shot-card reveal" data-full-en="images/ss4.png" data-full-ar="images/ss4.png">
+          <div class="shot-img-wrap"><img src="images/ss4.png" alt="Bill of Material" data-i18n-alt="shot4_title" data-src-en="images/ss4.png" data-src-ar="images/ss4.png" /></div>
+          <div class="shot-cap"><b data-i18n="shot4_title">Bill of Material</b><span data-i18n="shot4_desc">Multi-level BOMs with revisions, scrap and issue methods</span></div>
+        </div>
+        <div class="shot-card reveal" data-full-en="images/ss5.png" data-full-ar="images/ss5.png">
+          <div class="shot-img-wrap"><img src="images/ss5.png" alt="Production Monitoring" data-i18n-alt="shot5_title" data-src-en="images/ss5.png" data-src-ar="images/ss5.png" /></div>
+          <div class="shot-cap"><b data-i18n="shot5_title">Production Monitoring</b><span data-i18n="shot5_desc">Shop-floor progress, overdue orders and capacity load</span></div>
+        </div>
+        <div class="shot-card reveal" data-full-en="images/ss6.png" data-full-ar="images/ss6.png">
+          <div class="shot-img-wrap"><img src="images/ss6.png" alt="MRP" data-i18n-alt="shot6_title" data-src-en="images/ss6.png" data-src-ar="images/ss6.png" /></div>
+          <div class="shot-cap"><b data-i18n="shot6_title">Material Requirements Planning</b><span data-i18n="shot6_desc">Planned make and buy orders netted against stock and supply</span></div>
+        </div>
+        <div class="shot-card reveal" data-full-en="images/ss7.png" data-full-ar="images/ss7.png">
+          <div class="shot-img-wrap"><img src="images/ss7.png" alt="Stock Balances" data-i18n-alt="shot7_title" data-src-en="images/ss7.png" data-src-ar="images/ss7.png" /></div>
+          <div class="shot-cap"><b data-i18n="shot7_title">Stock Balances</b><span data-i18n="shot7_desc">Live stock by warehouse, bin and lot, with valuation</span></div>
+        </div>
+        <div class="shot-card reveal" data-full-en="images/ss8.png" data-full-ar="images/ss8.png">
+          <div class="shot-img-wrap"><img src="images/ss8.png" alt="Quality Inspections" data-i18n-alt="shot8_title" data-src-en="images/ss8.png" data-src-ar="images/ss8.png" /></div>
+          <div class="shot-cap"><b data-i18n="shot8_title">Quality Inspections</b><span data-i18n="shot8_desc">Incoming, in-process and final QC with clear dispositions</span></div>
+        </div>
+        <div class="shot-card reveal" data-full-en="images/ss9.png" data-full-ar="images/ss9.png">
+          <div class="shot-img-wrap"><img src="images/ss9.png" alt="Sales Orders" data-i18n-alt="shot9_title" data-src-en="images/ss9.png" data-src-ar="images/ss9.png" /></div>
+          <div class="shot-cap"><b data-i18n="shot9_title">Sales Orders</b><span data-i18n="shot9_desc">From confirmation through picking and delivery to invoice</span></div>
+        </div>
+        <div class="shot-card reveal" data-full-en="images/ss10.png" data-full-ar="images/ss10.png">
+          <div class="shot-img-wrap"><img src="images/ss10.png" alt="Customer Invoices" data-i18n-alt="shot10_title" data-src-en="images/ss10.png" data-src-ar="images/ss10.png" /></div>
+          <div class="shot-cap"><b data-i18n="shot10_title">Customer Invoices</b><span data-i18n="shot10_desc">Standard, progress and credit-note billing with balances</span></div>
+        </div>
+        <div class="shot-card reveal" data-full-en="images/ss11.png" data-full-ar="images/ss11.png">
+          <div class="shot-img-wrap"><img src="images/ss11.png" alt="Supplier Invoices" data-i18n-alt="shot11_title" data-src-en="images/ss11.png" data-src-ar="images/ss11.png" /></div>
+          <div class="shot-cap"><b data-i18n="shot11_title">Supplier Invoices (3-Way Match)</b><span data-i18n="shot11_desc">PO, receipt and invoice matched before you pay</span></div>
+        </div>
+        <div class="shot-card reveal" data-full-en="images/ss12.png" data-full-ar="images/ss12.png">
+          <div class="shot-img-wrap"><img src="images/ss12.png" alt="Cost Report" data-i18n-alt="shot12_title" data-src-en="images/ss12.png" data-src-ar="images/ss12.png" /></div>
+          <div class="shot-cap"><b data-i18n="shot12_title">Standard vs Actual Cost</b><span data-i18n="shot12_desc">Budget against committed and actual cost by category</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="why" class="why">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow" data-i18n="why_eyebrow">Why This App</p>
+        <h2 data-i18n="why_h2">Your factory data stays yours</h2>
+        <p data-i18n="why_p">No cloud account, no monthly fee, and nothing leaves your computer unless you export it yourself.</p>
+      </div>
+      <div class="why-grid">
+        <div class="why-card reveal">
+          <h3 data-i18n="why1_t">Fully Offline</h3>
+          <p data-i18n="why1_d">Everything runs locally — the shop floor keeps working even when the internet does not.</p>
+        </div>
+        <div class="why-card reveal">
+          <h3 data-i18n="why2_t">Private By Design</h3>
+          <p data-i18n="why2_d">Your recipes, costs and customers live in your own database file. Nothing is transmitted to us or anyone else.</p>
+        </div>
+        <div class="why-card reveal">
+          <h3 data-i18n="why3_t">Multi-PC Ready</h3>
+          <p data-i18n="why3_d">Optionally share one database across the office, warehouse and shop-floor PCs on the same network — no cloud subscription needed.</p>
+        </div>
+        <div class="why-card reveal">
+          <h3 data-i18n="why4_t">No Subscription</h3>
+          <p data-i18n="why4_d">Install it once. There is no recurring fee holding your own production records hostage.</p>
+        </div>
+        <div class="why-card reveal">
+          <h3 data-i18n="why5_t">Try It With a Demo Factory</h3>
+          <p data-i18n="why5_d">First run can load a complete demo furniture factory — BOMs, work orders, stock, sales and payables — so you can explore before entering real data, then remove it with one Go Live step.</p>
+        </div>
+        <div class="why-card reveal">
+          <h3 data-i18n="why6_t">Bilingual Interface</h3>
+          <p data-i18n="why6_d">Switch the app — including printed documents — between English and Arabic at any time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band" id="contact">
+    <div class="container">
+      <h2 class="reveal" data-i18n="cta_h2">Ready to run your factory from one screen?</h2>
+      <p class="reveal" data-i18n="cta_p">Get in touch with RamRam Dev to get set up.</p>
+      <div class="cta-row reveal" style="justify-content:center">
+        <a class="btn btn-primary" style="background:var(--accent);color:#fff" href="https://play.google.com/store/apps/dev?id=4673213010085861192" target="_blank" rel="noopener" data-i18n="cta_btn">Visit Developer Profile</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img class="footer-badge" src="images/bottom-developed-by.png" alt="Developed by RamRam Dev" data-i18n-alt="footer_badge_alt" />
+        </div>
+        <div class="footer-links">
+          <a href="privacy-policy.html" data-i18n="foot_privacy">Privacy Policy</a>
+          <a href="https://play.google.com/store/apps/dev?id=4673213010085861192" target="_blank" rel="noopener" data-i18n="foot_devprofile">Developer Profile</a>
+          <a href="#features" data-i18n="nav_features">Features</a>
+          <a href="#modules" data-i18n="nav_modules">Modules</a>
+          <a href="#screenshots" data-i18n="nav_screenshots">Screenshots</a>
+        </div>
+      </div>
+      <div class="footer-bottom" data-i18n="foot_copy">© 2026 RamRam Dev — RRD Suite: Manufacturing ERP. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close" data-i18n-aria="lightbox_close">&times;</button>
+    <img id="lightboxImg" src="" alt="Enlarged screenshot" data-i18n-alt="lightbox_alt" />
+  </div>
+
+  <script>
+    var I18N = {
+      en: {
+        page_title: "RRD Suite: Manufacturing ERP — RamRam Dev",
+        page_desc: "A complete offline desktop Manufacturing ERP: bills of material, work orders, MRP, inventory, quality, purchasing, sales, costing and finance. No subscription, no internet required.",
+        lang_name: "العربية",
+
+        brand: "RRD Suite",
+        nav_features: "Features",
+        nav_flow: "Order to Cash",
+        nav_modules: "Modules",
+        nav_screenshots: "Screenshots",
+        nav_why: "Why Us",
+        nav_contact: "Contact",
+        nav_cta: "Get Started",
+
+        hero_eyebrow: "Manufacturing ERP · Windows Desktop",
+        hero_logo_alt: "RRD Suite: Manufacturing ERP",
+        hero_h1: "Run your whole factory from one screen.",
+        hero_lead: "Bills of material, work orders, MRP, inventory, quality, purchasing, sales, and costing — one manufacturing ERP that works fully offline, with no subscription and no internet connection required.",
+        hero_cta_primary: "Get Started",
+        hero_cta_secondary: "See it in action",
+        hero_shot_alt: "Manufacturing dashboard screenshot",
+
+        stat1_value: "BOM → Cash",
+        stat1_label: "End-to-End Flow",
+        stat2_label: "Reports & Excel Export",
+        stat3_label: "Offline & Local",
+        stat4_value: "EN / AR",
+        stat4_label: "Bilingual",
+        stat5_label: "Subscription Fees",
+
+        feat_eyebrow: "Built For Manufacturers",
+        feat_h2: "Everything between the drawing and the delivery",
+        feat_p: "From the bill of material to the customer invoice, every step is connected — stock, cost and quality update as the work happens, not in a spreadsheet at month end.",
+        feat1_t: "BOM & Routings",
+        feat1_d: "Multi-level bills of material with scrap, phantoms and alternates, routings with setup and run times, revisions and engineering change orders.",
+        feat2_t: "Work Orders & Shop Floor",
+        feat2_d: "Release, issue material, book labor and machine time, clock in and out, log scrap and downtime, and receive finished goods — with live progress.",
+        feat3_t: "MPS & MRP Planning",
+        feat3_d: "Net demand against stock and open supply, explode BOMs, and turn planned orders into work orders and purchase requests — with capacity checks.",
+        feat4_t: "Inventory & Traceability",
+        feat4_d: "Multi-warehouse stock with bins, lots, expiry and serial numbers, FIFO / FEFO picking, cycle counts, and recall-ready forward and backward trace.",
+        feat5_t: "Quality Control",
+        feat5_d: "Incoming, in-process and final inspections with QC plans, quarantine, dispositions and non-conformance reports that follow the problem to closure.",
+        feat6_t: "Costing & Variances",
+        feat6_d: "Standard cost roll-up from BOM and routing, actual cost per work order, six variances, WIP valuation and budget-vs-actual flags on every order.",
+        feat7_t: "Purchasing & 3-Way Match",
+        feat7_d: "Material and purchase requests with approvals, POs pegged to work orders, receipts into quarantine, and invoices matched to PO and receipt before payment.",
+        feat8_t: "Sales to Cash",
+        feat8_d: "Quotations with custom-product costing, sales orders with credit and availability checks, pick lists, deliveries, progress billing, returns and receipts.",
+        feat9_t: "Subcontracting",
+        feat9_d: "Send material out for outside operations, receive it back good or rejected, and carry the service cost straight into the work order.",
+        feat10_t: "Finance & Banking",
+        feat10_d: "Receivables and payables aging, supplier payments, overhead absorption, bank accounts and reconciliation — the cash picture beside the shop floor.",
+        feat11_t: "Reports & Excel",
+        feat11_d: "More than 25 production, inventory, purchasing, sales, cost and finance reports with filters, print and one-click Excel export.",
+        feat12_t: "Roles, Audit & In-App Help",
+        feat12_d: "Fine-grained permissions per role, a full activity log, and an “i” help panel on every screen explaining the process, fields and links to other modules.",
+
+        flow_eyebrow: "One Connected Flow",
+        flow_h2: "From customer enquiry to cash collected",
+        flow_p: "Each document creates the next one and every movement of stock and money is recorded once — so what the shop floor does is what the books show.",
+        flow1_t: "Quote",
+        flow1_d: "Price catalog and custom-built products from their BOM and routing cost.",
+        flow2_t: "Sales Order",
+        flow2_d: "Credit and stock-availability checks, reservations and billing milestones.",
+        flow3_t: "Plan",
+        flow3_d: "MPS and MRP propose what to make and buy, and when.",
+        flow4_t: "Buy & Receive",
+        flow4_d: "Requests, purchase orders, goods receipt with lots and quarantine.",
+        flow5_t: "Produce",
+        flow5_d: "Work orders issue material, book time and track cost against standard.",
+        flow6_t: "Inspect",
+        flow6_d: "In-process and final QC release stock or raise a non-conformance.",
+        flow7_t: "Ship",
+        flow7_d: "Pick by FIFO or FEFO, deliver, print the delivery note, record the cost of goods.",
+        flow8_t: "Invoice & Collect",
+        flow8_d: "Bill deliveries or milestones, apply receipts, age the receivables.",
+
+        mod_eyebrow: "Modules",
+        mod_h2: "Eight areas, one database",
+        mod_p: "Switch on only what you need — permissions decide who sees which module.",
+        mod1_t: "Engineering",
+        mod1_l1: "Bills of material with revisions",
+        mod1_l2: "Routings and operations library",
+        mod1_l3: "Engineering change orders",
+        mod1_l4: "Standard cost roll-up and simulation",
+        mod2_t: "Planning",
+        mod2_l1: "Master production schedule with ATP",
+        mod2_l2: "MRP with lot sizing and pegging",
+        mod2_l3: "Rough-cut capacity by work center",
+        mod2_l4: "One-click work order and PR creation",
+        mod3_t: "Production",
+        mod3_l1: "Work orders in every status",
+        mod3_l2: "Material issues, returns and backflush",
+        mod3_l3: "Labor, machine, downtime and shift logs",
+        mod3_l4: "Operations board and monitoring",
+        mod4_t: "Quality",
+        mod4_l1: "Incoming, in-process and final QC",
+        mod4_l2: "Inspection plans and results",
+        mod4_l3: "NCR with root cause and corrective action",
+        mod4_l4: "Quarantine and release control",
+        mod5_t: "Inventory",
+        mod5_l1: "Warehouses, bins, lots and serials",
+        mod5_l2: "Transfers, adjustments and cycle counts",
+        mod5_l3: "Reorder alerts and aging",
+        mod5_l4: "Full movement ledger and traceability",
+        mod6_t: "Purchasing",
+        mod6_l1: "Material and purchase requests",
+        mod6_l2: "Approval chains by department",
+        mod6_l3: "Purchase orders and goods receipts",
+        mod6_l4: "Supplier price catalogues and performance",
+        mod7_t: "Sales",
+        mod7_l1: "Quotations and sales orders",
+        mod7_l2: "Pick lists and delivery notes",
+        mod7_l3: "Customer returns (RMA) with QC",
+        mod7_l4: "Backlog and on-time delivery",
+        mod8_t: "Finance & Costing",
+        mod8_l1: "Invoices, credit notes and receipts",
+        mod8_l2: "Supplier invoices with 3-way match",
+        mod8_l3: "Overhead, WIP and variance analysis",
+        mod8_l4: "Bank accounts and reconciliation",
+
+        shots_eyebrow: "A Closer Look",
+        shots_h2: "See the app in action",
+        shots_p: "Real screens from the application, running a demo furniture factory — click any screenshot to enlarge.",
+        shot1_title: "Manufacturing Dashboard",
+        shot1_desc: "WIP, inventory, backlog, receivables and quality at a glance",
+        shot2_title: "Work Orders",
+        shot2_desc: "Every order with its status, progress and schedule health",
+        shot3_title: "Work Order Workspace",
+        shot3_desc: "Materials, operations, labor, costs and timeline in one place",
+        shot4_title: "Bill of Material",
+        shot4_desc: "Multi-level BOMs with revisions, scrap and issue methods",
+        shot5_title: "Production Monitoring",
+        shot5_desc: "Shop-floor progress, overdue orders and capacity load",
+        shot6_title: "Material Requirements Planning",
+        shot6_desc: "Planned make and buy orders netted against stock and supply",
+        shot7_title: "Stock Balances",
+        shot7_desc: "Live stock by warehouse, bin and lot, with valuation",
+        shot8_title: "Quality Inspections",
+        shot8_desc: "Incoming, in-process and final QC with clear dispositions",
+        shot9_title: "Sales Orders",
+        shot9_desc: "From confirmation through picking and delivery to invoice",
+        shot10_title: "Customer Invoices",
+        shot10_desc: "Standard, progress and credit-note billing with balances",
+        shot11_title: "Supplier Invoices (3-Way Match)",
+        shot11_desc: "PO, receipt and invoice matched before you pay",
+        shot12_title: "Standard vs Actual Cost",
+        shot12_desc: "Budget against committed and actual cost by category",
+
+        why_eyebrow: "Why This App",
+        why_h2: "Your factory data stays yours",
+        why_p: "No cloud account, no monthly fee, and nothing leaves your computer unless you export it yourself.",
+        why1_t: "Fully Offline",
+        why1_d: "Everything runs locally — the shop floor keeps working even when the internet does not.",
+        why2_t: "Private By Design",
+        why2_d: "Your recipes, costs and customers live in your own database file. Nothing is transmitted to us or anyone else.",
+        why3_t: "Multi-PC Ready",
+        why3_d: "Optionally share one database across the office, warehouse and shop-floor PCs on the same network — no cloud subscription needed.",
+        why4_t: "No Subscription",
+        why4_d: "Install it once. There is no recurring fee holding your own production records hostage.",
+        why5_t: "Try It With a Demo Factory",
+        why5_d: "First run can load a complete demo furniture factory — BOMs, work orders, stock, sales and payables — so you can explore before entering real data, then remove it with one Go Live step.",
+        why6_t: "Bilingual Interface",
+        why6_d: "Switch the app — including printed documents — between English and Arabic at any time.",
+
+        cta_h2: "Ready to run your factory from one screen?",
+        cta_p: "Get in touch with RamRam Dev to get set up.",
+        cta_btn: "Visit Developer Profile",
+
+        footer_badge_alt: "Developed by RamRam Dev",
+        foot_privacy: "Privacy Policy",
+        foot_devprofile: "Developer Profile",
+        foot_copy: "© 2026 RamRam Dev — RRD Suite: Manufacturing ERP. All rights reserved.",
+
+        lightbox_close: "Close",
+        lightbox_alt: "Enlarged screenshot"
+      },
+      ar: {
+        page_title: "نظام RRD Suite لتخطيط موارد التصنيع — RamRam Dev",
+        page_desc: "نظام متكامل لتخطيط موارد التصنيع يعمل على سطح المكتب دون إنترنت: قوائم المواد وأوامر التصنيع وتخطيط الاحتياجات والمخزون والجودة والمشتريات والمبيعات والتكاليف والمالية. بلا اشتراك.",
+        lang_name: "English",
+
+        brand: "نظام RRD Suite",
+        nav_features: "المميزات",
+        nav_flow: "من الطلب إلى التحصيل",
+        nav_modules: "الوحدات",
+        nav_screenshots: "لقطات الشاشة",
+        nav_why: "لماذا نحن",
+        nav_contact: "تواصل معنا",
+        nav_cta: "ابدأ الآن",
+
+        hero_eyebrow: "نظام تخطيط موارد التصنيع · ويندوز",
+        hero_logo_alt: "نظام RRD Suite لتخطيط موارد التصنيع",
+        hero_h1: "أدِر مصنعك بالكامل من شاشة واحدة.",
+        hero_lead: "قوائم المواد وأوامر التصنيع وتخطيط الاحتياجات والمخزون والجودة والمشتريات والمبيعات والتكاليف — نظام واحد لتخطيط موارد التصنيع يعمل دون اتصال بالإنترنت، بلا اشتراك ودون الحاجة إلى إنترنت.",
+        hero_cta_primary: "ابدأ الآن",
+        hero_cta_secondary: "شاهده أثناء العمل",
+        hero_shot_alt: "لقطة شاشة للوحة تحكم التصنيع",
+
+        stat1_value: "من القائمة إلى النقد",
+        stat1_label: "دورة متكاملة",
+        stat2_label: "تقارير وتصدير Excel",
+        stat3_label: "محلي ودون إنترنت",
+        stat4_value: "عربي / إنجليزي",
+        stat4_label: "ثنائي اللغة",
+        stat5_label: "رسوم الاشتراك",
+
+        feat_eyebrow: "مصمَّم للمصنّعين",
+        feat_h2: "كل ما بين المخطط والتسليم",
+        feat_p: "من قائمة المواد إلى فاتورة العميل، كل خطوة مرتبطة بالأخرى — يتحدّث المخزون والتكلفة والجودة أثناء سير العمل، لا في جدول بيانات آخر الشهر.",
+        feat1_t: "قوائم المواد ومسارات التصنيع",
+        feat1_d: "قوائم مواد متعددة المستويات مع الفاقد والمكوّنات الوهمية والبدائل، ومسارات بأزمنة الإعداد والتشغيل، ومراجعات وأوامر تغيير هندسية.",
+        feat2_t: "أوامر التصنيع وأرضية المصنع",
+        feat2_d: "أطلق الأمر، واصرف المواد، وسجّل ساعات العمالة والآلات، والدخول والخروج، والهالك وأوقات التوقف، واستلم المنتج التام — مع تقدّم مباشر.",
+        feat3_t: "الجدولة وتخطيط الاحتياجات",
+        feat3_d: "قارن الطلب بالمخزون والإمداد المفتوح، وفكّك قوائم المواد، وحوّل الأوامر المخططة إلى أوامر تصنيع وطلبات شراء — مع فحص الطاقة الإنتاجية.",
+        feat4_t: "المخزون والتتبّع",
+        feat4_d: "مخزون متعدد المستودعات مع الأرفف والدفعات وتواريخ الانتهاء والأرقام التسلسلية، وسحب حسب الأقدم أو الأقرب انتهاءً، وجرد دوري، وتتبّع للأمام والخلف جاهز للاستدعاء.",
+        feat5_t: "مراقبة الجودة",
+        feat5_d: "فحص وارد وأثناء التصنيع ونهائي مع خطط فحص وحجر وقرارات تصرّف وتقارير عدم مطابقة تتابع المشكلة حتى إغلاقها.",
+        feat6_t: "التكاليف والانحرافات",
+        feat6_d: "تجميع التكلفة المعيارية من القائمة والمسار، والتكلفة الفعلية لكل أمر، وستة انحرافات، وتقييم الإنتاج تحت التشغيل، ومؤشرات الميزانية مقابل الفعلي.",
+        feat7_t: "المشتريات والمطابقة الثلاثية",
+        feat7_d: "طلبات مواد وشراء بالاعتماد، وأوامر شراء مرتبطة بأوامر التصنيع، واستلام إلى الحجر، وفواتير تُطابَق مع أمر الشراء والاستلام قبل الدفع.",
+        feat8_t: "من المبيعات إلى التحصيل",
+        feat8_d: "عروض أسعار بتكلفة المنتجات المخصصة، وأوامر بيع بفحص الائتمان والتوفر، وقوائم سحب وتسليم وفوترة مرحلية ومرتجعات وتحصيلات.",
+        feat9_t: "التصنيع الخارجي",
+        feat9_d: "أرسل المواد لعمليات خارجية، واستلمها سليمة أو مرفوضة، وحمّل تكلفة الخدمة مباشرة على أمر التصنيع.",
+        feat10_t: "المالية والبنوك",
+        feat10_d: "أعمار الذمم المدينة والدائنة، ودفعات الموردين، وتحميل المصاريف غير المباشرة، والحسابات البنكية والتسوية — صورة النقد بجانب أرضية المصنع.",
+        feat11_t: "التقارير وExcel",
+        feat11_d: "أكثر من 25 تقريرًا للإنتاج والمخزون والمشتريات والمبيعات والتكاليف والمالية مع الفلاتر والطباعة والتصدير إلى Excel بنقرة.",
+        feat12_t: "الأدوار والتدقيق والمساعدة",
+        feat12_d: "صلاحيات دقيقة لكل دور، وسجل نشاط كامل، ولوحة مساعدة “i” في كل شاشة تشرح العملية والحقول والعلاقة بالوحدات الأخرى.",
+
+        flow_eyebrow: "دورة واحدة متصلة",
+        flow_h2: "من استفسار العميل إلى تحصيل النقد",
+        flow_p: "كل مستند ينشئ التالي، وكل حركة مخزون ومال تُسجَّل مرة واحدة — فما تفعله أرضية المصنع هو ما تعرضه الدفاتر.",
+        flow1_t: "عرض السعر",
+        flow1_d: "تسعير الأصناف والمنتجات المخصصة من تكلفة القائمة والمسار.",
+        flow2_t: "أمر البيع",
+        flow2_d: "فحص الائتمان وتوفر المخزون، وحجوزات، ومراحل الفوترة.",
+        flow3_t: "التخطيط",
+        flow3_d: "الجدولة وتخطيط الاحتياجات يقترحان ما يُصنَّع وما يُشترى ومتى.",
+        flow4_t: "الشراء والاستلام",
+        flow4_d: "طلبات وأوامر شراء واستلام بالدفعات والحجر.",
+        flow5_t: "التصنيع",
+        flow5_d: "أوامر التصنيع تصرف المواد وتسجّل الوقت وتتابع التكلفة مقابل المعيار.",
+        flow6_t: "الفحص",
+        flow6_d: "فحص أثناء التصنيع ونهائي يُفرج عن المخزون أو يفتح عدم مطابقة.",
+        flow7_t: "الشحن",
+        flow7_d: "سحب حسب الأقدم أو الانتهاء، وتسليم، وطباعة إذن التسليم، وتسجيل تكلفة البضاعة.",
+        flow8_t: "الفوترة والتحصيل",
+        flow8_d: "فوترة التسليمات أو المراحل، وتطبيق التحصيلات، وأعمار الذمم.",
+
+        mod_eyebrow: "الوحدات",
+        mod_h2: "ثمانية مجالات، قاعدة بيانات واحدة",
+        mod_p: "فعّل ما تحتاجه فقط — والصلاحيات تحدد من يرى أي وحدة.",
+        mod1_t: "الهندسة",
+        mod1_l1: "قوائم المواد مع المراجعات",
+        mod1_l2: "المسارات ومكتبة العمليات",
+        mod1_l3: "أوامر التغيير الهندسية",
+        mod1_l4: "تجميع التكلفة المعيارية والمحاكاة",
+        mod2_t: "التخطيط",
+        mod2_l1: "جدول الإنتاج الرئيسي مع المتاح للوعد",
+        mod2_l2: "تخطيط الاحتياجات بأحجام الدفعات والربط",
+        mod2_l3: "الطاقة الإنتاجية التقريبية لكل مركز عمل",
+        mod2_l4: "إنشاء أمر تصنيع وطلب شراء بنقرة",
+        mod3_t: "الإنتاج",
+        mod3_l1: "أوامر التصنيع بكل حالاتها",
+        mod3_l2: "صرف المواد والمرتجعات والصرف التلقائي",
+        mod3_l3: "سجلات العمالة والآلات والتوقف والورديات",
+        mod3_l4: "لوحة العمليات والمتابعة",
+        mod4_t: "الجودة",
+        mod4_l1: "فحص وارد وأثناء التصنيع ونهائي",
+        mod4_l2: "خطط الفحص ونتائجه",
+        mod4_l3: "عدم المطابقة مع السبب الجذري والإجراء التصحيحي",
+        mod4_l4: "التحكم في الحجر والإفراج",
+        mod5_t: "المخزون",
+        mod5_l1: "مستودعات وأرفف ودفعات وأرقام تسلسلية",
+        mod5_l2: "تحويلات وتسويات وجرد دوري",
+        mod5_l3: "تنبيهات إعادة الطلب والأعمار",
+        mod5_l4: "دفتر حركة كامل وتتبّع",
+        mod6_t: "المشتريات",
+        mod6_l1: "طلبات المواد وطلبات الشراء",
+        mod6_l2: "سلاسل اعتماد حسب القسم",
+        mod6_l3: "أوامر الشراء وسندات الاستلام",
+        mod6_l4: "قوائم أسعار الموردين وأداؤهم",
+        mod7_t: "المبيعات",
+        mod7_l1: "عروض الأسعار وأوامر البيع",
+        mod7_l2: "قوائم السحب وإذونات التسليم",
+        mod7_l3: "مرتجعات العملاء مع الفحص",
+        mod7_l4: "الطلبات المتراكمة والتسليم في الموعد",
+        mod8_t: "المالية والتكاليف",
+        mod8_l1: "الفواتير والإشعارات الدائنة والتحصيلات",
+        mod8_l2: "فواتير الموردين بالمطابقة الثلاثية",
+        mod8_l3: "المصاريف غير المباشرة والإنتاج تحت التشغيل والانحرافات",
+        mod8_l4: "الحسابات البنكية والتسوية",
+
+        shots_eyebrow: "نظرة أقرب",
+        shots_h2: "شاهد التطبيق أثناء العمل",
+        shots_p: "شاشات حقيقية من التطبيق وهو يعمل على مصنع أثاث تجريبي — انقر على أي لقطة لتكبيرها.",
+        shot1_title: "لوحة تحكم التصنيع",
+        shot1_desc: "الإنتاج تحت التشغيل والمخزون والطلبات والذمم والجودة في نظرة",
+        shot2_title: "أوامر التصنيع",
+        shot2_desc: "كل أمر مع حالته وتقدّمه وموقفه من الجدول",
+        shot3_title: "مساحة عمل أمر التصنيع",
+        shot3_desc: "المواد والعمليات والعمالة والتكاليف والجدول الزمني في مكان واحد",
+        shot4_title: "قائمة المواد",
+        shot4_desc: "قوائم متعددة المستويات مع المراجعات والفاقد وطرق الصرف",
+        shot5_title: "متابعة الإنتاج",
+        shot5_desc: "تقدّم أرضية المصنع والأوامر المتأخرة وحمل الطاقة",
+        shot6_title: "تخطيط احتياجات المواد",
+        shot6_desc: "أوامر التصنيع والشراء المخططة مقابل المخزون والإمداد",
+        shot7_title: "أرصدة المخزون",
+        shot7_desc: "مخزون مباشر حسب المستودع والرف والدفعة مع التقييم",
+        shot8_title: "فحوصات الجودة",
+        shot8_desc: "فحص وارد وأثناء التصنيع ونهائي مع قرارات تصرّف واضحة",
+        shot9_title: "أوامر البيع",
+        shot9_desc: "من التأكيد مرورًا بالسحب والتسليم إلى الفاتورة",
+        shot10_title: "فواتير العملاء",
+        shot10_desc: "فوترة عادية ومرحلية وإشعارات دائنة مع الأرصدة",
+        shot11_title: "فواتير الموردين (مطابقة ثلاثية)",
+        shot11_desc: "أمر الشراء والاستلام والفاتورة تُطابَق قبل الدفع",
+        shot12_title: "التكلفة المعيارية مقابل الفعلية",
+        shot12_desc: "الميزانية مقابل الملتزم والفعلي حسب الفئة",
+
+        why_eyebrow: "لماذا هذا التطبيق",
+        why_h2: "بيانات مصنعك تبقى ملكك",
+        why_p: "لا حساب سحابي، ولا رسوم شهرية، ولا شيء يغادر جهازك إلا إذا صدّرته بنفسك.",
+        why1_t: "يعمل دون إنترنت تمامًا",
+        why1_d: "كل شيء يعمل محليًا — تستمر أرضية المصنع في العمل حتى لو انقطع الإنترنت.",
+        why2_t: "خصوصية بحكم التصميم",
+        why2_d: "وصفاتك وتكاليفك وعملاؤك في ملف قاعدة بيانات خاص بك، ولا يُرسَل شيء إلينا أو إلى أي جهة أخرى.",
+        why3_t: "جاهز للعمل على عدة أجهزة",
+        why3_d: "شارِك — اختياريًا — قاعدة بيانات واحدة بين أجهزة المكتب والمستودع وأرضية المصنع على الشبكة نفسها، دون اشتراك سحابي.",
+        why4_t: "بلا اشتراك",
+        why4_d: "ثبِّته مرة واحدة. لا رسوم متكررة تحتجز سجلات إنتاجك.",
+        why5_t: "جرّبه بمصنع تجريبي",
+        why5_d: "يمكن للتشغيل الأول تحميل مصنع أثاث تجريبي كامل — قوائم مواد وأوامر تصنيع ومخزون ومبيعات وذمم — لتستكشفه قبل إدخال بياناتك، ثم تزيله بخطوة واحدة.",
+        why6_t: "واجهة ثنائية اللغة",
+        why6_d: "بدِّل التطبيق — بما في ذلك المستندات المطبوعة — بين الإنجليزية والعربية في أي وقت.",
+
+        cta_h2: "جاهز لإدارة مصنعك من شاشة واحدة؟",
+        cta_p: "تواصل مع RamRam Dev للبدء.",
+        cta_btn: "زيارة ملف المطوِّر",
+
+        footer_badge_alt: "تطوير RamRam Dev",
+        foot_privacy: "سياسة الخصوصية",
+        foot_devprofile: "ملف المطوِّر",
+        foot_copy: "© 2026 RamRam Dev — نظام RRD Suite لتخطيط موارد التصنيع. جميع الحقوق محفوظة.",
+
+        lightbox_close: "إغلاق",
+        lightbox_alt: "لقطة شاشة مكبَّرة"
+      }
+    };
+
+    var currentLang = "en";
+
+    function ensureArabicFont() {
+      if (document.getElementById("arFont")) return;
+      var pc1 = document.createElement("link");
+      pc1.rel = "preconnect"; pc1.href = "https://fonts.googleapis.com";
+      var pc2 = document.createElement("link");
+      pc2.rel = "preconnect"; pc2.href = "https://fonts.gstatic.com"; pc2.crossOrigin = "anonymous";
+      var css = document.createElement("link");
+      css.id = "arFont"; css.rel = "stylesheet";
+      css.href = "https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap";
+      document.head.appendChild(pc1);
+      document.head.appendChild(pc2);
+      document.head.appendChild(css);
+    }
+
+    function applyLang(lang) {
+      var d = I18N[lang] || I18N.en;
+      currentLang = I18N[lang] ? lang : "en";
+
+      var html = document.documentElement;
+      html.setAttribute("lang", currentLang);
+      html.setAttribute("dir", currentLang === "ar" ? "rtl" : "ltr");
+
+      if (currentLang === "ar") ensureArabicFont();
+
+      document.title = d.page_title;
+      var md = document.querySelector('meta[name="description"]');
+      if (md) md.setAttribute("content", d.page_desc);
+
+      document.querySelectorAll("[data-i18n]").forEach(function (el) {
+        var k = el.getAttribute("data-i18n");
+        if (d[k] != null) el.textContent = d[k];
+      });
+      document.querySelectorAll("[data-i18n-alt]").forEach(function (el) {
+        var k = el.getAttribute("data-i18n-alt");
+        if (d[k] != null) el.setAttribute("alt", d[k]);
+      });
+      document.querySelectorAll("[data-i18n-aria]").forEach(function (el) {
+        var k = el.getAttribute("data-i18n-aria");
+        if (d[k] != null) el.setAttribute("aria-label", d[k]);
+      });
+
+      var srcAttr = currentLang === "ar" ? "data-src-ar" : "data-src-en";
+      var fullAttr = currentLang === "ar" ? "data-full-ar" : "data-full-en";
+      document.querySelectorAll("img[" + srcAttr + "]").forEach(function (img) {
+        var s = img.getAttribute(srcAttr);
+        if (s) img.setAttribute("src", s);
+      });
+      document.querySelectorAll(".shot-card[" + fullAttr + "]").forEach(function (card) {
+        card.setAttribute("data-full", card.getAttribute(fullAttr));
+      });
+
+      var toggle = document.getElementById("langToggle");
+      if (toggle) toggle.textContent = d.lang_name;
+
+      try { localStorage.setItem("siteLang", currentLang); } catch (e) {}
+    }
+
+    (function init() {
+      var stored;
+      try { stored = localStorage.getItem("siteLang"); } catch (e) {}
+      var nav = (navigator.language || "").toLowerCase();
+      applyLang(stored || (nav.indexOf("ar") === 0 ? "ar" : "en"));
+    })();
+
+    document.getElementById("langToggle").addEventListener("click", function () {
+      applyLang(currentLang === "ar" ? "en" : "ar");
+    });
+
+    var lightbox = document.getElementById("lightbox");
+    var lightboxImg = document.getElementById("lightboxImg");
+    document.getElementById("shotGrid").addEventListener("click", function (e) {
+      var card = e.target.closest(".shot-card");
+      if (!card) return;
+      lightboxImg.src = card.getAttribute("data-full");
+      lightbox.classList.add("open");
+    });
+    function closeLightbox() { lightbox.classList.remove("open"); lightboxImg.src = ""; }
+    document.getElementById("lightboxClose").addEventListener("click", closeLightbox);
+    lightbox.addEventListener("click", function (e) { if (e.target === lightbox) closeLightbox(); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeLightbox(); });
+
+    /* ---- Motion: staggered scroll-reveal + nav elevation ---- */
+    (function () {
+      var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var revealEls = [].slice.call(document.querySelectorAll(".reveal"));
+
+      [".feat-grid", ".flow-grid", ".mod-grid", ".shot-grid", ".why-grid"].forEach(function (sel) {
+        var grid = document.querySelector(sel);
+        if (!grid) return;
+        [].slice.call(grid.children).forEach(function (el, i) {
+          if (el.classList.contains("reveal")) {
+            el.style.transitionDelay = Math.min(i * 60, 300) + "ms";
+          }
+        });
+      });
+
+      if (reduce || !("IntersectionObserver" in window)) {
+        revealEls.forEach(function (el) { el.classList.add("in"); });
+      } else {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              e.target.classList.add("in");
+              io.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+        revealEls.forEach(function (el) { io.observe(el); });
+      }
+
+      var topnav = document.querySelector("nav.topnav");
+      if (topnav) {
+        var onScroll = function () { topnav.classList.toggle("scrolled", window.scrollY > 8); };
+        onScroll();
+        window.addEventListener("scroll", onScroll, { passive: true });
+      }
+    })();
+  </script>
+
+</body>
+</html>
